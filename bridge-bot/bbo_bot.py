@@ -14,7 +14,7 @@ last_deal_hash = None
 last_dd_hash = None
 last_dd_result = None
 
-BOTTOM_SEAT = "North"  # Change to "East", "West", or "North" to control which hand is at the bottom
+BOTTOM_SEAT = "South"  # Change to "East", "West", or "North" to control which hand is at the bottom
 
 # Parse dot-format hand into suit dictionary
 def parse_dot_hand(dot_str):
@@ -223,6 +223,7 @@ async def handle_connection(websocket):
             if msg_type == "game_event":
                 event_type = data.get("event_type")
                 event_data = data.get("data", {})
+                print(f"🎯 Received event: {event_type}")  # DEBUG
                 handle_game_event(event_type, event_data)
             
             # Legacy messages (keep for backward compatibility)
@@ -233,6 +234,8 @@ async def handle_connection(websocket):
                 handle_dd_result(data.get("dd"))
         except Exception as e:
             print("❌ Error:", e)
+            import traceback
+            traceback.print_exc()
 
 # Find free port to avoid collisions
 def find_free_port(start=8675):

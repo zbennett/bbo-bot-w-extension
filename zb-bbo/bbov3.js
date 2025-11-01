@@ -42,11 +42,16 @@ var app = { "startTime": Date.now(), "traffic": '', "trafficCounter": 0, "prevWS
 const socket = new WebSocket("ws://localhost:8675");
 
 socket.onopen = () => {
-  console.log("Connected to local Python WebSocket server");
+  console.log("✅ Connected to local Python WebSocket server on ws://localhost:8675");
+  console.log("📊 Socket state:", socket.readyState, "(1 = OPEN)");
 };
 
 socket.onerror = (err) => {
-  console.error("WebSocket error", err);
+  console.error("❌ WebSocket error:", err);
+};
+
+socket.onclose = (event) => {
+  console.warn("🔌 WebSocket closed:", event.code, event.reason);
 };
 
 function sendAppToPython(app) {
@@ -94,16 +99,19 @@ function sendTableInfoToPython(tableInfo) {
  * This is more efficient than sending the entire app object
  */
 function sendGameEvent(eventType, data) {
-  if (socket.readyState === WebSocket.OPEN) {
+  if (socket && socket.readyState === WebSocket.OPEN) {
     const message = {
-      type: eventType,
+      type: 'game_event',  // Fixed: was sending eventType as type
+      event_type: eventType,
       timestamp: Date.now(),
       data: data
     };
-    socket.send(JSON.stringify(message));
-    console.log('📤 Bot Event:', eventType);
+    const jsonStr = JSON.stringify(message);
+    socket.send(jsonStr);
+    console.log('📤 Bot Event:', eventType, '| Size:', jsonStr.length, 'bytes');
+    console.log('📦 Message:', message);
   } else {
-    console.warn('⚠️  WebSocket not open, cannot send:', eventType);
+    console.warn('⚠️  WebSocket not open, cannot send:', eventType, '| State:', socket ? socket.readyState : 'socket is null');
   }
 }
 
