@@ -165,10 +165,37 @@ class DecisionEngine:
         if not remaining_cards:
             return None, f"{self.lead_player} has no cards remaining"
             
+        # Extract trump suit from contract
+        trump_suit = None
+        if self.contract:
+            # Contract format like "4H", "3NT", "2S", etc.
+            if 'NT' in self.contract or 'N' in self.contract:
+                trump_suit = 'NT'
+            else:
+                for suit in ['S', 'H', 'D', 'C']:
+                    if suit in self.contract:
+                        trump_suit = suit
+                        break
+            
         # Use DD analyzer to recommend best play
         try:
             analyzer = DoubleDummyAnalyzer(self.dd_data)
-            card, reasoning = analyzer.analyze_position(self.lead_player, remaining_cards)
+            card, reasoning = analyzer.analyze_position(
+                self.lead_player, 
+                remaining_cards,
+                current_trick=self.current_trick,
+                trump_suit=trump_suit
+            )
+            
+            # Validate recommended card is actually in hand
+            if card and card not in remaining_cards:
+                print(f"⚠️  WARNING: Recommended {card} not in {self.lead_player}'s hand: {remaining_cards}")
+                print(f"    Current trick: {self.current_trick}")
+                print(f"    Trump: {trump_suit}")
+                # Fallback: just play first available card
+                card = remaining_cards[0]
+                reasoning = f"Playing {card} (fallback due to logic error)"
+            
             return card, reasoning
         except Exception as e:
             return None, f"Error analyzing position: {str(e)}"

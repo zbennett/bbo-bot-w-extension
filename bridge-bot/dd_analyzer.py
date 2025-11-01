@@ -61,13 +61,15 @@ class DoubleDummyAnalyzer:
             return 0
         return self.tricks[player][suit]
         
-    def analyze_position(self, player, cards_in_hand):
+    def analyze_position(self, player, cards_in_hand, current_trick=None, trump_suit=None):
         """
         Analyze current position and recommend best card to play
         
         Args:
             player: 'N', 'S', 'E', or 'W'
             cards_in_hand: List of cards like ['SA', 'HK', 'D7', 'C3']
+            current_trick: List of dicts [{'player': 'W', 'card': 'SA'}, ...] (cards played so far this trick)
+            trump_suit: Trump suit ('S', 'H', 'D', 'C', or 'NT')
             
         Returns:
             Recommended card to play with reasoning
@@ -83,23 +85,96 @@ class DoubleDummyAnalyzer:
                 suits_in_hand[suit] = []
             suits_in_hand[suit].append(card)
             
-        # Get best suit based on DD analysis
-        best_suit = self.get_best_lead(player)
-        
-        if best_suit and best_suit in suits_in_hand:
-            # Play from best suit
-            # For now, play highest card (TODO: more sophisticated logic)
-            cards = suits_in_hand[best_suit]
-            best_card = max(cards, key=lambda c: self._card_rank(c[1]))
-            tricks = self.get_tricks_for_lead(player, best_suit)
-            reason = f"DD analysis suggests {best_suit} (can make {tricks} tricks)"
-            return best_card, reason
+        # If we're following to a trick (not leading), must follow suit
+        if current_trick and len(current_trick) > 0:
+            led_suit = current_trick[0]['card'][0]  # First card's suit
+            
+            if led_suit in suits_in_hand:
+                # Must follow suit - choose best card in that suit
+                cards = suits_in_hand[led_suit]
+                
+                # Determine if we should try to win or play low
+                # For now: play high if we can win, low otherwise
+                high_card = max(cards, key=lambda c: self._card_rank(c[1]))
+                low_card = min(cards, key=lambda c: self._card_rank(c[1]))
+                
+                # Simple heuristic: if partner is winning, play low; otherwise try to win
+                highest_so_far = self._get_highest_card_in_trick(current_trick, led_suit, trump_suit)
+                
+                if self._can_beat(high_card, highest_so_far, led_suit, trump_suit):
+                    return high_card, f"Following suit with high {led_suit} to try to win"
+                else:
+                    return low_card, f"Following suit with low {led_suit} (can't win)"
+            else:
+                # Can't follow - need to discard or trump
+                trump = trump_suit if trump_suit != 'NT' else None
+                
+                if trump and trump in suits_in_hand:
+                    # Can trump
+                    cards = suits_in_hand[trump]
+                    # Trump with lowest trump
+                    trump_card = min(cards, key=lambda c: self._card_rank(c[1]))
+                    return trump_card, f"Trumping with {trump_card}"
+                else:
+                    # Must discard - throw lowest card from longest/weakest suit
+                    longest_suit = max(suits_in_hand.keys(), key=lambda s: len(suits_in_hand[s]))
+                    cards = suits_in_hand[longest_suit]
+                    discard = min(cards, key=lambda c: self._card_rank(c[1]))
+                    return discard, f"Discarding {discard} (can't follow, no trump)"
         else:
-            # Fallback: play highest card from longest suit
-            longest_suit = max(suits_in_hand.keys(), key=lambda s: len(suits_in_hand[s]))
-            cards = suits_in_hand[longest_suit]
-            best_card = max(cards, key=lambda c: self._card_rank(c[1]))
-            return best_card, f"Playing high from longest suit ({longest_suit})"
+            # We're leading - use DD analysis if available
+            best_suit = self.get_best_lead(player)
+            
+            if best_suit and best_suit in suits_in_hand:
+                # Lead from best suit according to DD
+                cards = suits_in_hand[best_suit]
+                # Lead high from strong suit
+                best_card = max(cards, key=lambda c: self._card_rank(c[1]))
+                tricks = self.get_tricks_for_lead(player, best_suit)
+                reason = f"Leading {best_suit} (DD suggests {tricks} tricks)"
+                return best_card, reason
+            else:
+                # Fallback: lead highest card from longest suit
+                longest_suit = max(suits_in_hand.keys(), key=lambda s: len(suits_in_hand[s]))
+                cards = suits_in_hand[longest_suit]
+                best_card = max(cards, key=lambda c: self._card_rank(c[1]))
+                return best_card, f"Leading high from longest suit ({longest_suit})"
+    
+    def _can_beat(self, card, highest_card, led_suit, trump_suit):
+        """Check if card can beat the highest card so far"""
+        if not highest_card:
+            return True
+            
+        card_suit = card[0]
+        high_suit = highest_card[0]
+        
+        # Trump beats everything
+        if trump_suit and trump_suit != 'NT':
+            if card_suit == trump_suit and high_suit != trump_suit:
+                return True
+            if card_suit != trump_suit and high_suit == trump_suit:
+                return False
+                
+        # If different suits (and no trump involved), can't beat
+        if card_suit != high_suit:
+            return False
+            
+        # Same suit - compare ranks
+        return self._card_rank(card[1]) > self._card_rank(highest_card[1])
+    
+    def _get_highest_card_in_trick(self, trick, led_suit, trump_suit):
+        """Get the currently winning card in the trick"""
+        if not trick:
+            return None
+            
+        winning_card = trick[0]['card']
+        
+        for play in trick[1:]:
+            card = play['card']
+            if self._can_beat(card, winning_card, led_suit, trump_suit):
+                winning_card = card
+                
+        return winning_card
             
     def _card_rank(self, rank):
         """Convert card rank to numeric value for comparison"""
@@ -122,11 +197,40 @@ class DoubleDummyAnalyzer:
                 player_tricks = self.tricks[player]
                 suits_str = '  '.join([f"{suit}:{player_tricks[suit]}" for suit in ['S', 'H', 'D', 'C'] if suit in player_tricks])
                 lines.append(f"   {player}: {suits_str}")
+        
+        # Add interpretation
+        lines.append(f"\n💡 Opening Lead Recommendations:")
+        
+        # Find which partnership should be declaring
+        ns_best = max(self.tricks.get('N', {}).values(), default=0) + max(self.tricks.get('S', {}).values(), default=0)
+        ew_best = max(self.tricks.get('E', {}).values(), default=0) + max(self.tricks.get('W', {}).values(), default=0)
+        
+        if ns_best > ew_best:
+            lines.append(f"   • NS should declare (can make more tricks)")
+            # Best leads for NS
+            for player in ['N', 'S']:
+                if player in self.tricks:
+                    best_suit = max(self.tricks[player].keys(), key=lambda s: self.tricks[player][s])
+                    tricks = self.tricks[player][best_suit]
+                    lines.append(f"   • {player} best lead: {self._suit_name(best_suit)} ({tricks} tricks)")
+        else:
+            lines.append(f"   • EW should declare (can make more tricks)")
+            # Best leads for EW
+            for player in ['E', 'W']:
+                if player in self.tricks:
+                    best_suit = max(self.tricks[player].keys(), key=lambda s: self.tricks[player][s])
+                    tricks = self.tricks[player][best_suit]
+                    lines.append(f"   • {player} best lead: {self._suit_name(best_suit)} ({tricks} tricks)")
                 
         return '\n'.join(lines)
+    
+    def _suit_name(self, suit):
+        """Convert suit letter to symbol"""
+        suit_names = {'S': '♠', 'H': '♥', 'D': '♦', 'C': '♣'}
+        return suit_names.get(suit, suit)
 
 
-def recommend_play(dd_data, player, cards_in_hand):
+def recommend_play(dd_data, player, cards_in_hand, current_trick=None, trump_suit=None):
     """
     Convenience function to get play recommendation
     
@@ -134,9 +238,11 @@ def recommend_play(dd_data, player, cards_in_hand):
         dd_data: Double dummy data dictionary
         player: 'N', 'S', 'E', or 'W'
         cards_in_hand: List of cards
+        current_trick: List of cards played so far this trick
+        trump_suit: Trump suit ('S', 'H', 'D', 'C', or 'NT')
         
     Returns:
         Tuple of (recommended_card, reasoning)
     """
     analyzer = DoubleDummyAnalyzer(dd_data)
-    return analyzer.analyze_position(player, cards_in_hand)
+    return analyzer.analyze_position(player, cards_in_hand, current_trick, trump_suit)
