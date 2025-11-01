@@ -1,0 +1,575 @@
+{
+   "LIN_boards_fetched": {
+      "description": "LIN board records fetched",
+      "message": "LIN-Daten geholt"
+   },
+   "about_slogan": {
+      "description": "Taking BBO to the next level",
+      "message": "Hebt BBO auf ein neues Niveau"
+   },
+   "about_viewdoc": {
+      "description": "View Online Documentation",
+      "message": "Online-Dokumentation anzeigen"
+   },
+   "about_viewrev": {
+      "description": "View Change Log",
+      "message": "Änderungsprotokoll anzeigen"
+   },
+   "alert_1NT_15_17": {
+      "description": "Within ACBL-land, 1NT without an explanation is assumed to be 15-17 HCP. In wider circles, you should always indicate your notrump range and style, e.g. “15-17 HCP, stiff Q, K, A permitted.”",
+      "message": "Bei ACBL-Turnieren wird 1SA mit 15-17 HCP angenommen. In anderen Turnieren sollten Sie immer den Punktebereich und den Typ bei 1SA-Eröffnungen angeben, z.B. “15-17 HCP, Single D, K, A möglich.”"
+   },
+   "alert_auto_alert_occurs": {
+      "description": "When an auto alert occurs, the user is notified by a brief popup. Owing to limitations on how well BBO Helper can integrate with the BBO application, the auto alert will not otherwise show up on your screen. Nonetheless, it is communicated to your opponents, shows up in the History pane later, and is otherwise be included in the permanent record of the hand. If an auto alert is incorrect, you may change it by providing an explanation in the usual manner.",
+      "message": "Wenn ein automatisches Alert erfolgt, wird der Benutzer durch ein kurzes Popup darauf aufmerksam gemacht. Aufgrund von Limitierungen, wie BBO-Helper sich in BBO integrieren kann, wird das automatische Alert sonst nicht auf Ihrem Bildschirm erscheinen. Trotzdem wird es an Ihre Gegner kommuniziert, erscheint später im Verlauf und ist ansonsten in der gespeicherten Hand sichtbar. Wenn ein automatisches Alert falsch ist, können Sie es entsprechend auf die übliche Weise erklären."
+   },
+   "alert_auto_alerts": {
+      "description": "Auto Alerts",
+      "message": "Automatische Alerts"
+   },
+   "alert_define_your_alerts": {
+      "description": "Define your automatic alerts. If a text box below is left empty, no auto alert will be made. Use the standard BBO !c, !d, !h, !s notations for the club, diamond, heart, and spade suit symbols respectively. These will be replaced with $CDH_HTML$, and $S_HTML$. For example, “!c+!d 5-5 or better”, will be alerted as, “♣+♦, 5-5 or better”. BBO limits alerts to 39 characters.",
+      "message": "Definieren Sie Ihre automatischen Alerts. Wenn Sie die Box unten leer lassen, wird nicht automatisch alertiert. Verwende die üblichen BBO !C, !D, !H, !S Notationen für Treff-, Karo-, Coeur- und Pik-Farbsymbole. Diese werden durch $CDH_HTML$ und $S_HTML$ ersetzt. Z. B. wird “!C+!D 5-5 oder mehr“ als “♣+♦, 5-5 oder mehr“ alertiert. BBO begrentzt die Alerts auf 39 Zeichen.",
+      "placeholders": {
+         "cdh_html": {
+            "content": "&clubs;, \u003Cspan class=\"ds\">&diams;\u003C/span>, \u003Cspan class=\"hs\">&hearts;\u003C/span>"
+         },
+         "s_html": {
+            "content": "&spades;"
+         }
+      }
+   },
+   "alert_diff_vul": {
+      "description": "If different when vulnerable",
+      "message": "Unterschiedlich, wenn in Gefahr"
+   },
+   "alert_fourth_seat": {
+      "description": "in fourth seat",
+      "message": "in vierter Hand"
+   },
+   "alert_full_disclosure": {
+      "description": "Auto Alerts simplify full disclosure. Please take advantage of this functionality. For example, if you systematically have 4+ diamonds when you open 1$D_HTML$ except when you have 4=4=3=2 shape, indicate this with, “4+ cd, unless 4=4=3=2”.",
+      "message": "Automatische Alerts vereinfachen die vollständige Offenlegung. Bitte nutzen Sie diese Funktionalität. Zum Beispiel, wenn Sie üblicherweise 4+ Karos haben, wenn Sie 1$D_HTML$ eröffnen, außer, wenn Sie eine 4-4-3-2 Verteilung haben, dann zeigen Sie dies mit “4+ Karten, außer bei 4-4-3-2 Verteilung“ an.",
+      "placeholders": {
+         "d_html": {
+            "content": "\u003Cspan class=\"ds\">&diams;\u003C/span>"
+         }
+      }
+   },
+   "alert_precision": {
+      "description": "Precision players should indicate that 1$H_HTML$ and 1$S_HTML$ are limited bids (“10-15 HCP” or as appropriate), in addition to providing information for the 1$C_HTML$, $D_HTML$, 1NT, and 2$C_HTML$ openings. In an ACBL open regional pairs or higher events, it is reasonable to assume opponents have a basic familiarity with Precision. This is not a reasonable assumption in Support Your Club games on BBO. Disclose.",
+      "message": "Precision-Spieler sollten angeben, dass 1$H_HTML$ und 1$S_HTML$ limitierte Reizungen sind (“10-15 HCP” oder ähnlich), zusätzlich zu den Informationen für die 1$C_HTML$, $D_HTML$, 1SA und 2$C_HTML$ Eröffnungen. In ACBL-Turnieren (Open Regional oder höhere Turniere), ist es sinnvoll, anzunehmen, dass die Gegner ein Basisverständnis für Precision haben. Dies gilt nicht für andere Turniere bei BBO. Geben Sie deshalb entsprechende Erläuterungen ab.",
+      "placeholders": {
+         "c_html": {
+            "content": "&clubs;"
+         },
+         "d_html": {
+            "content": "\u003Cspan class=\"ds\">&diams;\u003C/span>"
+         },
+         "h_html": {
+            "content": "\u003Cspan class=\"hs\">&hearts;\u003C/span>"
+         },
+         "s_html": {
+            "content": "&spades;"
+         }
+      }
+   },
+   "alert_remember_save": {
+      "description": "Remember to save any changes before closing this window.",
+      "message": "Denken Sie daran, Änderungen zu speichern, bevor Sie dieses Fenster schließen."
+   },
+   "alert_save": {
+      "description": "Save Auto Alerts",
+      "message": "Speichere automatische Alerts"
+   },
+   "alert_section_nt_defense": {
+      "description": "Direct seat defense to a 1NT opening",
+      "message": "Direkte Zwischenreizung nach einer 1SA-Eröffnung"
+   },
+   "alert_section_nt_responses": {
+      "description": "Responses to an opening 1NT",
+      "message": "Antworten auf 1SA-Eröffnung"
+   },
+   "alert_section_opening": {
+      "description": "Opening Bids",
+      "message": "Eröffnungen"
+   },
+   "alert_section_other": {
+      "description": "Other scenarios",
+      "message": "Andere Szenarien"
+   },
+   "alert_section_responses": {
+      "description": "Non-competitive responses",
+      "message": "Nicht-kompetitive Antworten"
+   },
+   "appDesc": {
+      "description": "Adds functionally to Bridge Base Online (BBO) website",
+      "message": "Erweitert die BBO-Website um hilfreiche Funktionen"
+   },
+   "appName": {
+      "description": "BBO Helper",
+      "message": "BBO Helper"
+   },
+   "board_copy_HTML": {
+      "description": "Board copied to the clipboard",
+      "message": "Hand in die Zwischenablage kopiert"
+   },
+   "board_copy_failed": {
+      "description": "Board HTML copy to clipboard failed.",
+      "message": "Das Kopieren der Hand-HTML in die Zwischenablage ist fehlgeschlagen."
+   },
+   "board_copy_text": {
+      "description": "Board HTML copied to clipboard as text",
+      "message": "Hand-HTML als Text in die Zwischenablage kopiert"
+   },
+   "board_selected": {
+      "description": "Board selected. Press",
+      "message": "Hand ausgewählt. Drücke"
+   },
+   "copy_aid": {
+      "description": "Board Copy-and-Paste Aid",
+      "message": "Hilfe zum Kopieren einer Hand"
+   },
+   "copy_aid_instructions_Chrome": {
+      "description": "Copy to clipboard with 5th button",
+      "message": "In die Zwischenablage kopieren mit dem 5. Knopf"
+   },
+   "copy_aid_instructions_Firefox": {
+      "description": "Select all with 5th button, then",
+      "message": "Wähle alles mit dem 5. Knopf aus, dann"
+   },
+   "download_in_progress": {
+      "description": "A download is already in progress.",
+      "message": "Ein Download ist bereits im Gange."
+   },
+   "download_pbn": {
+      "description": "Download PBN",
+      "message": "Lade PBN herunter"
+   },
+   "explanations": {
+      "description": "Explanations",
+      "message": "Erklärungen"
+   },
+   "fetching_LIN": {
+      "description": "Fetching LIN records for each board",
+      "message": "Hole die LIN-Daten für jede Hand"
+   },
+   "install": {
+      "description": "%1 has been installed.",
+      "message": "%1 wurde installiert."
+   },
+   "install_chrome_refresh_tab": {
+      "description": "If you have a BBO application tab open, %1 will not fully function until you either refresh (press F5 or click the %2 button on the address bar) or close and reopen the BBO application tab. Any of these actions will log you off BBO.",
+      "message": "Wenn Sie eine BBO-Anwendung geöffnet haben, wird %1 nicht vollständig funktionieren, bis Sie entweder die BBO-Anwendung aktualisiert haben (durch Drücken der F5-Taste oder durch Klicken auf den %2-Knopf in der Adressenleiste) oder die BBO-Anwendung geschlossen und erneut geöffnet haben. Jede dieser Aktionen wird Sie von BBO abmelden."
+   },
+   "install_close": {
+      "description": "You may simply close this message and continue to use BBO normally until you are ready to close the BBO application tab.",
+      "message": "Sie können diese Meldung einfach schließen und BBO normal weiterbenutzen, bis Sie bereit sind, die BBO-Anwendung zu beenden."
+   },
+   "install_refresh_tab": {
+      "description": "%1 may not function correctly until you refresh or close and reopen the BBO application tab. Either action will log you off BBO.",
+      "message": "%1 wird nicht korrekt funktionieren, bis Sie die BBO-Anwendung entweder aktualisiert oder sich von BBO ab- und wieder angemeldet haben. Jede dieser Aktionen wird Sie von BBO abmelden."
+   },
+   "install_update": {
+      "description": "%1 has been automatically updated to version %2.",
+      "message": "%1 wurde automatisch auf Version %2 aktualisiert."
+   },
+   "menu_about": {
+      "description": "About BBO Helper",
+      "message": "Über BBO-Helper"
+   },
+   "menu_auto_alerts": {
+      "description": "Define Auto Alerts",
+      "message": "Definiere automatische Alerts"
+   },
+   "menu_board_pbn": {
+      "description": "Save Board as PBN",
+      "message": "Speichere die Hand im PBN-Format"
+   },
+   "menu_copy_board": {
+      "description": "Copy Board as HTML",
+      "message": "Kopiere die Hand im HTML-Format"
+   },
+   "menu_dd_bsol": {
+      "description": "Double Dummy (BSOL)",
+      "message": "Double Dummy (BSOL)"
+   },
+   "menu_export_timing": {
+      "description": "Export Timing Data",
+      "message": "Exportiere die Zeitmessungen"
+   },
+   "menu_import_timing": {
+      "description": "Import Timing Data",
+      "message": "Importiere Zeitmessungen"
+   },
+   "menu_my_hands": {
+      "description": "Open BBO My Hands",
+      "message": "Öffne die BBO-My Hands Seite"
+   },
+   "menu_player_memo": {
+      "description": "ACBL Player Memo",
+      "message": "ACBL Spielernotiz"
+   },
+   "menu_quick": {
+      "description": "Quick Settings",
+      "message": "Schnelleinstellungen"
+   },
+   "menu_real_names": {
+      "description": "Toggle Real Names",
+      "message": "Echte Namen umschalten"
+   },
+   "menu_save_traffic": {
+      "description": "Save BBO Traffic",
+      "message": "Speichere den BBO-Netzwerkverkehr"
+   },
+   "menu_settings": {
+      "description": "Edit All Settings",
+      "message": "Alle Einstellungen bearbeiten"
+   },
+   "no_ACBL_players": {
+      "description": "No known ACBL players for field strength estimation",
+      "message": "Keine bekannten ACBL-Spieler für die Bestimmung der Stärke des Feldes gefunden"
+   },
+   "no_EBU_players": {
+      "description": "No known EBU players for field strength estimation",
+      "message": "Keine bekannten EBU-Spieler für die Bestimmung der Stärke des Feldes gefunden"
+   },
+   "options_appAlertSubstitutions": {
+      "description": "Enable alert substitutions",
+      "message": "Aktiviere Alert-Abkürzugen"
+   },
+   "options_appAutoAlerts": {
+      "description": "Enable Auto Alerts (configure alerts separately)",
+      "message": "Aktiviere automatische Alerts (Alerts werden separat konfiguriert)"
+   },
+   "options_appAutoAlertsFlag": {
+      "description": "Append [B++] to all auto alerts",
+      "message": "Hangen sie [B++] an alle automatische Alerts"
+   },
+   "options_appBoardLocalization": {
+      "description": "Use local language for board display rather than English",
+      "message": "Verwende die lokale Sprache für die Anzeige einer Hand statt Englisch"
+   },
+   "options_appChatAutoSuits": {
+      "description": "Automatically insert ! for cards, bids, and suits in chat window",
+      "message": "Füge automatisch ! für Karten, Reizungen und Farben im Chat-Fenster ein"
+   },
+   "options_appChatNameSubs": {
+      "description": "Enable !w, !n, !e, and !t name substitutions in chat window",
+      "message": "Aktiviere !w, !n, !e, and !t Namensersetzungen im Chat-Fenster"
+   },
+   "options_appClaimAutoSuits": {
+      "description": "Automatically insert ! for cards, bids, and suits in claim window",
+      "message": "Füge automatisch ! für Karten, Reizungen und Farben im Claim-Fenster ein"
+   },
+   "options_appDoubleDummyMode": {
+      "description": "Show double dummy table, par, and par contract(s) in History pane",
+      "message": "Zeige die Double Dummy Tabelle, das Par-Ergebnis sowie Par-Kontrakte im Verlauf an"
+   },
+   "options_appDoubleDummyTricks": {
+      "description": "Double dummy table shows tricks instead of contracts",
+      "message": "Die Double-Dummy-Tabelle zeigt Stiche statt Kontrakte an"
+   },
+   "options_appShowAuctionClock": {
+      "description": "Show time taken for last call in lower right corner of the auction box",
+      "message": "Zeige die für die letzte Reizung benötigte Zeit in der rechten unteren Ecke der Reizbox an"
+   },
+   "options_appShowPeopleTooltip": {
+      "description": "Show real name tooltip in People tab (friends, hosts, stars, ignores)",
+      "message": "Zeige den echten Namen als Tooltip beim Personen-Tab (Freunde, Helfer, Champions, Feinde) an"
+   },
+   "options_appShowPlayClock": {
+      "description": "Show time required to play each card in trick",
+      "message": "Zeige die benötigte Zeit für jede Karte eines Stichs an"
+   },
+   "options_appTrafficLogFeed": {
+      "description": "Include \u003Csc_feed> messages (friend logins, VuGraph announcements, etc)",
+      "message": "Einschließlich \u003Csc_feed> Nachrichten (Login von Freunden, VuGraph-Ankündigungen usw.)"
+   },
+   "options_appTrafficLogHidePassword": {
+      "description": "Replace BBO password with 8 asterisks (best if sharing traffic logs)",
+      "message": "Ersetze das BBO-Passwort mit 8 Sternen (zu empfehlen, wenn Sie Netzwerkverkehr mit jemandem teilen)"
+   },
+   "options_appTrafficLogging": {
+      "description": "Enable web request and websocket traffic logging",
+      "message": "Aktiviere das Mitschreiben von Webanfragen und Websocket-Verkehr"
+   },
+   "options_appTrafficLoggingFull": {
+      "description": "Log everything, including pings, keepalives, and lang.php request",
+      "message": "Schreibe alles mit, einschließlich Pings, Keepalives und lang.php-Anfragen"
+   },
+   "options_appTrafficMaxKilobytes": {
+      "description": "Log limit (KB), zero means unlimited",
+      "message": "Log-Grenze (KB), Null bedeutet unlimitiert"
+   },
+   "options_auctionBBOstyling": {
+      "description": "Style the auction box similar to BBO",
+      "message": "Verwende dasselbe Layout für die Reizbox wie BBO"
+   },
+   "options_auctionHideFinalPasses": {
+      "description": "Don't include the final three passes (more compact display)",
+      "message": "Lasse die letzten drei Passe-Reizungen weg (kompaktere Ansicht)"
+   },
+   "options_auctionSeatLetters": {
+      "description": "Use seat letters (S, W, N, E) instead of seat names",
+      "message": "Verwende Himmelsrichtungen (S, W, N, E) anstelle von Platzbezeichnern"
+   },
+   "options_auctionShortCalls": {
+      "description": "Use short calls (P, X, XX) instead of Pass, Dbl, and Rdbl",
+      "message": "Verwende Abkürzungen (P, X, XX) anstelle von Pass, Dbl und Redbl"
+   },
+   "options_auctionTextNT": {
+      "description": "Use NT instead N for notrump bids",
+      "message": "Verwende NT anstelle N für SA-Reizungen"
+   },
+   "options_boardHideRobotExplanations": {
+      "description": "Hide robot bidding explanations",
+      "message": "Verberge Erklärungen von Roboter-Reizungen"
+   },
+   "options_boardIncludeBorder": {
+      "description": "Include bounding box (one pixel grey border)",
+      "message": "Mit Boxumrandung (ein Pixel dick in Grau)"
+   },
+   "options_boardIncludeNames": {
+      "description": "Include player handles / seat names. Use: ",
+      "message": "Einschließlich Spieler-Alias / Platzbezeichner. Verwende: "
+   },
+   "options_boardLinksTargetBlank": {
+      "description": "Links open in a new page $TARGET$",
+      "message": "Links öffnen sich auf einer neuen Seite $TARGET$",
+      "placeholders": {
+         "target": {
+            "content": "(target=\"_blank\")"
+         }
+      }
+   },
+   "options_boardPartialShowBoardNumber": {
+      "description": "Include board number",
+      "message": "Einschließlich Board-Nummer"
+   },
+   "options_boardPartialShowContract": {
+      "description": "Include contract",
+      "message": "Einschließlich Kontrakt"
+   },
+   "options_boardPlayerNameMode": {
+      "description": "Label seats with: ",
+      "message": "Beschrifte Plätze mit:"
+   },
+   "options_boardPlayerNameMode_compass": {
+      "description": "Compass Direction",
+      "message": "Himmelsrichtung"
+   },
+   "options_boardPlayerNameMode_handle": {
+      "description": "BBO Handle",
+      "message": "BBO Alias"
+   },
+   "options_boardPlayerNameMode_name": {
+      "description": "Name (if known) or BBO",
+      "message": "Name (sofern bekannt) oder BBO"
+   },
+   "options_boardShowAuction": {
+      "description": "Include auction",
+      "message": "Einschließlich Reizung"
+   },
+   "options_boardShowContract": {
+      "description": "Include contract",
+      "message": "Einschließlich Kontrakt"
+   },
+   "options_boardShowDateTime": {
+      "description": "Include date and time of event (if available)",
+      "message": "Einschließlich Datum und Uhrzeit des Turniers (sofern verfügbar)"
+   },
+   "options_boardShowDoubleDummy": {
+      "description": "Include double dummy table, par, and par contract(s)",
+      "message": "Einschließlich Double-Dummy-Tabelle, Par und Par-Kontrakt(e)"
+   },
+   "options_boardShowExplanations": {
+      "description": "Include explanations of any explained bids (if any)",
+      "message": "Einschließlich Erklärungen von erklärten Reizungen (wenn vorhanden)"
+   },
+   "options_boardShowHCP": {
+      "description": "Include high card point (HCP) diagram",
+      "message": "Einschließlich Diagramm mit Figurenpunkten"
+   },
+   "options_boardShowLinks": {
+      "description": "Include BBO Viewer and Bridge Solver links",
+      "message": "Einschließlich BBO Viewer und Bridger Solver Links"
+   },
+   "options_boardShowPlay": {
+      "description": "Include table of card play (if available)",
+      "message": "Einschließlich Tabelle mit Abspiel (wenn verfügbar)"
+   },
+   "options_boardShowTiming": {
+      "description": "Show timing (if available) in auction box and card play table",
+      "message": "Zeige Zeitmessung (wenn verfügbar) in Bietbox und Abspiel-Tabelle an"
+   },
+   "options_cardUse10": {
+      "description": "Use 10 instead of T for displaying tens.",
+      "message": "Verwende 10 anstelle von T zur Anzeige der Zehner"
+   },
+   "options_handVoidmdash": {
+      "description": "Indicate void suits with $MDASH$",
+      "message": "Zeige Chicanes mit $MDASH$ an",
+      "placeholders": {
+         "mdash": {
+            "content": "—"
+         }
+      }
+   },
+   "options_hvDoubleDummyMode": {
+      "description": "Show double dummy table etc in standalone BBO Hand Viewer",
+      "message": "Zeige Double-Dummy-Tabelle usw. im BBO Hand Viewer an"
+   },
+   "options_section_app": {
+      "description": "BBO application options",
+      "message": "Optionen für BBO-Anwendungen"
+   },
+   "options_section_auction": {
+      "description": "Auction display",
+      "message": "Anzeige der Reizung"
+   },
+   "options_section_board_full": {
+      "description": "Full Board Copy display",
+      "message": "Anzeige der ganzen Hand"
+   },
+   "options_section_board_partial": {
+      "description": "Partial Board Copy display",
+      "message": "Anzeige einer Teilhand"
+   },
+   "options_section_cards": {
+      "description": "Card, Bid, and Suit appearance",
+      "message": "Erscheinungsbild für Karte, Reizung und Farbe"
+   },
+   "options_section_timing": {
+      "description": "Time flagging thresholds",
+      "message": "Grenzen für Zeitüberschreitungen"
+   },
+   "options_section_traffic": {
+      "description": "Traffic Logging (advanced)",
+      "message": "Mitschreiben des Netzwerkverkehrs (erweitert)"
+   },
+   "options_sessDoubleDummyAlways": {
+      "description": "Always include double dummy table in session HTML (even if not cached)",
+      "message": "Zeige immer die Double-Dummy-Tabelle im HTML für die aktuelle Sitzung (selbst, wenn nicht zwischengespeichert)"
+   },
+   "options_suitForceBlack": {
+      "description": "Explicitly set color of spades and clubs to black in HTML output. If not\u003Cbr>checked, color will match foreground color of embedding document",
+      "message": "Pik und Treff sollen in der HTML-Ausgabe schwarz dargestellt werden. Wenn\u003Cbr>nicht aktiviert, wird die Vordergrundfarbe der aktuellen Seite verwendet"
+   },
+   "options_suitFourColor": {
+      "description": "Use four colors for the suits (the colors are similar to bidding box colors)",
+      "message": "Verwende vierfarbige Farbsymbole (die Farben ähneln den Farben in Bidding-Boxen)"
+   },
+   "options_timimgLongBIT": {
+      "description": "Long break in tempo threshold (seconds)",
+      "message": "Grenze für langen Bruch im Tempo (Sekunden)"
+   },
+   "options_timingBIT": {
+      "description": "Break in tempo (BIT) threshold (seconds)",
+      "message": "Grenze für Bruch im Tempo (BIT) in Sekunden"
+   },
+   "options_timingInstantAction": {
+      "description": "Insta-action threshold (seconds)",
+      "message": "Grenze für Sofortaktionen (Sekunden)"
+   },
+   "options_travSuitFourColor": {
+      "description": "Use four colors for the suits in the traveller display",
+      "message": "Verwende vierfarbige Farbsymbole in der Traveller-Anzeige"
+   },
+   "player_names": {
+      "description": "Player Names",
+      "message": "Spielernamen"
+   },
+   "preparing_PBN": {
+      "description": "Preparing PBN file",
+      "message": "Bereite PBN-Datei vor"
+   },
+   "qs_appAutoAlerts": {
+      "description": "Enable auto alerts",
+      "message": "Aktiviere automatische Alerts"
+   },
+   "qs_appChatAutoSuits": {
+      "description": "Enable auto chat suit symbols",
+      "message": "Aktiviere automatische Farbsymbole im Chat"
+   },
+   "qs_appDoubleDummyTricks": {
+      "description": "Double dummy shows tricks (not contracts)",
+      "message": "Double Dummy zeigt Stiche an (keine Kontrakte)"
+   },
+   "qs_appShowAuctionClock": {
+      "description": "Show auction clock",
+      "message": "Zeige Uhr während der Reizung an"
+   },
+   "qs_appShowPeopleTooltip": {
+      "description": "Show name tooltip in people tab",
+      "message": "Zeige im Personen-Tab den Namen als Tooltip an"
+   },
+   "qs_appShowPlayClock": {
+      "description": "Show card play timing",
+      "message": "Zeige benötigte Zeiten beim Abspiel an"
+   },
+   "qs_boardShowTiming": {
+      "description": "Show timing on board copy HTML",
+      "message": "Zeige Zeitmessungen auf der HTML Hand kopiere"
+   },
+   "qs_showddBBO": {
+      "description": "Show double dummy table in BBO",
+      "message": "Zeige Double-Dummy-Tabelle in BBO an"
+   },
+   "qs_showddHV": {
+      "description": "Show double dummy table in Hand Viewer",
+      "message": "Zeige Double-Dummy-Tabelle in Hand Viewer an"
+   },
+   "qs_suitFourColor": {
+      "description": "Four color suits on board copy HTML",
+      "message": "Vierfarbige Farbsymbole auf der HTML Hand kopiere"
+   },
+   "qs_title": {
+      "description": "BBO Helper Quick Settings",
+      "message": "BBO-Helper Schnelleinstellungen"
+   },
+   "session_apply_to_user": {
+      "description": "Raw scores and matchpoint percentage or IMP scores apply to user %1 and partner.",
+      "message": "Anschriften und Matchpoint-% oder IMPs gelten für Spieler %1 und Partner."
+   },
+   "session_no_double_dummy": {
+      "description": "No double dummy data was cached for any boards. To see double dummy results, enable the %1 option in the full settings of %2 and download the session again.",
+      "message": "Für keine Hand wurden Double Dummy Daten gespeichert. Um Double Dummy Ergebnisse zu sehen, aktivieren Sie die %1 Option in allen Einstellungen und laden Sie die SItzung erneut herunter."
+   },
+   "session_no_timing": {
+      "description": "No timing information was available for any boards.",
+      "message": "Für keine Hand liegen Zeitmessungen vor."
+   },
+   "session_unable_lin": {
+      "description": "Unable to download LIN string from BBO for %1 boards.",
+      "message": "Kann die LIN-Daten von BBO für %1 Hände nicht herunterladen."
+   },
+   "to_copy_to_clipboard": {
+      "description": "to copy to clipboard",
+      "message": "um in die Zwischenablage zu kopieren"
+   },
+   "traveller_auction_freq": {
+      "description": "Auction frequencies",
+      "message": "Häufigkeiten der Reizungen"
+   },
+   "traveller_auction_sorted": {
+      "description": "Auction sorted",
+      "message": "Sortierte Reizung"
+   },
+   "traveller_contract_freq": {
+      "description": "Contract frequencies",
+      "message": "Häufigkeiten der Kontrakte"
+   },
+   "traveller_pav": {
+      "description": "Principal Auction Variants",
+      "message": "Hauptsächliche Reizvarianten"
+   },
+   "traveller_rawscore_freq": {
+      "description": "Raw score frequencies",
+      "message": "Häufigkeiten der Anschriften"
+   },
+   "update_chrome_refresh_tab": {
+      "description": "If you have a BBO application tab open, the updated %1 will not take effect until you either refresh (F5 or click the %2 button on the address bar) or close and reopen the BBO application tab. Any of these actions will log you off BBO.",
+      "message": "Wenn Sie eine BBO-Anwendung geöffnet haben, wird der aktualisierte %1 nicht funktionieren, bis Sie entweder die BBO-Anwendung aktualisiert haben (durch Drücken der F5-Taste oder durch Klicken auf den %2-Knopf in der Adressenleiste) oder die BBO-Anwendung geschlossen und erneut geöffnet haben. Jede dieser Aktionen wird Sie von BBO abmelden."
+   }
+}

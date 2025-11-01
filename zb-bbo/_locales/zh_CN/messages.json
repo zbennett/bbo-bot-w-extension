@@ -1,0 +1,575 @@
+{
+   "LIN_boards_fetched": {
+      "description": "LIN board records fetched",
+      "message": "牌例LIN记录调出"
+   },
+   "about_slogan": {
+      "description": "Taking BBO to the next level",
+      "message": "让BBO再上一层楼"
+   },
+   "about_viewdoc": {
+      "description": "View Online Documentation",
+      "message": "查看在线文件"
+   },
+   "about_viewrev": {
+      "description": "View Change Log",
+      "message": "查看更改日志"
+   },
+   "alert_1NT_15_17": {
+      "description": "Within ACBL-land, 1NT without an explanation is assumed to be 15-17 HCP. In wider circles, you should always indicate your notrump range and style, e.g. “15-17 HCP, stiff Q, K, A permitted.”",
+      "message": "在ACBL的比赛中，不提示的1NT应当是15-17HCP，但在更广泛的比赛中，你需要提示1NT点力范围和包括Q，K，A单张"
+   },
+   "alert_auto_alert_occurs": {
+      "description": "When an auto alert occurs, the user is notified by a brief popup. Owing to limitations on how well BBO Helper can integrate with the BBO application, the auto alert will not otherwise show up on your screen. Nonetheless, it is communicated to your opponents, shows up in the History pane later, and is otherwise be included in the permanent record of the hand. If an auto alert is incorrect, you may change it by providing an explanation in the usual manner.",
+      "message": "如果有自动提示显示，使用者将会看到一个短暂弹窗。"
+   },
+   "alert_auto_alerts": {
+      "description": "Auto Alerts",
+      "message": "自动提示"
+   },
+   "alert_define_your_alerts": {
+      "description": "Define your automatic alerts. If a text box below is left empty, no auto alert will be made. Use the standard BBO !c, !d, !h, !s notations for the club, diamond, heart, and spade suit symbols respectively. These will be replaced with $CDH_HTML$, and $S_HTML$. For example, “!c+!d 5-5 or better”, will be alerted as, “♣+♦, 5-5 or better”. BBO limits alerts to 39 characters.",
+      "message": "解释你的自动提示。如果解释框空白，自动提示将不会显示。采用BBO标准!c, !d, !h, !s符号。",
+      "placeholders": {
+         "cdh_html": {
+            "content": "&clubs;, \u003Cspan class=\"ds\">&diams;\u003C/span>, \u003Cspan class=\"hs\">&hearts;\u003C/span>"
+         },
+         "s_html": {
+            "content": "&spades;"
+         }
+      }
+   },
+   "alert_diff_vul": {
+      "description": "If different when vulnerable",
+      "message": "如果有局时不同"
+   },
+   "alert_fourth_seat": {
+      "description": "in fourth seat",
+      "message": "第四家"
+   },
+   "alert_full_disclosure": {
+      "description": "Auto Alerts simplify full disclosure. Please take advantage of this functionality. For example, if you systematically have 4+ diamonds when you open 1$D_HTML$ except when you have 4=4=3=2 shape, indicate this with, “4+ cd, unless 4=4=3=2”.",
+      "message": "自动提示时简化解释",
+      "placeholders": {
+         "d_html": {
+            "content": "\u003Cspan class=\"ds\">&diams;\u003C/span>"
+         }
+      }
+   },
+   "alert_precision": {
+      "description": "Precision players should indicate that 1$H_HTML$ and 1$S_HTML$ are limited bids (“10-15 HCP” or as appropriate), in addition to providing information for the 1$C_HTML$, $D_HTML$, 1NT, and 2$C_HTML$ openings. In an ACBL open regional pairs or higher events, it is reasonable to assume opponents have a basic familiarity with Precision. This is not a reasonable assumption in Support Your Club games on BBO. Disclose.",
+      "message": "在ACBL区域性或更高级的比赛中，牌手们或许对精确体系比较熟悉，但在BBO上，除了1$C_HTML$, $D_HTML$, 1NT, and 2$C_HTML$要说明以外，精确体系还应该提示1$H_HTML$ and 1$S_HTML$为限制性叫牌（“10-15HCP”或相当）",
+      "placeholders": {
+         "c_html": {
+            "content": "&clubs;"
+         },
+         "d_html": {
+            "content": "\u003Cspan class=\"ds\">&diams;\u003C/span>"
+         },
+         "h_html": {
+            "content": "\u003Cspan class=\"hs\">&hearts;\u003C/span>"
+         },
+         "s_html": {
+            "content": "&spades;"
+         }
+      }
+   },
+   "alert_remember_save": {
+      "description": "Remember to save any changes before closing this window.",
+      "message": "关闭窗口前存档所有改编"
+   },
+   "alert_save": {
+      "description": "Save Auto Alerts",
+      "message": "存档自动提示"
+   },
+   "alert_section_nt_defense": {
+      "description": "Direct seat defense to a 1NT opening",
+      "message": "1NT叫牌后紧邻座位防守叫牌"
+   },
+   "alert_section_nt_responses": {
+      "description": "Responses to an opening 1NT",
+      "message": "1NT叫牌应叫"
+   },
+   "alert_section_opening": {
+      "description": "Opening Bids",
+      "message": "开叫"
+   },
+   "alert_section_other": {
+      "description": "Other scenarios",
+      "message": "其它情况"
+   },
+   "alert_section_responses": {
+      "description": "Non-competitive responses",
+      "message": "非竞叫性应叫"
+   },
+   "appDesc": {
+      "description": "Adds functionally to Bridge Base Online (BBO) website",
+      "message": "增加BBO网站功能"
+   },
+   "appName": {
+      "description": "BBO Helper",
+      "message": "BBO Helper"
+   },
+   "board_copy_HTML": {
+      "description": "Board copied to the clipboard",
+      "message": "牌例复制"
+   },
+   "board_copy_failed": {
+      "description": "Board HTML copy to clipboard failed.",
+      "message": "HTML牌例复制失败"
+   },
+   "board_copy_text": {
+      "description": "Board HTML copied to clipboard as text",
+      "message": "HTML复制为简单文件"
+   },
+   "board_selected": {
+      "description": "Board selected. Press",
+      "message": "牌例选择后，按"
+   },
+   "copy_aid": {
+      "description": "Board Copy-and-Paste Aid",
+      "message": "牌例复制帮助"
+   },
+   "copy_aid_instructions_Chrome": {
+      "description": "Copy to clipboard with 5th button",
+      "message": "用第5键剪贴"
+   },
+   "copy_aid_instructions_Firefox": {
+      "description": "Select all with 5th button, then",
+      "message": "用第5键进行全选"
+   },
+   "download_in_progress": {
+      "description": "A download is already in progress.",
+      "message": "正在下载"
+   },
+   "download_pbn": {
+      "description": "Download PBN",
+      "message": "下载PBN"
+   },
+   "explanations": {
+      "description": "Explanations",
+      "message": "解释"
+   },
+   "fetching_LIN": {
+      "description": "Fetching LIN records for each board",
+      "message": "调出每一付牌的LIN记录"
+   },
+   "install": {
+      "description": "%1 has been installed.",
+      "message": "%1 安装完毕"
+   },
+   "install_chrome_refresh_tab": {
+      "description": "If you have a BBO application tab open, %1 will not fully function until you either refresh (press F5 or click the %2 button on the address bar) or close and reopen the BBO application tab. Any of these actions will log you off BBO.",
+      "message": "如果您打开了 BBO 应用程序选项卡，则 %1 将无法完全运行，直到您刷新（F5 或单击地址栏上的 %2 按钮）或关闭并重新打开 BBO 应用程序选项卡。 任何这些操作都会让您退出 BBO"
+   },
+   "install_close": {
+      "description": "You may simply close this message and continue to use BBO normally until you are ready to close the BBO application tab.",
+      "message": "您可以简单地关闭此消息并继续正常使用 BBO，直到您准备好关闭 BBO 应用程序选项卡"
+   },
+   "install_refresh_tab": {
+      "description": "%1 may not function correctly until you refresh or close and reopen the BBO application tab. Either action will log you off BBO.",
+      "message": "%1 有可能无法正常工作。请刷新或重起BBO，这会需要重新登录"
+   },
+   "install_update": {
+      "description": "%1 has been automatically updated to version %2.",
+      "message": "%1 已自动升级到 %2"
+   },
+   "menu_about": {
+      "description": "About BBO Helper",
+      "message": "关于BBO增值App"
+   },
+   "menu_auto_alerts": {
+      "description": "Define Auto Alerts",
+      "message": "自动提示"
+   },
+   "menu_board_pbn": {
+      "description": "Save Board as PBN",
+      "message": "存档牌例为PBN"
+   },
+   "menu_copy_board": {
+      "description": "Copy Board as HTML",
+      "message": "复制牌例为HTML"
+   },
+   "menu_dd_bsol": {
+      "description": "Double Dummy (BSOL)",
+      "message": "双明手"
+   },
+   "menu_export_timing": {
+      "description": "Export Timing Data",
+      "message": "输出BBO时序数据"
+   },
+   "menu_import_timing": {
+      "description": "Import Timing Data",
+      "message": "输入时序数据"
+   },
+   "menu_my_hands": {
+      "description": "Open BBO My Hands",
+      "message": "打开BBO我的牌例"
+   },
+   "menu_player_memo": {
+      "description": "ACBL Player Memo",
+      "message": "ACBL 玩家备忘录"
+   },
+   "menu_quick": {
+      "description": "Quick Settings",
+      "message": "快速设置"
+   },
+   "menu_real_names": {
+      "description": "Toggle Real Names",
+      "message": "转换实名"
+   },
+   "menu_save_traffic": {
+      "description": "Save BBO Traffic",
+      "message": "存储BBO信息记录"
+   },
+   "menu_settings": {
+      "description": "Edit All Settings",
+      "message": "修改所有设置"
+   },
+   "no_ACBL_players": {
+      "description": "No known ACBL players for field strength estimation",
+      "message": "在牌手水平估算中没有ACBL牌手"
+   },
+   "no_EBU_players": {
+      "description": "No known EBU players for field strength estimation",
+      "message": "在牌手水平估算中没有EBU牌手"
+   },
+   "options_appAlertSubstitutions": {
+      "description": "Enable alert substitutions",
+      "message": "启动提示替代"
+   },
+   "options_appAutoAlerts": {
+      "description": "Enable Auto Alerts (configure alerts separately)",
+      "message": "启动自动提示（另外编辑提示）"
+   },
+   "options_appAutoAlertsFlag": {
+      "description": "Append [B++] to all auto alerts",
+      "message": "将 [B++] 添加到所动自动提示"
+   },
+   "options_appBoardLocalization": {
+      "description": "Use local language for board display rather than English",
+      "message": "采用当地语言替代英语显示牌"
+   },
+   "options_appChatAutoSuits": {
+      "description": "Automatically insert ! for cards, bids, and suits in chat window",
+      "message": "在对话框中自动插入牌张，叫牌和花色"
+   },
+   "options_appChatNameSubs": {
+      "description": "Enable !w, !n, !e, and !t name substitutions in chat window",
+      "message": "在对话框中启动!w, !n, !e, and !t名字替代"
+   },
+   "options_appClaimAutoSuits": {
+      "description": "Automatically insert ! for cards, bids, and suits in claim window",
+      "message": "在宣称框中自动显示牌张，叫牌和花色"
+   },
+   "options_appDoubleDummyMode": {
+      "description": "Show double dummy table, par, and par contract(s) in History pane",
+      "message": "在历史一栏中显示双明手栏和最佳定约"
+   },
+   "options_appDoubleDummyTricks": {
+      "description": "Double dummy table shows tricks instead of contracts",
+      "message": "双明手栏显示墩数"
+   },
+   "options_appShowAuctionClock": {
+      "description": "Show time taken for last call in lower right corner of the auction box",
+      "message": "在左下角显示最后一次叫牌时间长度"
+   },
+   "options_appShowPeopleTooltip": {
+      "description": "Show real name tooltip in People tab (friends, hosts, stars, ignores)",
+      "message": "在人员栏显示实名"
+   },
+   "options_appShowPlayClock": {
+      "description": "Show time required to play each card in trick",
+      "message": "显示打每张牌需要的时间"
+   },
+   "options_appTrafficLogFeed": {
+      "description": "Include \u003Csc_feed> messages (friend logins, VuGraph announcements, etc)",
+      "message": "包括\u003Csc_feed>信息（好友登录，转播公告等等）"
+   },
+   "options_appTrafficLogHidePassword": {
+      "description": "Replace BBO password with 8 asterisks (best if sharing traffic logs)",
+      "message": "用8个星号替代BBO密码"
+   },
+   "options_appTrafficLogging": {
+      "description": "Enable web request and websocket traffic logging",
+      "message": "启动上线要求和网络流量记录"
+   },
+   "options_appTrafficLoggingFull": {
+      "description": "Log everything, including pings, keepalives, and lang.php request",
+      "message": "记录所有信息包括网址查询，保持连接和语言要求"
+   },
+   "options_appTrafficMaxKilobytes": {
+      "description": "Log limit (KB), zero means unlimited",
+      "message": "登录次数限制，0表示没有限制"
+   },
+   "options_auctionBBOstyling": {
+      "description": "Style the auction box similar to BBO",
+      "message": "叫牌框设计和BBO一致"
+   },
+   "options_auctionHideFinalPasses": {
+      "description": "Don't include the final three passes (more compact display)",
+      "message": "不要包括最后的3个PASS"
+   },
+   "options_auctionSeatLetters": {
+      "description": "Use seat letters (S, W, N, E) instead of seat names",
+      "message": "用(S, W, N, E) 表示座位"
+   },
+   "options_auctionShortCalls": {
+      "description": "Use short calls (P, X, XX) instead of Pass, Dbl, and Rdbl",
+      "message": "用缩写(P, X, XX) 代替Pass，DBL，和RDBL"
+   },
+   "options_auctionTextNT": {
+      "description": "Use NT instead N for notrump bids",
+      "message": "用NT表示无将定约"
+   },
+   "options_boardHideRobotExplanations": {
+      "description": "Hide robot bidding explanations",
+      "message": "屏蔽机器人叫牌解释"
+   },
+   "options_boardIncludeBorder": {
+      "description": "Include bounding box (one pixel grey border)",
+      "message": "包括边线框"
+   },
+   "options_boardIncludeNames": {
+      "description": "Include player handles / seat names. Use: ",
+      "message": "包括各座位牌手名字"
+   },
+   "options_boardLinksTargetBlank": {
+      "description": "Links open in a new page $TARGET$",
+      "message": "在新界面开启链接$TARGET$",
+      "placeholders": {
+         "target": {
+            "content": "(target=\"_blank\")"
+         }
+      }
+   },
+   "options_boardPartialShowBoardNumber": {
+      "description": "Include board number",
+      "message": "包括牌号"
+   },
+   "options_boardPartialShowContract": {
+      "description": "Include contract",
+      "message": "包括定约"
+   },
+   "options_boardPlayerNameMode": {
+      "description": "Label seats with: ",
+      "message": "标识座位用"
+   },
+   "options_boardPlayerNameMode_compass": {
+      "description": "Compass Direction",
+      "message": "指南针方向"
+   },
+   "options_boardPlayerNameMode_handle": {
+      "description": "BBO Handle",
+      "message": "BBO引用"
+   },
+   "options_boardPlayerNameMode_name": {
+      "description": "Name (if known) or BBO",
+      "message": "名称（如果知道）或BBO"
+   },
+   "options_boardShowAuction": {
+      "description": "Include auction",
+      "message": "包括叫牌"
+   },
+   "options_boardShowContract": {
+      "description": "Include contract",
+      "message": "包括定约"
+   },
+   "options_boardShowDateTime": {
+      "description": "Include date and time of event (if available)",
+      "message": "如果可能包括活动时间"
+   },
+   "options_boardShowDoubleDummy": {
+      "description": "Include double dummy table, par, and par contract(s)",
+      "message": "包括双明手框和双方最佳定约"
+   },
+   "options_boardShowExplanations": {
+      "description": "Include explanations of any explained bids (if any)",
+      "message": "包括叫牌解释（如果有）"
+   },
+   "options_boardShowHCP": {
+      "description": "Include high card point (HCP) diagram",
+      "message": "包括大牌点图面"
+   },
+   "options_boardShowLinks": {
+      "description": "Include BBO Viewer and Bridge Solver links",
+      "message": "包括BBO牌例和答案链接"
+   },
+   "options_boardShowPlay": {
+      "description": "Include table of card play (if available)",
+      "message": "包括牌桌（如果有可能）"
+   },
+   "options_boardShowTiming": {
+      "description": "Show timing (if available) in auction box and card play table",
+      "message": "如果可能，在叫牌框和牌桌上显示时间"
+   },
+   "options_cardUse10": {
+      "description": "Use 10 instead of T for displaying tens.",
+      "message": "用10代替T显示"
+   },
+   "options_handVoidmdash": {
+      "description": "Indicate void suits with $MDASH$",
+      "message": "用$MDASH$标明空们花色",
+      "placeholders": {
+         "mdash": {
+            "content": "—"
+         }
+      }
+   },
+   "options_hvDoubleDummyMode": {
+      "description": "Show double dummy table etc in standalone BBO Hand Viewer",
+      "message": "在单独的牌例回看窗口中显示双明手"
+   },
+   "options_section_app": {
+      "description": "BBO application options",
+      "message": "BBO文件使用选择"
+   },
+   "options_section_auction": {
+      "description": "Auction display",
+      "message": "叫牌显示"
+   },
+   "options_section_board_full": {
+      "description": "Full Board Copy display",
+      "message": "全手牌复制显示"
+   },
+   "options_section_board_partial": {
+      "description": "Partial Board Copy display",
+      "message": "部分牌复制显示"
+   },
+   "options_section_cards": {
+      "description": "Card, Bid, and Suit appearance",
+      "message": "牌，叫牌和套显示"
+   },
+   "options_section_timing": {
+      "description": "Time flagging thresholds",
+      "message": "设定标识时间"
+   },
+   "options_section_traffic": {
+      "description": "Traffic Logging (advanced)",
+      "message": "流量记录"
+   },
+   "options_sessDoubleDummyAlways": {
+      "description": "Always include double dummy table in session HTML (even if not cached)",
+      "message": "在本节HTML保留双明手栏"
+   },
+   "options_suitForceBlack": {
+      "description": "Explicitly set color of spades and clubs to black in HTML output. If not\u003Cbr>checked, color will match foreground color of embedding document",
+      "message": "在HTML输出时明确设置黑桃和梅花为黑色，如果没有选择黑色，其颜色将和前置文件相同"
+   },
+   "options_suitFourColor": {
+      "description": "Use four colors for the suits (the colors are similar to bidding box colors)",
+      "message": "用四种颜色表示各套（和叫牌框显示一样）"
+   },
+   "options_timimgLongBIT": {
+      "description": "Long break in tempo threshold (seconds)",
+      "message": "长时间迟疑设置（秒）"
+   },
+   "options_timingBIT": {
+      "description": "Break in tempo (BIT) threshold (seconds)",
+      "message": "迟疑设置（秒）"
+   },
+   "options_timingInstantAction": {
+      "description": "Insta-action threshold (seconds)",
+      "message": "即时标识（秒）"
+   },
+   "options_travSuitFourColor": {
+      "description": "Use four colors for the suits in the traveller display",
+      "message": "花色采用四种颜色进行对比显示"
+   },
+   "player_names": {
+      "description": "Player Names",
+      "message": "牌手名字"
+   },
+   "preparing_PBN": {
+      "description": "Preparing PBN file",
+      "message": "准备PBN文件"
+   },
+   "qs_appAutoAlerts": {
+      "description": "Enable auto alerts",
+      "message": "启动自动提示"
+   },
+   "qs_appChatAutoSuits": {
+      "description": "Enable auto chat suit symbols",
+      "message": "启动自动对话花色符号"
+   },
+   "qs_appDoubleDummyTricks": {
+      "description": "Double dummy shows tricks (not contracts)",
+      "message": "双明手显示墩数"
+   },
+   "qs_appShowAuctionClock": {
+      "description": "Show auction clock",
+      "message": "显示叫牌时间"
+   },
+   "qs_appShowPeopleTooltip": {
+      "description": "Show name tooltip in people tab",
+      "message": "在人员栏显示名字"
+   },
+   "qs_appShowPlayClock": {
+      "description": "Show card play timing",
+      "message": "显示打牌时间"
+   },
+   "qs_boardShowTiming": {
+      "description": "Show timing on board copy HTML",
+      "message": "显示牌例时间"
+   },
+   "qs_showddBBO": {
+      "description": "Show double dummy table in BBO",
+      "message": "在BBO显示双明手一栏"
+   },
+   "qs_showddHV": {
+      "description": "Show double dummy table in Hand Viewer",
+      "message": "在牌例回看中显示双明手栏"
+   },
+   "qs_suitFourColor": {
+      "description": "Four color suits on board copy HTML",
+      "message": "复制本牌四们花色为HTML"
+   },
+   "qs_title": {
+      "description": "BBO Helper Quick Settings",
+      "message": "BBO增值App快速设置"
+   },
+   "session_apply_to_user": {
+      "description": "Raw scores and matchpoint percentage or IMP scores apply to user %1 and partner.",
+      "message": "原始比分和比赛得分比或IMP得分适用于%1和搭档"
+   },
+   "session_no_double_dummy": {
+      "description": "No double dummy data was cached for any boards. To see double dummy results, enable the %1 option in the full settings of %2 and download the session again.",
+      "message": "任何牌都没有四明手数据，需要查看四明手数据时，请在BBO帮助设置中打开%1选项，然后下载"
+   },
+   "session_no_timing": {
+      "description": "No timing information was available for any boards.",
+      "message": "对任何一副牌都没有时间信息"
+   },
+   "session_unable_lin": {
+      "description": "Unable to download LIN string from BBO for %1 boards.",
+      "message": "无法从BBO下载%1牌"
+   },
+   "to_copy_to_clipboard": {
+      "description": "to copy to clipboard",
+      "message": "复制"
+   },
+   "traveller_auction_freq": {
+      "description": "Auction frequencies",
+      "message": "叫牌频率"
+   },
+   "traveller_auction_sorted": {
+      "description": "Auction sorted",
+      "message": "叫牌排序"
+   },
+   "traveller_contract_freq": {
+      "description": "Contract frequencies",
+      "message": "定约频率"
+   },
+   "traveller_pav": {
+      "description": "Principal Auction Variants",
+      "message": "主要叫牌变化"
+   },
+   "traveller_rawscore_freq": {
+      "description": "Raw score frequencies",
+      "message": "得分频率"
+   },
+   "update_chrome_refresh_tab": {
+      "description": "If you have a BBO application tab open, the updated %1 will not take effect until you either refresh (F5 or click the %2 button on the address bar) or close and reopen the BBO application tab. Any of these actions will log you off BBO.",
+      "message": "如果您打开了 BBO 应用程序选项卡，则 %1 将无法完全运行，直到您刷新（F5 或单击地址栏上的 %2 按钮）或关闭并重新打开 BBO 应用程序选项卡。 这些操作中的任何一个都会让您退出 BBO"
+   }
+}

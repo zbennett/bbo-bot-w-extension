@@ -1,0 +1,9 @@
+/* See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/col */
+.bbo_tr_o td:nth-child(6) { text-align: left; }
+.sectiontable td:nth-child(6) { text-align: left; }
+.star, .letter-badge { margin-left: 0.2em; color: #fcce08; -webkit-text-stroke: 1px #222; }
+.letter-badge { font-family: Arial Black; font-weight: bold; }
+.ngs { text-decoration: none; }
+.ngs span { background-color: #2aff55; font-weight: bold; margin-left: 0.3em; 
+ 	padding: 0.1em 0.2em 0em 0.2em; }
+.nd { text-decoration: none; }

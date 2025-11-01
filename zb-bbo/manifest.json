@@ -1,0 +1,70 @@
+{
+   "action": {
+      "default_icon": {
+         "16": "icons/B++16.png",
+         "24": "icons/B++24.png",
+         "32": "icons/B++32.png"
+      },
+      "default_popup": "popupmenu.html",
+      "default_title": "ZB BBO Helper"
+   },
+   "background": {
+      "service_worker": "service.js",
+      "type": "module"
+   },
+   "content_scripts": [ {
+      "css": [ "global.css", "hands.css" ],
+      "js": [ "FileSaver.js", "utf8unmangle.js", "common.js", "hands.js" ],
+      "matches": [ "*://www.bridgebase.com/myhands/hands.php?username=*", "*://www.bridgebase.com/myhands/hands.php?tourney=*", "*://webutil.bridgebase.com/v2/daylong_hands.php*" ]
+   }, {
+      "css": [ "global.css", "traveller.css" ],
+      "js": [ "FileSaver.js", "common.js", "traveller.js" ],
+      "matches": [ "*://www.bridgebase.com/myhands/hands.php?traveller=*" ]
+   }, {
+      "css": [ "global.css" ],
+      "js": [ "FileSaver.js", "utf8unmangle.js", "common.js", "handviewer.js" ],
+      "matches": [ "*://www.bridgebase.com/tools/handviewer.html*" ]
+   }, {
+      "js": [ "bbov3early.js" ],
+      "matches": [ "*://www.bridgebase.com/v3/*" ],
+      "run_at": "document_start"
+   }, {
+      "css": [ "global.css" ],
+      "js": [ "FileSaver.js", "common.js", "bbov3.js" ],
+      "matches": [ "*://www.bridgebase.com/v3/*" ],
+      "run_at": "document_end"
+   }, {
+      "css": [ "tview.css" ],
+      "js": [ "tview.js" ],
+      "matches": [ "*://webutil.bridgebase.com/v2/tview.php*" ]
+   }, {
+      "js": [ "ngssearch.js" ],
+      "matches": [ "https://www.ebu.co.uk/ngs/search*" ]
+   } ],
+   "default_locale": "en",
+   "description": "__MSG_appDesc__",
+   "homepage_url": "https://lajollabridge.com/Software/BBO-Helper/",
+   "host_permissions": [ "https://webutil.bridgebase.com/*", "https://dds.bridgewebs.com/bsol2/*", "https://dds.bridgewebs.com/cgi-bin/bsol2/*" ],
+   "icons": {
+      "16": "icons/B++16.png",
+      "24": "icons/B++24.png",
+      "32": "icons/B++32.png",
+      "48": "icons/B++48.png",
+      "96": "icons/B++96.png"
+   },
+   "incognito": "spanning",
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArSulaNsWMfg9qGws9eIbhKAD0CAn/mFYyzxNatvNizkixbTnR6xQ9CNtAyNAuREkR49H+bxJ1kq9jOppmGBaCeWiGu8Sck52Xi3v0foc/GpfKZAcT1mFV47xeahhNlHjLKrLngDMx8cvvcWuTZbtnP8zo17VAdvynkuKmxLiMmTVW0ajcNC1f7j92ZcHMalIK4x9hOZQKnT0oyvsy4142RCzMYnpg1prJQZGLgi3FGzLrpOuiaE48zUgu1Gi7s71wae9mC81ZkDf8adp9cMy+i8YdVuQZGppNqmLm+CjADP847fhkvetx06PqWF2XAINMADQ3YcH+IyNL8dpOEl6iQIDAQAB",
+   "manifest_version": 3,
+   "name": "__MSG_appName__",
+   "options_ui": {
+      "browser_style": true,
+      "page": "options.html"
+   },
+   "permissions": [ "activeTab", "clipboardWrite", "storage", "unlimitedStorage" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.4.13",
+   "web_accessible_resources": [ {
+      "matches": [ "*://www.bridgebase.com/*", "*://webutil.bridgebase.com/*" ],
+      "resources": [ "utf8unmangle.js", "injectedsniffers.js", "injectedbbo.js", "tviewinjected.js", "buttons/*.png", "images/*.png", "icons/*.png", "sesshands/*" ]
+   } ]
+}

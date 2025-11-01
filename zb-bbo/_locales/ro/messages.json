@@ -1,0 +1,571 @@
+{
+   "LIN_boards_fetched": {
+      "description": "LIN board records fetched",
+      "message": "Preluare înregisrări mâini LIN"
+   },
+   "about_slogan": {
+      "description": "Taking BBO to the next level",
+      "message": "BBO la un alt nivel"
+   },
+   "about_viewdoc": {
+      "description": "View Online Documentation",
+      "message": "Vizualizare documentație online"
+   },
+   "about_viewrev": {
+      "description": "View Change Log",
+      "message": "Vizualizare jurnal de modificări"
+   },
+   "alert_1NT_15_17": {
+      "description": "Within ACBL-land, 1NT without an explanation is assumed to be 15-17 HCP. In wider circles, you should always indicate your notrump range and style, e.g. “15-17 HCP, stiff Q, K, A permitted.”",
+      "message": "În realmul ACBL, este de așteptat ca deschiderea 1FA să indice 15-17p. În alte situații, ar trebui să descrieți intervalul și stilul, de ex. “15-17 HCP, Q, K, A singleton permise.”"
+   },
+   "alert_auto_alert_occurs": {
+      "description": "When an auto alert occurs, the user is notified by a brief popup. Owing to limitations on how well BBO Helper can integrate with the BBO application, the auto alert will not otherwise show up on your screen. Nonetheless, it is communicated to your opponents, shows up in the History pane later, and is otherwise be included in the permanent record of the hand. If an auto alert is incorrect, you may change it by providing an explanation in the usual manner.",
+      "message": "Când va fi folosită o alertare automată, jucătorul este informat printr-o bulă de scurtă durată. Datorită limitărilor în integrarea BBO Helper cu BBO, alerta automată nu va fi altfel afișată pe ecranul dvs. În orice caz, va fi comunicată adversarilor, va fi afișată în panoul de istorie și va fi inclusă în înregistrarea permanentă a mâinii. Dacă alerta automată este incorectă, o puteți schimba folosind mecanismul tradițional BBO de alertare"
+   },
+   "alert_auto_alerts": {
+      "description": "Auto Alerts",
+      "message": "Alerte automate"
+   },
+   "alert_define_your_alerts": {
+      "description": "Define your automatic alerts. If a text box below is left empty, no auto alert will be made. Use the standard BBO !c, !d, !h, !s notations for the club, diamond, heart, and spade suit symbols respectively. These will be replaced with $CDH_HTML$, and $S_HTML$. For example, “!c+!d 5-5 or better”, will be alerted as, “♣+♦, 5-5 or better”. BBO limits alerts to 39 characters.",
+      "message": "Definiți alertele automate. Dacă lăsați necomplectată o căsută de text de mai jos, nu va fi înregistrată nici o alertă. Folosiți notațiile standard BBO !c, !d, !h, !s pentru trefă, caro, cupă și pică. Acestea vor fi înlocuite cu $CDH_HTML$ și $S_HTML$. De exemplu, “!c+!d 5-5 sau mai bun”, va fi alertat ca “♣+♦, 5-5 sau mai bun”. BBO limitează alertele la 39 de caractere.",
+      "placeholders": {
+         "cdh_html": {
+            "content": "&clubs;, \u003Cspan class=\"ds\">&diams;\u003C/span>, \u003Cspan class=\"hs\">&hearts;\u003C/span>"
+         },
+         "s_html": {
+            "content": "&spades;"
+         }
+      }
+   },
+   "alert_diff_vul": {
+      "description": "If different when vulnerable",
+      "message": "Dacă e diferit când e vulnerabil"
+   },
+   "alert_fourth_seat": {
+      "description": "in fourth seat",
+      "message": "în poziția a patra"
+   },
+   "alert_full_disclosure": {
+      "description": "Auto Alerts simplify full disclosure. Please take advantage of this functionality. For example, if you systematically have 4+ diamonds when you open 1$D_HTML$ except when you have 4=4=3=2 shape, indicate this with, “4+ cd, unless 4=4=3=2”.",
+      "message": "Alertele automate simplifică explicatiile complete. Vă rugăm folosiți-vă de această funcționalitate. De expemplu, dacă întotdeauna aveți 4+ carouri când deschideți 1$D_HTML$ în afara cazului când aveți distribuția 4=4=3=2, puteți indica asta prin: “4+ cărți, exceptând 4=4=3=2”.",
+      "placeholders": {
+         "d_html": {
+            "content": "\u003Cspan class=\"ds\">&diams;\u003C/span>"
+         }
+      }
+   },
+   "alert_precision": {
+      "description": "Precision players should indicate that 1$H_HTML$ and 1$S_HTML$ are limited bids (“10-15 HCP” or as appropriate), in addition to providing information for the 1$C_HTML$, $D_HTML$, 1NT, and 2$C_HTML$ openings. In an ACBL open regional pairs or higher events, it is reasonable to assume opponents have a basic familiarity with Precision. This is not a reasonable assumption in Support Your Club games on BBO. Disclose.",
+      "message": "Jucătorii de Precizie vor trebui să arate că 1$H_HTML$ și 1$S_HTML$ sunt licitații limitate (“10-15 HCP” sau ca atare), în plus față de informațiile necesare pentru licitațiile 1$C_HTML$, $D_HTML$, 1NT, and 2$C_HTML$. În turneele regionale sau naționale ACBL, este de așteptat ca adversarii șă fie cât de cât familari cu sistemul Precizie. Aceasta nu este valabil pentru jocurile Support Your Game din BBO",
+      "placeholders": {
+         "c_html": {
+            "content": "&clubs;"
+         },
+         "d_html": {
+            "content": "\u003Cspan class=\"ds\">&diams;\u003C/span>"
+         },
+         "h_html": {
+            "content": "\u003Cspan class=\"hs\">&hearts;\u003C/span>"
+         },
+         "s_html": {
+            "content": "&spades;"
+         }
+      }
+   },
+   "alert_remember_save": {
+      "description": "Remember to save any changes before closing this window.",
+      "message": "Nu uitați să înregistrați schimbările făcute, înainte de a inchide acestă fereastră"
+   },
+   "alert_save": {
+      "description": "Save Auto Alerts",
+      "message": "Scriere alerte automate"
+   },
+   "alert_section_nt_defense": {
+      "description": "Direct seat defense to a 1NT opening",
+      "message": "Apărare în poziția directă la deschiderea de 1FA"
+   },
+   "alert_section_nt_responses": {
+      "description": "Responses to an opening 1NT",
+      "message": "Răspunsuri la deschiderea de 1FA"
+   },
+   "alert_section_opening": {
+      "description": "Opening Bids",
+      "message": "Licitații de deschidere"
+   },
+   "alert_section_other": {
+      "description": "Other scenarios",
+      "message": "Alte scenarii"
+   },
+   "alert_section_responses": {
+      "description": "Non-competitive responses",
+      "message": "Răspunsuri ne-competitive"
+   },
+   "appDesc": {
+      "description": "Adds functionally to Bridge Base Online (BBO) website",
+      "message": "Extinde funcționalitatea site-ului Bridge Base Online (BBO)"
+   },
+   "appName": {
+      "description": "BBO Helper",
+      "message": "BBO Helper"
+   },
+   "board_copy_HTML": {
+      "description": "Board copied to the clipboard",
+      "message": "Dona copiată în memorie"
+   },
+   "board_copy_failed": {
+      "description": "Board HTML copy to clipboard failed.",
+      "message": "Copiere nereușită a donei HTML în memorie"
+   },
+   "board_copy_text": {
+      "description": "Board HTML copied to clipboard as text",
+      "message": "Dona HTML copiată în memorie ca text"
+   },
+   "board_selected": {
+      "description": "Board selected. Press",
+      "message": "donă selectată. Apăsați"
+   },
+   "copy_aid": {
+      "description": "Board Copy-and-Paste Aid",
+      "message": "Ajutor Copy-Paste donă"
+   },
+   "copy_aid_instructions_Chrome": {
+      "description": "Copy to clipboard with 5th button",
+      "message": "Copiere în memorie cu al 5-lea buton"
+   },
+   "copy_aid_instructions_Firefox": {
+      "description": "Select all with 5th button, then",
+      "message": "Selectare tot cu al 5-lea buton, apoi"
+   },
+   "download_in_progress": {
+      "description": "A download is already in progress.",
+      "message": "Descărcare deja în curs"
+   },
+   "download_pbn": {
+      "description": "Download PBN",
+      "message": "Descărcare PBN"
+   },
+   "explanations": {
+      "description": "Explanations",
+      "message": "Explicații"
+   },
+   "fetching_LIN": {
+      "description": "Fetching LIN records for each board",
+      "message": "Preluare înregisrări LIN pentru fiecare donă"
+   },
+   "install": {
+      "description": "%1 has been installed.",
+      "message": "%1 a fost instalat."
+   },
+   "install_chrome_refresh_tab": {
+      "description": "If you have a BBO application tab open, %1 will not fully function until you either refresh (press F5 or click the %2 button on the address bar) or close and reopen the BBO application tab. Any of these actions will log you off BBO.",
+      "message": "Dacă aveți tab-ul BBO deschis, %1 nu va fi complet operațional până când nu actualizați (apăsați F5 sau butonul %2 in linia de adresă) sau inchideți si redeschideți tab-ul BBO. Oricare din aceste acțiuni vă vor deconecta de la BBO"
+   },
+   "install_close": {
+      "description": "You may simply close this message and continue to use BBO normally until you are ready to close the BBO application tab.",
+      "message": "Puteți închide acest mesaj și continua să folosiți BBO ca de obicei paână când sunteți  pregătit să inchideți tab-ul BBO"
+   },
+   "install_refresh_tab": {
+      "description": "%1 may not function correctly until you refresh or close and reopen the BBO application tab. Either action will log you off BBO.",
+      "message": "%1 nu va funcționa corect până când nu actualizați sau închideți si redeschideți tab-ul BBO. Oricare din aceste acțiuni vă vor deconecta de la BBO"
+   },
+   "install_update": {
+      "description": "%1 has been automatically updated to version %2.",
+      "message": "%1 a fost actualizat automat la versiunea %2"
+   },
+   "menu_about": {
+      "description": "About BBO Helper",
+      "message": "Despre BBO Helper"
+   },
+   "menu_auto_alerts": {
+      "description": "Define Auto Alerts",
+      "message": "Definiții alerte automate"
+   },
+   "menu_board_pbn": {
+      "description": "Save Board as PBN",
+      "message": "Scriere donă ca PBN"
+   },
+   "menu_copy_board": {
+      "description": "Copy Board as HTML",
+      "message": "Copiază dona ca HTML"
+   },
+   "menu_dd_bsol": {
+      "description": "Double Dummy (BSOL)",
+      "message": "Double Dummy (BSOL)"
+   },
+   "menu_export_timing": {
+      "description": "Export Timing Data",
+      "message": "Export intervale timp"
+   },
+   "menu_import_timing": {
+      "description": "Import Timing Data",
+      "message": "Import intervale timp"
+   },
+   "menu_my_hands": {
+      "description": "Open BBO My Hands",
+      "message": "Deschide BBO My Hands"
+   },
+   "menu_player_memo": {
+      "description": "ACBL Player Memo",
+      "message": "ACBL Nota Jucătorului"
+   },
+   "menu_quick": {
+      "description": "Quick Settings",
+      "message": "Setări rapide"
+   },
+   "menu_real_names": {
+      "description": "Toggle Real Names",
+      "message": "Alternare nume reale"
+   },
+   "menu_save_traffic": {
+      "description": "Save BBO Traffic",
+      "message": "Scriere trafic BBO"
+   },
+   "menu_settings": {
+      "description": "Edit All Settings",
+      "message": "Editare setări"
+   },
+   "no_ABCL_players": {
+      "description": "No known ACBL players for field strength estimation",
+      "message": "Nr. insuficient de jucători ACBL pentru determinarea tăriei câmpului"
+   },
+   "options_appAlertSubstitutions": {
+      "description": "Enable alert substitutions",
+      "message": "Activare înlocuire alerte"
+   },
+   "options_appAutoAlerts": {
+      "description": "Enable Auto Alerts (configure alerts separately)",
+      "message": "Activare alerte automate (configurare separată pentru alerte"
+   },
+   "options_appAutoAlertsFlag": {
+      "description": "Append [B++] to all auto alerts",
+      "message": "Adăugați [B++] la toate auto alerts"
+   },
+   "options_appBoardLocalization": {
+      "description": "Use local language for board display rather than English",
+      "message": "Folosește limba locală pentru afișarea mâinilor în loc de engleză"
+   },
+   "options_appChatAutoSuits": {
+      "description": "Automatically insert ! for cards, bids, and suits in chat window",
+      "message": "Inserează automat ! pentru cărți, licitații și culori în fereastra de dialog"
+   },
+   "options_appChatNameSubs": {
+      "description": "Enable !w, !n, !e, and !t name substitutions in chat window",
+      "message": "Activare înlocuire nume !w, !n, !e și !t în fereastra de dialog"
+   },
+   "options_appClaimAutoSuits": {
+      "description": "Automatically insert ! for cards, bids, and suits in claim window",
+      "message": "Inserează automat ! pentru cărți, licitații și culori în dialogul de tablare"
+   },
+   "options_appDoubleDummyMode": {
+      "description": "Show double dummy table, par, and par contract(s) in History pane",
+      "message": "Vizualizare masă double dummy, par și contract par în tabloul Istoric"
+   },
+   "options_appDoubleDummyTricks": {
+      "description": "Double dummy table shows tricks instead of contracts",
+      "message": "Masa double dummy arată levate în loc de contracte"
+   },
+   "options_appShowAuctionClock": {
+      "description": "Show time taken for last call in lower right corner of the auction box",
+      "message": "Vizualizare timp necesar pentru cea mai recentă acțiune în colțul dreapta jos"
+   },
+   "options_appShowPeopleTooltip": {
+      "description": "Show real name tooltip in People tab (friends, hosts, stars, ignores)",
+      "message": "Afișează bula cu numele adevărat în tab-ul Oameni (prieteni, gazde, campioni, ignorați"
+   },
+   "options_appShowPlayClock": {
+      "description": "Show time required to play each card in trick",
+      "message": "Vizualizare timp necesar pentru fiecare carte jucată"
+   },
+   "options_appTrafficLogFeed": {
+      "description": "Include \u003Csc_feed> messages (friend logins, VuGraph announcements, etc)",
+      "message": "Include mesajul  \u003Csc_feed> (intrare prieten, anunțuri VuGraph, etc"
+   },
+   "options_appTrafficLogHidePassword": {
+      "description": "Replace BBO password with 8 asterisks (best if sharing traffic logs)",
+      "message": "Înlocuiește parola BBO cu 8 asteriscuri (recomandat când jurnalele vor fi partajate)"
+   },
+   "options_appTrafficLogging": {
+      "description": "Enable web request and websocket traffic logging",
+      "message": "Afișare cerere web și jurnal trafic websocket"
+   },
+   "options_appTrafficLoggingFull": {
+      "description": "Log everything, including pings, keepalives, and lang.php request",
+      "message": "Înregistrează tot, inclusiv pings, keepalives și cereri lang.php"
+   },
+   "options_appTrafficMaxKilobytes": {
+      "description": "Log limit (KB), zero means unlimited",
+      "message": "Limită jurnal (KB), zero însemnă nelimitat"
+   },
+   "options_auctionBBOstyling": {
+      "description": "Style the auction box similar to BBO",
+      "message": "Afișare similară a licitației cu BBO"
+   },
+   "options_auctionHideFinalPasses": {
+      "description": "Don't include the final three passes (more compact display)",
+      "message": "Nu include cele trei pas-uri de la final (afișaj mai compact)"
+   },
+   "options_auctionSeatLetters": {
+      "description": "Use seat letters (S, W, N, E) instead of seat names",
+      "message": "Folosește literele (S, W, N, E) în loc de direcțiile pozițiilor)"
+   },
+   "options_auctionShortCalls": {
+      "description": "Use short calls (P, X, XX) instead of Pass, Dbl, and Rdbl",
+      "message": "Folosește forma scurtă (P, X, XX) în loc de Pass, Dbl și Rdbl"
+   },
+   "options_auctionTextNT": {
+      "description": "Use NT instead N for notrump bids",
+      "message": "Folosește NT în loc de N pentru licitațiile fără atu"
+   },
+   "options_boardHideRobotExplanations": {
+      "description": "Hide robot bidding explanations",
+      "message": "Nu afișa explicațiile roboților"
+   },
+   "options_boardIncludeBorder": {
+      "description": "Include bounding box (one pixel grey border)",
+      "message": "Include chenar de marcare (margină de un pixel gri)"
+   },
+   "options_boardIncludeNames": {
+      "description": "Include player handles / seat names. Use: ",
+      "message": "Include afișajul / direcția jucătorilor. Folosește: "
+   },
+   "options_boardLinksTargetBlank": {
+      "description": "Links open in a new page $TARGET$",
+      "message": "Legăturile se vor deschide într-o pagină nouă",
+      "placeholders": {
+         "target": {
+            "content": "(target=\"_blank\")"
+         }
+      }
+   },
+   "options_boardPartialShowBoardNumber": {
+      "description": "Include board number",
+      "message": "Include numărul mâinii"
+   },
+   "options_boardPartialShowContract": {
+      "description": "Include contract",
+      "message": "Include contractul"
+   },
+   "options_boardPlayerNameMode": {
+      "description": "Label seats with: ",
+      "message": "Catalogare poziție cu:"
+   },
+   "options_boardPlayerNameMode_compass": {
+      "description": "Compass Direction",
+      "message": "Direcție busolă"
+   },
+   "options_boardPlayerNameMode_handle": {
+      "description": "BBO Handle",
+      "message": "Afișaj BBO"
+   },
+   "options_boardPlayerNameMode_name": {
+      "description": "Name (if known) or BBO",
+      "message": "Numele (dacă e cunoscut) sau BBO"
+   },
+   "options_boardShowAuction": {
+      "description": "Include auction",
+      "message": "Include licitația"
+   },
+   "options_boardShowContract": {
+      "description": "Include contract",
+      "message": "Inlcude contractul"
+   },
+   "options_boardShowDateTime": {
+      "description": "Include date and time of event (if available)",
+      "message": "Include data și ora (dacă sunt disponibile)"
+   },
+   "options_boardShowDoubleDummy": {
+      "description": "Include double dummy table, par, and par contract(s)",
+      "message": "Include double dummy, rezultatul par și contractul par"
+   },
+   "options_boardShowExplanations": {
+      "description": "Include explanations of any explained bids (if any)",
+      "message": "Include eventualele explicații pentru licitații"
+   },
+   "options_boardShowHCP": {
+      "description": "Include high card point (HCP) diagram",
+      "message": "Include diagrama cu numărul de puncte"
+   },
+   "options_boardShowLinks": {
+      "description": "Include BBO Viewer and Bridge Solver links",
+      "message": "Include legăturile BBO Viewer și Bridge Solver"
+   },
+   "options_boardShowPlay": {
+      "description": "Include table of card play (if available)",
+      "message": "Include masa de joc (dacă e disponibilă)"
+   },
+   "options_boardShowTiming": {
+      "description": "Show timing (if available) in auction box and card play table",
+      "message": "Afișare interval de timp (dacă este disponibil) în căsuța de licitație și la masa de joc"
+   },
+   "options_cardUse10": {
+      "description": "Use 10 instead of T for displaying tens.",
+      "message": "Folosește 10 în loc de T"
+   },
+   "options_handVoidmdash": {
+      "description": "Indicate void suits with $MDASH$",
+      "message": "Arată șicanele cu $MDASH$",
+      "placeholders": {
+         "mdash": {
+            "content": "—"
+         }
+      }
+   },
+   "options_hvDoubleDummyMode": {
+      "description": "Show double dummy table etc in standalone BBO Hand Viewer",
+      "message": "Vizualizare masă double dummy, etc în mod independent BBO Hand Viewer"
+   },
+   "options_section_app": {
+      "description": "BBO application options",
+      "message": "Opțiuni BBO"
+   },
+   "options_section_auction": {
+      "description": "Auction display",
+      "message": "Afișare licitație"
+   },
+   "options_section_board_full": {
+      "description": "Full Board Copy display",
+      "message": "Afișare integrală mână copiată"
+   },
+   "options_section_board_partial": {
+      "description": "Partial Board Copy display",
+      "message": "Afișare parțială donă copiată"
+   },
+   "options_section_cards": {
+      "description": "Card, Bid, and Suit appearance",
+      "message": "Afișaj carte, licitație și culoare"
+   },
+   "options_section_timing": {
+      "description": "Time flagging thresholds",
+      "message": "Limite de timp"
+   },
+   "options_section_traffic": {
+      "description": "Traffic Logging (advanced)",
+      "message": "Jurnal de trafic (avansat)"
+   },
+   "options_sessDoubleDummyAlways": {
+      "description": "Always include double dummy table in session HTML (even if not cached)",
+      "message": "Include double dummy întotdeauna în sesiunea HTML (chiar dacă nu este stocată)"
+   },
+   "options_suitForceBlack": {
+      "description": "Explicitly set color of spades and clubs to black in HTML output. If not\u003Cbr>checked, color will match foreground color of embedding document",
+      "message": "Folosește explicit negru pentru pică și treflă în rezultatul HTML. Altfel,\u003Cbr>culoarea va fi aceeași cu fundalul documentului inserat"
+   },
+   "options_suitFourColor": {
+      "description": "Use four colors for the suits (the colors are similar to bidding box colors)",
+      "message": "Folosește patru culori pentru a reprezenta cele patru denominații"
+   },
+   "options_timimgLongBIT": {
+      "description": "Long break in tempo threshold (seconds)",
+      "message": "Durata maximă pentru întrerupere în tempo (în secunde)"
+   },
+   "options_timingBIT": {
+      "description": "Break in tempo (BIT) threshold (seconds)",
+      "message": "Limita de timp (în sec) pentru întrerupere tempo"
+   },
+   "options_timingInstantAction": {
+      "description": "Insta-action threshold (seconds)",
+      "message": "Limite de timp (în secunde) pentru licitații instantanee"
+   },
+   "options_travSuitFourColor": {
+      "description": "Use four colors for the suits in the traveller display",
+      "message": "Folosește cele patru culori în afișajul combinat"
+   },
+   "player_names": {
+      "description": "Player Names",
+      "message": "Nume jucător"
+   },
+   "preparing_PBN": {
+      "description": "Preparing PBN file",
+      "message": "Pregătire fișier PBN"
+   },
+   "qs_appAutoAlerts": {
+      "description": "Enable auto alerts",
+      "message": "Activare alerte automate"
+   },
+   "qs_appChatAutoSuits": {
+      "description": "Enable auto chat suit symbols",
+      "message": "Activare simboluri automate de culori"
+   },
+   "qs_appDoubleDummyTricks": {
+      "description": "Double dummy shows tricks (not contracts)",
+      "message": "Double dummy arată levate (nu contracte)"
+   },
+   "qs_appShowAuctionClock": {
+      "description": "Show auction clock",
+      "message": "Vizualizare timp licitație"
+   },
+   "qs_appShowPeopleTooltip": {
+      "description": "Show name tooltip in people tab",
+      "message": "Vizualizare nume în tab-ul Oameni"
+   },
+   "qs_appShowPlayClock": {
+      "description": "Show card play timing",
+      "message": "Vizualizare timp carte jucată"
+   },
+   "qs_boardShowTiming": {
+      "description": "Show timing on board copy HTML",
+      "message": "Vizualizare intervale timp mâini HTML"
+   },
+   "qs_showddBBO": {
+      "description": "Show double dummy table in BBO",
+      "message": "Activare masă double dummy în BBO"
+   },
+   "qs_showddHV": {
+      "description": "Show double dummy table in Hand Viewer",
+      "message": "Vizualizare masă double dummy în Hand Viewer"
+   },
+   "qs_suitFourColor": {
+      "description": "Four color suits on board copy HTML",
+      "message": "Patru culori pe mâini HTML"
+   },
+   "qs_title": {
+      "description": "BBO Helper Quick Settings",
+      "message": "Setări rapide BBO Helper"
+   },
+   "session_apply_to_user": {
+      "description": "Raw scores and matchpoint percentage or IMP scores apply to user %s and partner.",
+      "message": "Rezultatele brute și procentele matchpoint sau scorurile IMP aparțin jucătorului %s și partenerului"
+   },
+   "session_no_double_dummy": {
+      "description": "No double dummy data was cached for any boards. To see double dummy results, enable the %1 option in the full settings of %2 and download the session again.",
+      "message": "Nu a fost stocată nici o informație double dummy pentru nici o donă. Pentru a vedea rezultatele double dummy, activați opțiunea %1 în setările generale ale %2 și re-încercați"
+   },
+   "session_no_timing": {
+      "description": "No timing information was available for any boards.",
+      "message": "Nici un interval de timp nu este disponibil pentru nici o donă"
+   },
+   "session_unable_lin": {
+      "description": "Unable to download LIN string from BBO for %1 boards.",
+      "message": "Nu se poate descărca șirul LIN din BBO pentru %1 mâini"
+   },
+   "to_copy_to_clipboard": {
+      "description": "to copy to clipboard",
+      "message": "pentru a copia în clipboard"
+   },
+   "traveller_auction_freq": {
+      "description": "Auction frequencies",
+      "message": "Frecvență licitație"
+   },
+   "traveller_auction_sorted": {
+      "description": "Auction sorted",
+      "message": "Licitația sortată"
+   },
+   "traveller_contract_freq": {
+      "description": "Contract frequencies",
+      "message": "Frecvență contract"
+   },
+   "traveller_pav": {
+      "description": "Principal Auction Variants",
+      "message": "Variabile principale în licitație"
+   },
+   "traveller_rawscore_freq": {
+      "description": "Raw score frequencies",
+      "message": "Frecvență scor brut"
+   },
+   "update_chrome_refresh_tab": {
+      "description": "If you have a BBO application tab open, the updated %1 will not take effect until you either refresh (F5 or click the %2 button on the address bar) or close and reopen the BBO application tab. Any of these actions will log you off BBO.",
+      "message": "Dacă aveți tab-ul BBO deschis, noua versiune %1 nu va fi operațională până când nu actualizați (apăsați F5 sau butonul %2 in linia de adresă) sau inchideți si redeschideți tab-ul BBO. Oricare din aceste acțiuni vă vor deconecta de la BBO"
+   }
+}

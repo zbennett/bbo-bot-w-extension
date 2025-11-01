@@ -1,0 +1,575 @@
+{
+   "LIN_boards_fetched": {
+      "description": "LIN board records fetched",
+      "message": "LIN spil rækker hentet"
+   },
+   "about_slogan": {
+      "description": "Taking BBO to the next level",
+      "message": "Bringer BBO til næste niveau"
+   },
+   "about_viewdoc": {
+      "description": "View Online Documentation",
+      "message": "Se online dokumentation"
+   },
+   "about_viewrev": {
+      "description": "View Change Log",
+      "message": "Se ændringslog"
+   },
+   "alert_1NT_15_17": {
+      "description": "Within ACBL-land, 1NT without an explanation is assumed to be 15-17 HCP. In wider circles, you should always indicate your notrump range and style, e.g. “15-17 HCP, stiff Q, K, A permitted.”",
+      "message": "I ACBL-land, 1NT uden forklaring antages at vise 15-17 HCP. Andre steder bør du angive styrke og stil for 1N, fx “15-17 HCP, single D, K, E tilladt.”"
+   },
+   "alert_auto_alert_occurs": {
+      "description": "When an auto alert occurs, the user is notified by a brief popup. Owing to limitations on how well BBO Helper can integrate with the BBO application, the auto alert will not otherwise show up on your screen. Nonetheless, it is communicated to your opponents, shows up in the History pane later, and is otherwise be included in the permanent record of the hand. If an auto alert is incorrect, you may change it by providing an explanation in the usual manner.",
+      "message": "Når der sker en automatisk alert bliver brugeren notificeret med en popup, der vises i kort tid. På grund af begrænsninger i BBO softwaren vil den automatiske alert ikke blive vist på andre måder. Ikke desto mindre bliver beskeden sendt til dine modstandere, bliver vist i historikken for spillet og bliver inkluderet i den gemte information om hånden. Hvis en automatisk alert er forkert kan du ændre beskrivelsenpå den normale måde du beskriver dine meldinger."
+   },
+   "alert_auto_alerts": {
+      "description": "Auto Alerts",
+      "message": "Automatisk alerteringer"
+   },
+   "alert_define_your_alerts": {
+      "description": "Define your automatic alerts. If a text box below is left empty, no auto alert will be made. Use the standard BBO !c, !d, !h, !s notations for the club, diamond, heart, and spade suit symbols respectively. These will be replaced with $CDH_HTML$, and $S_HTML$. For example, “!c+!d 5-5 or better”, will be alerted as, “♣+♦, 5-5 or better”. BBO limits alerts to 39 characters.",
+      "message": "Definer dine automatiske alerts. Hvis en textboks nedenfor er blank vil der ikke blive givet en automatisk alert. Brug standard BBO notation !c, !d, !h, !s for klør, ruder, hjerter og spar. Disse vil blive erstattet med $CDH_HTML$, og $S_HTML$. For eksempel, “!c+!d 5-5 or better”, vil blive alerteret som, “♣+♦, 5-5 or better”. BBO begrænser alerts til 39 tegn.",
+      "placeholders": {
+         "cdh_html": {
+            "content": "&clubs;, \u003Cspan class=\"ds\">&diams;\u003C/span>, \u003Cspan class=\"hs\">&hearts;\u003C/span>"
+         },
+         "s_html": {
+            "content": "&spades;"
+         }
+      }
+   },
+   "alert_diff_vul": {
+      "description": "If different when vulnerable",
+      "message": "Hvis forskellig i zonen"
+   },
+   "alert_fourth_seat": {
+      "description": "in fourth seat",
+      "message": "i 4. position"
+   },
+   "alert_full_disclosure": {
+      "description": "Auto Alerts simplify full disclosure. Please take advantage of this functionality. For example, if you systematically have 4+ diamonds when you open 1$D_HTML$ except when you have 4=4=3=2 shape, indicate this with, “4+ cd, unless 4=4=3=2”.",
+      "message": "Auto Alerts simplificerer fuld åbenhed. Brug denne funktionalitet med fordel. For eksempel, hvis du systematisk har 4 ruder, når du åbner 1$D_HTML$ undtagen med 4=4=3=2 fordeling, indiker dette med, “4+ cd, unless 4=4=3=2”.",
+      "placeholders": {
+         "d_html": {
+            "content": "\u003Cspan class=\"ds\">&diams;\u003C/span>"
+         }
+      }
+   },
+   "alert_precision": {
+      "description": "Precision players should indicate that 1$H_HTML$ and 1$S_HTML$ are limited bids (“10-15 HCP” or as appropriate), in addition to providing information for the 1$C_HTML$, $D_HTML$, 1NT, and 2$C_HTML$ openings. In an ACBL open regional pairs or higher events, it is reasonable to assume opponents have a basic familiarity with Precision. This is not a reasonable assumption in Support Your Club games on BBO. Disclose.",
+      "message": "Precision spillere bør angive at 1$H_HTML$ og 1$S_HTML$ er begrænsede meldinger (“10-15 HCP” eller tilsvarende), ud over at beskrive 1$C_HTML$, $D_HTML$, 1NT, og 2$C_HTML$ åbninger. I en ACBL open regional pairs eller højere, forventes det at modstanderne har et rimeligt kendskab til Precision. Det bør ikke forventes i Support Your Club games on BBO. Fortæl.",
+      "placeholders": {
+         "c_html": {
+            "content": "&clubs;"
+         },
+         "d_html": {
+            "content": "\u003Cspan class=\"ds\">&diams;\u003C/span>"
+         },
+         "h_html": {
+            "content": "\u003Cspan class=\"hs\">&hearts;\u003C/span>"
+         },
+         "s_html": {
+            "content": "&spades;"
+         }
+      }
+   },
+   "alert_remember_save": {
+      "description": "Remember to save any changes before closing this window.",
+      "message": "Husk at gemme ændringer inden lukning af vindue"
+   },
+   "alert_save": {
+      "description": "Save Auto Alerts",
+      "message": "Gem Auto Alerteringer"
+   },
+   "alert_section_nt_defense": {
+      "description": "Direct seat defense to a 1NT opening",
+      "message": "Forsvar mod 1N i direkte position"
+   },
+   "alert_section_nt_responses": {
+      "description": "Responses to an opening 1NT",
+      "message": "Svar til åbning 1NT"
+   },
+   "alert_section_opening": {
+      "description": "Opening Bids",
+      "message": "Åbningsmeldinger"
+   },
+   "alert_section_other": {
+      "description": "Other scenarios",
+      "message": "Andre situationer"
+   },
+   "alert_section_responses": {
+      "description": "Non-competitive responses",
+      "message": "Ikke-konkurrerende svar"
+   },
+   "appDesc": {
+      "description": "Adds functionally to Bridge Base Online (BBO) website",
+      "message": "Tilføjer funktionalitet til Bridge Base Online (BBO) website"
+   },
+   "appName": {
+      "description": "BBO Helper",
+      "message": "BBO Hjælper"
+   },
+   "board_copy_HTML": {
+      "description": "Board copied to the clipboard",
+      "message": "Spil kopieret til klippebord"
+   },
+   "board_copy_failed": {
+      "description": "Board HTML copy to clipboard failed.",
+      "message": "Spil HTML kopiering til klippebord fejlet"
+   },
+   "board_copy_text": {
+      "description": "Board HTML copied to clipboard as text",
+      "message": "HTML for spil kopieret til klippebord som tekst"
+   },
+   "board_selected": {
+      "description": "Board selected. Press",
+      "message": "Spil valgt. Tryk"
+   },
+   "copy_aid": {
+      "description": "Board Copy-and-Paste Aid",
+      "message": "Hjælp til copy-paste af spil"
+   },
+   "copy_aid_instructions_Chrome": {
+      "description": "Copy to clipboard with 5th button",
+      "message": "Kopier til klippebord med den 5. knap"
+   },
+   "copy_aid_instructions_Firefox": {
+      "description": "Select all with 5th button, then",
+      "message": "Marker alt med 5. knap, så"
+   },
+   "download_in_progress": {
+      "description": "A download is already in progress.",
+      "message": "En download er allerede i gang."
+   },
+   "download_pbn": {
+      "description": "Download PBN",
+      "message": "Downloader PBN"
+   },
+   "explanations": {
+      "description": "Explanations",
+      "message": "Forklaringer"
+   },
+   "fetching_LIN": {
+      "description": "Fetching LIN records for each board",
+      "message": "Henter LIN rækker for hvert spil"
+   },
+   "install": {
+      "description": "%1 has been installed.w",
+      "message": "%1 er blevet installeret."
+   },
+   "install_chrome_refresh_tab": {
+      "description": "If you have a BBO application tab open, %1 will not fully function until you either refresh (press F5 or click the %2 button on the address bar) or close and reopen the BBO application tab. Any of these actions will log you off BBO.",
+      "message": "Hvis du har en BBO-applikationsfane åben, vil %1 ikke fungere fuldt ud, før du enten opdaterer (F5 eller klikker på %2-knappen på adresselinjen) eller lukker og genåbner BBO-applikationsfanen. Enhver af disse handlinger vil logge dig af BBO."
+   },
+   "install_close": {
+      "description": "You may simply close this message and continue to use BBO normally until you are ready to close the BBO application tab.",
+      "message": "Du kan sagtens lukke denne besked, og fortsætte med at brugte BBO som du plejer indtil du er klar til at lukke BBO-programmet."
+   },
+   "install_refresh_tab": {
+      "description": "%1 may not function correctly until you refresh or close and reopen the BBO application tab. Either action will log you off BBO.",
+      "message": "%1 kan fejle indtil du genopfrisker eller lukker BBO-programmet. Begge dele vil logge dig af BBO."
+   },
+   "install_update": {
+      "description": "%1 has been automatically updated to version %2.",
+      "message": "%1 er automatisk blevet opdateret til version %2."
+   },
+   "menu_about": {
+      "description": "About BBO Helper",
+      "message": "Om BBO Helper"
+   },
+   "menu_auto_alerts": {
+      "description": "Define Auto Alerts",
+      "message": "Definer automatiske Alerts"
+   },
+   "menu_board_pbn": {
+      "description": "Save Board as PBN",
+      "message": "Gem spil som PBN"
+   },
+   "menu_copy_board": {
+      "description": "Copy Board as HTML",
+      "message": "Kopier spil som HTML"
+   },
+   "menu_dd_bsol": {
+      "description": "Double Dummy (BSOL)",
+      "message": "Double Dummy (BSOL)"
+   },
+   "menu_export_timing": {
+      "description": "Export Timing Data",
+      "message": "Exporter tidsdata"
+   },
+   "menu_import_timing": {
+      "description": "Import Timing Data",
+      "message": "Importer tidsdata"
+   },
+   "menu_my_hands": {
+      "description": "Open BBO My Hands",
+      "message": "Åbn BBO My Hands"
+   },
+   "menu_player_memo": {
+      "description": "ACBL Player Memo",
+      "message": "ACBL Spillermemo"
+   },
+   "menu_quick": {
+      "description": "Quick Settings",
+      "message": "Hurtig indstillinger"
+   },
+   "menu_real_names": {
+      "description": "Toggle Real Names",
+      "message": "Skift rigtige navne"
+   },
+   "menu_save_traffic": {
+      "description": "Save BBO Traffic",
+      "message": "Gem BBO trafik"
+   },
+   "menu_settings": {
+      "description": "Edit All Settings",
+      "message": "Rediger alle indstillinger"
+   },
+   "no_ACBL_players": {
+      "description": "No known ACBL players for field strength estimation",
+      "message": "Ingen kendte ACBL spillere kan bruges til at finde feltets styrke"
+   },
+   "no_EBU_players": {
+      "description": "No known EBU players for field strength estimation",
+      "message": "Ingen kendte EBU spillere kan bruges til at finde feltets styrke"
+   },
+   "options_appAlertSubstitutions": {
+      "description": "Enable alert substitutions",
+      "message": "Tillad erstatninger ved alert"
+   },
+   "options_appAutoAlerts": {
+      "description": "Enable Auto Alerts (configure alerts separately)",
+      "message": "Tillad Auto Alert (konfigurer alerts individuelt"
+   },
+   "options_appAutoAlertsFlag": {
+      "description": "Append [B++] to all auto alerts",
+      "message": "Tilføj [B++] til alle auto alerts"
+   },
+   "options_appBoardLocalization": {
+      "description": "Use local language for board display rather than English",
+      "message": "Brug lokalt sprog ved kopiering af spil frem for engelsk"
+   },
+   "options_appChatAutoSuits": {
+      "description": "Automatically insert ! for cards, bids, and suits in chat window",
+      "message": "Indsæt automatisk ! for kort, meldinger og farver i chat vinduet"
+   },
+   "options_appChatNameSubs": {
+      "description": "Enable !w, !n, !e, and !t name substitutions in chat window",
+      "message": "Aktiver !w, !n, !e, og !t erstatninger i chat vinduet"
+   },
+   "options_appClaimAutoSuits": {
+      "description": "Automatically insert ! for cards, bids, and suits in claim window",
+      "message": "Indsæt automatisk ! for kort, meldinger og farver i claim vinduet"
+   },
+   "options_appDoubleDummyMode": {
+      "description": "Show double dummy table, par, and par contract(s) in History pane",
+      "message": "Vis double doummy tabel, optimal score og kontrakt i Historik panelet"
+   },
+   "options_appDoubleDummyTricks": {
+      "description": "Double dummy table shows tricks instead of contracts",
+      "message": "Double dummy tabel viser stik i stedet for kontrakt"
+   },
+   "options_appShowAuctionClock": {
+      "description": "Show time taken for last call in lower right corner of the auction box",
+      "message": "Vis tiden for sidst afgivne melding i nederste højre hjørne af meldeforløbet"
+   },
+   "options_appShowPeopleTooltip": {
+      "description": "Show real name tooltip in People tab (friends, hosts, stars, ignores)",
+      "message": "Vis spillers rgigtige navn i tooltip i Person-panelet (venner, værter, stjerner, ignores)"
+   },
+   "options_appShowPlayClock": {
+      "description": "Show time required to play each card in trick",
+      "message": "Vis tid brugt på hvert tilspil i stikket"
+   },
+   "options_appTrafficLogFeed": {
+      "description": "Include \u003Csc_feed> messages (friend logins, VuGraph announcements, etc)",
+      "message": "Inkluder \u003Csc_feed>-beskeder (Vennelogin, Vugraph beskeder, osv"
+   },
+   "options_appTrafficLogHidePassword": {
+      "description": "Replace BBO password with 8 asterisks (best if sharing traffic logs)",
+      "message": "Erstat BBO password med ******** (Bedst ved deling af trakfiklogs)"
+   },
+   "options_appTrafficLogging": {
+      "description": "Enable web request and websocket traffic logging",
+      "message": "Tillad logning af web request og websocket trafik"
+   },
+   "options_appTrafficLoggingFull": {
+      "description": "Log everything, including pings, keepalives, and lang.php request",
+      "message": "Log alt, inklusiv ping, keepalives og lang.php requests"
+   },
+   "options_appTrafficMaxKilobytes": {
+      "description": "Log limit (KB), zero means unlimited",
+      "message": "Log begrænsning (KB), 0 er ingen begrænsning"
+   },
+   "options_auctionBBOstyling": {
+      "description": "Style the auction box similar to BBO",
+      "message": "Brug samme stil som BBO til meldeforløb"
+   },
+   "options_auctionHideFinalPasses": {
+      "description": "Don't include the final three passes (more compact display)",
+      "message": "Inkluder ikke de 3 sidste passer (mere kompakt visning)"
+   },
+   "options_auctionSeatLetters": {
+      "description": "Use seat letters (S, W, N, E) instead of seat names",
+      "message": "Brug bogstaver (S, V, N, Ø) i stedet for verdenshjørner"
+   },
+   "options_auctionShortCalls": {
+      "description": "Use short calls (P, X, XX) instead of Pass, Dbl, and Rdbl",
+      "message": "Brug kort version (P, x, XX) i stedet for Pas, Dobler og Redobler"
+   },
+   "options_auctionTextNT": {
+      "description": "Use NT instead N for notrump bids",
+      "message": "Brug NT i stedet for N for sans-meldinger"
+   },
+   "options_boardHideRobotExplanations": {
+      "description": "Hide robot bidding explanations",
+      "message": "Skjul forklaring for robottens meldinger"
+   },
+   "options_boardIncludeBorder": {
+      "description": "Include bounding box (one pixel grey border)",
+      "message": "Sæt ramme omkring (1 pixel grå)"
+   },
+   "options_boardIncludeNames": {
+      "description": "Include player handles / seat names. Use: ",
+      "message": "Inkluder spiller navne / verdenshjørner. Brug: "
+   },
+   "options_boardLinksTargetBlank": {
+      "description": "Links open in a new page $TARGET$",
+      "message": "Link åbner på en ny side $TARGET$",
+      "placeholders": {
+         "target": {
+            "content": "(target=\"_blank\")"
+         }
+      }
+   },
+   "options_boardPartialShowBoardNumber": {
+      "description": "Include board number",
+      "message": "Inkluder spilnummer"
+   },
+   "options_boardPartialShowContract": {
+      "description": "Include contract",
+      "message": "Inkluder kontrakt"
+   },
+   "options_boardPlayerNameMode": {
+      "description": "Label seats with: ",
+      "message": "Angiv verdenshjørner med:"
+   },
+   "options_boardPlayerNameMode_compass": {
+      "description": "Compass Direction",
+      "message": "Verdenshjørne"
+   },
+   "options_boardPlayerNameMode_handle": {
+      "description": "BBO Handle",
+      "message": "BBO Handle"
+   },
+   "options_boardPlayerNameMode_name": {
+      "description": "Name (if known) or BBO",
+      "message": "Navn (hvis kendt) på BBO"
+   },
+   "options_boardShowAuction": {
+      "description": "Include auction",
+      "message": "Inkluder meldeforløb"
+   },
+   "options_boardShowContract": {
+      "description": "Include contract",
+      "message": "Inkluder kontrakt"
+   },
+   "options_boardShowDateTime": {
+      "description": "Include date and time of event (if available)",
+      "message": "Inkluder dato og tid (hvis tilgængelig)"
+   },
+   "options_boardShowDoubleDummy": {
+      "description": "Include double dummy table, par, and par contract(s)",
+      "message": "inkluder double doummy tabel, optimal score og kontrakt"
+   },
+   "options_boardShowExplanations": {
+      "description": "Include explanations of any explained bids (if any)",
+      "message": "Inkluder forklaring for meldinger med forklaring (hvis nogen)"
+   },
+   "options_boardShowHCP": {
+      "description": "Include high card point (HCP) diagram",
+      "message": "Inkluder honnørpoint (HCP) diagram"
+   },
+   "options_boardShowLinks": {
+      "description": "Include BBO Viewer and Bridge Solver links",
+      "message": "Inkluder link til BBO Viewer og Bridge Solver"
+   },
+   "options_boardShowPlay": {
+      "description": "Include table of card play (if available)",
+      "message": "Inkluder table med spil af kortene (hvis tilgængelig)"
+   },
+   "options_boardShowTiming": {
+      "description": "Show timing (if available) in auction box and card play table",
+      "message": "Vis tider (hvis tilgængelige) i meldeforløb og ved spil af kortene"
+   },
+   "options_cardUse10": {
+      "description": "Use 10 instead of T for displaying tens.",
+      "message": "Brug 10 i stedet for T ved visning af tiere."
+   },
+   "options_handVoidmdash": {
+      "description": "Indicate void suits with $MDASH$",
+      "message": "Vis renonce i en farve som $MDASH$",
+      "placeholders": {
+         "mdash": {
+            "content": "—"
+         }
+      }
+   },
+   "options_hvDoubleDummyMode": {
+      "description": "Show double dummy table etc in standalone BBO Hand Viewer",
+      "message": "Vis double dummy tabel mv i den selvstændige BBO Hand Viewer"
+   },
+   "options_section_app": {
+      "description": "BBO application options",
+      "message": "BBO application options"
+   },
+   "options_section_auction": {
+      "description": "Auction display",
+      "message": "Meldeforløb"
+   },
+   "options_section_board_full": {
+      "description": "Full Board Copy display",
+      "message": "Hele spil kopieringsvisning"
+   },
+   "options_section_board_partial": {
+      "description": "Partial Board Copy display",
+      "message": "Visning af kopi for delvist spil "
+   },
+   "options_section_cards": {
+      "description": "Card, Bid, and Suit appearance",
+      "message": "Kort, melding og farve visning"
+   },
+   "options_section_timing": {
+      "description": "Time flagging thresholds",
+      "message": "Grænser for brud i tempo"
+   },
+   "options_section_traffic": {
+      "description": "Traffic Logging (advanced)",
+      "message": "Logning af trafik (avanceret)"
+   },
+   "options_sessDoubleDummyAlways": {
+      "description": "Always include double dummy table in session HTML (even if not cached)",
+      "message": "Inkluder altid double dummy tabel i sessions HTML (også selv om den ikke er cached)"
+   },
+   "options_suitForceBlack": {
+      "description": "Explicitly set color of spades and clubs to black in HTML output. If not\u003Cbr>checked, color will match foreground color of embedding document",
+      "message": "Sæt farven for spar og klør til sort i HTML output. Hvis ikke\u003Cbr> valgt, vil farven matche forgrundsfarven af det omgivende dokument"
+   },
+   "options_suitFourColor": {
+      "description": "Use four colors for the suits (the colors are similar to bidding box colors)",
+      "message": "Brug 4 farver for kortsymboler (Farverne er de samme som i meldeboksen)"
+   },
+   "options_timimgLongBIT": {
+      "description": "Long break in tempo threshold (seconds)",
+      "message": "Grænse for registrering af lang pause (sekunder)"
+   },
+   "options_timingBIT": {
+      "description": "Break in tempo (BIT) threshold (seconds)",
+      "message": "Grænse for registrering af pause (sekunder)"
+   },
+   "options_timingInstantAction": {
+      "description": "Insta-action threshold (seconds)",
+      "message": "Grænse for normal melding"
+   },
+   "options_travSuitFourColor": {
+      "description": "Use four colors for the suits in the traveller display",
+      "message": "Brug 4 farver for kortsymbolerne ved visning af regnskab"
+   },
+   "player_names": {
+      "description": "Player Names",
+      "message": "Spillernavne"
+   },
+   "preparing_PBN": {
+      "description": "Preparing PBN file",
+      "message": "Forbereder PBN fil"
+   },
+   "qs_appAutoAlerts": {
+      "description": "Enable auto alerts",
+      "message": "Tillad auto alerts"
+   },
+   "qs_appChatAutoSuits": {
+      "description": "Enable auto chat suit symbols",
+      "message": "Tillad auto chat farve symboler"
+   },
+   "qs_appDoubleDummyTricks": {
+      "description": "Double dummy shows tricks (not contracts)",
+      "message": "Double dummy viser stik (og ikke kontrakt)"
+   },
+   "qs_appShowAuctionClock": {
+      "description": "Show auction clock",
+      "message": "Vis ur for meldeforløb"
+   },
+   "qs_appShowPeopleTooltip": {
+      "description": "Show name tooltip in people tab",
+      "message": "Vis navn for spiller som tooltip i person tab"
+   },
+   "qs_appShowPlayClock": {
+      "description": "Show card play timing",
+      "message": "Vis tid for tilspil af kort"
+   },
+   "qs_boardShowTiming": {
+      "description": "Show timing on board copy HTML",
+      "message": "Vis tidsmålinger ved kopi af spil til HTML"
+   },
+   "qs_showddBBO": {
+      "description": "Show double dummy table in BBO",
+      "message": "Vis double dummy tabel på BBO"
+   },
+   "qs_showddHV": {
+      "description": "Show double dummy table in Hand Viewer",
+      "message": "Vis double dummy i Hand Viewer"
+   },
+   "qs_suitFourColor": {
+      "description": "Four color suits on board copy HTML",
+      "message": "Brug 4 farver ved kopi af spil til HTML"
+   },
+   "qs_title": {
+      "description": "BBO Helper Quick Settings",
+      "message": "BBO Helper hurtig indstillinger"
+   },
+   "session_apply_to_user": {
+      "description": "Raw scores and matchpoint percentage or IMP scores apply to user %1 and partner.",
+      "message": "Resultater er for bruger %1 og makker."
+   },
+   "session_no_double_dummy": {
+      "description": "No double dummy data was cached for any boards. To see double dummy results, enable the %1 option in the full settings of %2 and download the session again.",
+      "message": "Ingen double dummy gemt. For at se double dummy resultater, aktiver %1 option i indstillinger for %2 og download sessionen igen."
+   },
+   "session_no_timing": {
+      "description": "No timing information was available for any boards.",
+      "message": "Ingen timinginformation tilgængelig"
+   },
+   "session_unable_lin": {
+      "description": "Unable to download LIN string from BBO for %1 boards.",
+      "message": "Kan ikke downloade LIN streng fra BBO for spil %1"
+   },
+   "to_copy_to_clipboard": {
+      "description": "to copy to clipboard",
+      "message": "for at kopiere til klippebord"
+   },
+   "traveller_auction_freq": {
+      "description": "Auction frequencies",
+      "message": "Frekvenser for meldeforløb"
+   },
+   "traveller_auction_sorted": {
+      "description": "Auction sorted",
+      "message": "Sorteret meldeforløb"
+   },
+   "traveller_contract_freq": {
+      "description": "Contract frequencies",
+      "message": "Frekvenser for kontrakter"
+   },
+   "traveller_pav": {
+      "description": "Principal Auction Variants",
+      "message": "Grundlæggende varianter i meldeforløb"
+   },
+   "traveller_rawscore_freq": {
+      "description": "Raw score frequencies",
+      "message": "Frekvenser for Score"
+   },
+   "update_chrome_refresh_tab": {
+      "description": "If you have a BBO application tab open, the updated %1 will not take effect until you either refresh (F5 or click the %2 button on the address bar) or close and reopen the BBO application tab. Any of these actions will log you off BBO.",
+      "message": "Hvis du har en BBO-applikationsfane åben, vil %1 ikke fungere fuldt ud, før du enten opdaterer (F5 eller klikker på %2-knappen på adresselinjen) eller lukker og genåbner BBO-applikationsfanen. Enhver af disse handlinger vil logge dig af BBO."
+   }
+}
