@@ -175,13 +175,15 @@ def handle_game_event(event_type, event_data):
     elif event_type == "bid_made":
         # Bid was made
         call = event_data.get("call")
+        bidder = event_data.get("bidder", "?")
         current_auction = event_data.get("auction", [])
         time = event_data.get("time", 0)
-        print(f"📢 Bid: {call.upper()} (after {time:.2f}s)")
+        print(f"📢 {bidder} bids: {call.upper()} (after {time:.2f}s)")
         
     elif event_type == "card_played":
         # Card was played
         card = event_data.get("card")
+        player = event_data.get("player", "?")
         played_count = event_data.get("played_count", 0)
         current_played_cards.append(card)
         
@@ -192,7 +194,7 @@ def handle_game_event(event_type, event_data):
                 hand[suit].remove(rank)
                 break
         
-        print(f"🎴 Card played: {SUIT_SYMBOLS.get(suit, suit)}{rank} ({played_count + 1} cards played)")
+        print(f"🎴 {player} plays: {SUIT_SYMBOLS.get(suit, suit)}{rank} ({played_count + 1} cards played)")
         print_hand_summary(hands_dict_cache)
         
     elif event_type == "claim_accepted":

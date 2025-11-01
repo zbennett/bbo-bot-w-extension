@@ -688,9 +688,18 @@ function processWebsocket(e) {
 		app.deal.actionTime.push(tdiff);
 		app.deal.lastActionTime = e.timeStamp;
 		
+		const ncalls = app.deal.auction.length;
+		
+		// Determine who made the bid (dealer rotates: dealer, LHO, partner, RHO)
+		const seats = ['N', 'E', 'S', 'W'];
+		const dealerIndex = seats.indexOf(app.deal.dealer);
+		const bidderIndex = (dealerIndex + ncalls - 1) % 4;
+		const bidder = seats[bidderIndex];
+		
 		// Send bid event to Python bot
 		sendGameEvent('bid_made', {
 			call: call,
+			bidder: bidder,
 			auction: app.deal.auction,
 			time: tdiff / 1000
 		});
@@ -698,8 +707,6 @@ function processWebsocket(e) {
 		console.info(call.toUpperCase(), 'call made after', (tdiff/1000).toFixed(3),
 			(tdiff ? 'sec' : 'sec (joining table part way through board)') );
 		auctionclock(tdiff);
-		
-		const ncalls = app.deal.auction.length;
 		if (ncalls === 1) { saveCardSize(); }
 		
 		// Check if this is the last pass at a bidding table (type = "100")
@@ -743,12 +750,26 @@ function processWebsocket(e) {
 		if (!app.deal.amDummy || app.deal.blast2_complete) {
 			// Faster than the DOM parser for this common message.
 			let card = msg.match( /(?<= card=")[CDHS][2-9TJQKA](?=")/ )[0];
+			
+			// Determine who played the card before updating play array
+			const played_count = app.deal.play ? app.deal.play.length : 0;
+			const seats = ['S', 'W', 'N', 'E'];  // BBO order
+			let player = '?';
+			if (app.trick && app.deal.seenOpeningLead) {
+				const seatix = (app.trick.leader + app.trick.cards.length) % 4;
+				player = seats[seatix];
+			} else if (app.deal.declarer !== undefined) {
+				// Opening lead (first card played)
+				player = seats[(app.deal.declarer + 1) % 4];
+			}
+			
 			trickcard(card, e.timeStamp, false);
 			
 			// Send card played event to Python bot
 			sendGameEvent('card_played', {
 				card: card,
-				played_count: app.deal.played ? app.deal.played.length : 0
+				player: player,
+				played_count: played_count
 			});
 		}
 	}
