@@ -5,6 +5,7 @@ import socket
 import hashlib
 import re
 from dd_analyzer import DoubleDummyAnalyzer, recommend_play
+from decision_engine import DecisionEngine
 
 SEAT_ORDER = ["South", "West", "North", "East"]
 SUITS = ['S', 'H', 'D', 'C']
@@ -14,6 +15,7 @@ POINTS = {'A': 4, 'K': 3, 'Q': 2, 'J': 1}
 last_deal_hash = None
 last_dd_hash = None
 last_dd_result = None
+decision_engine = DecisionEngine()
 
 BOTTOM_SEAT = "South"  # Change to "East", "West", or "North" to control which hand is at the bottom
 
@@ -124,7 +126,7 @@ def analyze_app(app):
 
 # Handle DD result updates
 def handle_dd_result(data):
-    global last_dd_hash, last_dd_result
+    global last_dd_hash, last_dd_result, decision_engine
 
     dd_hash = hashlib.md5(json.dumps(data, sort_keys=True).encode()).hexdigest()
     if dd_hash == last_dd_hash:
@@ -142,6 +144,9 @@ def handle_dd_result(data):
     print(analyzer.format_analysis())
     print("="*60)
     
+    # Update decision engine with DD data
+    decision_engine.update_dd_analysis(data)
+    
     # Trigger reprint of current hands with updated DD info
     if last_deal_hash:
         print_hand_summary(hands_dict_cache)
@@ -154,7 +159,7 @@ current_played_cards = []
 
 def handle_game_event(event_type, event_data):
     """Handle event-based messages from Chrome extension"""
-    global hands_dict_cache, current_board, current_auction, current_played_cards
+    global hands_dict_cache, current_board, current_auction, current_played_cards, decision_engine
     
     if event_type == "new_deal":
         # New deal started
@@ -170,6 +175,7 @@ def handle_game_event(event_type, event_data):
         # Parse hands
         hands = event_data.get("hands", {})
         hands_dict_cache = {}
+        hands_lin = {}  # Keep LIN format for decision engine
         for seat in SEAT_ORDER:
             seat_key = seat.lower()
             if seat_key in hands:
@@ -178,6 +184,17 @@ def handle_game_event(event_type, event_data):
                 # LIN: SAKQHAKQJAKQJAKQ -> Dot: AKQ.AKQ.AKQ.AKQ
                 # This is a simplified conversion - may need adjustment
                 hands_dict_cache[seat] = parse_lin_hand(lin_hand)
+                # Map to decision engine format (N/S/E/W)
+                de_seat = {'South': 'S', 'West': 'W', 'North': 'N', 'East': 'E'}[seat]
+                hands_lin[de_seat] = lin_hand
+        
+        # Initialize decision engine with new deal
+        decision_engine.reset_deal(
+            current_board,
+            event_data.get('dealer'),
+            event_data.get('vul'),
+            hands_lin
+        )
         
         print_hand_summary(hands_dict_cache)
         
@@ -188,6 +205,9 @@ def handle_game_event(event_type, event_data):
         current_auction = event_data.get("auction", [])
         time = event_data.get("time", 0)
         print(f"📢 {bidder} bids: {call.upper()} (after {time:.2f}s)")
+        
+        # Update decision engine
+        decision_engine.update_auction(call, bidder)
         
     elif event_type == "card_played":
         # Card was played
@@ -204,6 +224,19 @@ def handle_game_event(event_type, event_data):
                 break
         
         print(f"🎴 {player} plays: {SUIT_SYMBOLS.get(suit, suit)}{rank} ({played_count + 1} cards played)")
+        
+        # Update decision engine
+        decision_engine.update_card_played(player, card)
+        
+        # Get and display play recommendation
+        recommended_card, reasoning = decision_engine.get_recommendation()
+        if recommended_card:
+            rec_suit = SUIT_SYMBOLS.get(recommended_card[0], recommended_card[0])
+            print(f"💡 Recommendation: {rec_suit}{recommended_card[1]} - {reasoning}")
+        elif reasoning and decision_engine.lead_player:
+            # Show reason only if there's an active player
+            print(f"💭 {reasoning}")
+        
         print_hand_summary(hands_dict_cache)
         
     elif event_type == "claim_accepted":

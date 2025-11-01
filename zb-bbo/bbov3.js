@@ -692,14 +692,16 @@ function processWebsocket(e) {
 		
 		// Determine who made the bid (dealer rotates: dealer, LHO, partner, RHO)
 		const seats = ['N', 'E', 'S', 'W'];
-		const dealerIndex = seats.indexOf(app.deal.dealer);
+		const dealer = app.deal.dealer ? app.deal.dealer.toUpperCase() : 'N';
+		const dealerIndex = seats.indexOf(dealer);
 		const bidderIndex = (dealerIndex + ncalls - 1) % 4;
-		const bidder = seats[bidderIndex];
+		const bidder = dealerIndex >= 0 ? seats[bidderIndex] : '?';
 		
 		// Send bid event to Python bot
 		sendGameEvent('bid_made', {
 			call: call,
 			bidder: bidder,
+			dealer: dealer,
 			auction: app.deal.auction,
 			time: tdiff / 1000
 		});
