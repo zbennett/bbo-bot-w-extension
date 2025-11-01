@@ -270,6 +270,11 @@ async def handle_connection(websocket):
                 print(f"🎯 Received event: {event_type}")  # DEBUG
                 handle_game_event(event_type, event_data)
             
+            # DD result message
+            elif msg_type == "dd_result":
+                print(f"🎯 Received DD result for board {data.get('board')}")  # DEBUG
+                handle_dd_result(data)
+            
             # Legacy messages (keep for backward compatibility)
             elif msg_type == "app_update":
                 app = data.get("app")
