@@ -115,6 +115,46 @@ function sendGameEvent(eventType, data) {
   }
 }
 
+// Callback for double dummy results - send to Python bot
+function ddResultCallback(d, dd) {
+  if (!dd || !dd.tr) {
+    console.warn('⚠️  DD callback received but no tricks data');
+    return;
+  }
+  
+  // Parse the dd.tr string (20 hex chars = 5x4 grid)
+  // Format: N's tricks in SHDC, E's tricks in SHDC, S's tricks in SHDC, W's tricks in SHDC
+  const tricks = {};
+  const suits = ['S', 'H', 'D', 'C'];
+  const players = ['N', 'E', 'S', 'W'];
+  
+  for (let p = 0; p < 4; p++) {
+    tricks[players[p]] = {};
+    for (let s = 0; s < 4; s++) {
+      const hexChar = dd.tr[p * 5 + s];
+      tricks[players[p]][suits[s]] = parseInt(hexChar, 16);
+    }
+  }
+  
+  // Send DD result to Python bot
+  const message = {
+    type: 'dd_result',
+    board: d.bnum,
+    tricks: tricks,
+    cNS: dd.cNS,
+    sNS: dd.sNS,
+    cEW: dd.cEW || dd.cNS,
+    sEW: dd.sEW || -dd.sNS,
+    wasCached: dd.wasCached || false
+  };
+  
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    const jsonStr = JSON.stringify(message);
+    socket.send(jsonStr);
+    console.log('🧠 DD Result sent | Board:', d.bnum, '| Cached:', dd.wasCached);
+  }
+}
+
 // Check if the extension is newly installed or has been automatically updated
 // (or reloaded during development from the about:debugging page). This displays a
 // message centered on the page. A different treatment is required for Chrome because
@@ -923,9 +963,8 @@ function processWebsocket(e) {
 				// Keep it so we don't have to regenerate it
 				app.deal.d = d;
 				
-				// No callback (3rd parameter) because we don't want to show anything until
-				// board is over, but rather just have the result cached.
-				doubledummy(d, false);
+				// Send DD results to Python bot via callback
+				doubledummy(d, false, ddResultCallback);
 			}
 		}
 		else {
