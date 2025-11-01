@@ -110,12 +110,22 @@ Added `parse_lin_hand()` helper to convert BBO's LIN format (SAKQHAKQ...) to the
 3. **Error Handling**: Need more robust error handling for malformed events
 4. **Dummy Hand Reveal**: `sc_dummy_holds` event not yet implemented (need to test when we become dummy)
 
+### Enhancements Added
+
+- **Player Position Tracking**: Added `bidder` field to `bid_made` events showing who made the bid (N/S/E/W)
+- **Card Player Tracking**: Added `player` field to `card_played` events showing who played the card (N/S/E/W)
+- **Improved Display**: Python bot now shows "N bids: 1NT" and "S plays: ♠A" instead of just "Bid: 1NT"
+
 ### Next Steps (from ROADMAP.md)
 
-- **Step 2**: Implement basic bidding logic (rule-based system)
-- **Step 3**: Add double dummy analysis integration for play decisions
-- **Step 4**: Create action injection system (send bids/plays back to BBO)
-- **Step 5**: Add machine learning for bidding improvements
+✅ **Phase 1, Step 1**: Event-based messaging - **COMPLETE!**
+
+**Phase 2: Add Decision Logic**
+- **Step 1**: Parse and analyze double dummy results for optimal play
+- **Step 2**: Implement basic rule-based bidding system  
+- **Step 3**: Create decision engine that recommends bids/plays
+- **Step 4**: Add action injection system (send bids/plays back to BBO)
+- **Step 5**: Test with live games and refine logic
 
 ### Files Modified
 

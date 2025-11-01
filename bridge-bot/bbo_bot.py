@@ -4,6 +4,7 @@ import json
 import socket
 import hashlib
 import re
+from dd_analyzer import DoubleDummyAnalyzer, recommend_play
 
 SEAT_ORDER = ["South", "West", "North", "East"]
 SUITS = ['S', 'H', 'D', 'C']
@@ -131,8 +132,16 @@ def handle_dd_result(data):
 
     last_dd_hash = dd_hash
     last_dd_result = data
-    print("🧠 New double dummy result received.")
-    print(data)
+    
+    print("\n" + "="*60)
+    print("🧠 DOUBLE DUMMY ANALYSIS RECEIVED")
+    print("="*60)
+    
+    # Create analyzer and display formatted results
+    analyzer = DoubleDummyAnalyzer(data)
+    print(analyzer.format_analysis())
+    print("="*60)
+    
     # Trigger reprint of current hands with updated DD info
     if last_deal_hash:
         print_hand_summary(hands_dict_cache)
