@@ -117,8 +117,10 @@ function sendGameEvent(eventType, data) {
 
 // Callback for double dummy results - send to Python bot
 function ddResultCallback(d, dd) {
+  console.log('🧠 DD callback triggered for board', d ? d.bnum : '?', 'DD data:', dd ? 'present' : 'missing');
+  
   if (!dd || !dd.tr) {
-    console.warn('⚠️  DD callback received but no tricks data');
+    console.warn('⚠️  DD callback received but no tricks data', dd);
     return;
   }
   
@@ -949,15 +951,13 @@ function processWebsocket(e) {
 			// Need this here too in case table ran out of time to complete the last hand.
 			dealCleanup();
 			
-			// Sometimes we have the full deal (Bidding table, Teaching table, social table)
-			// If so, launch the double dummy calculation immediately.
-			if (pref.appDoubleDummyMode === 'always' &&
-				app.deal.south !== 'SHDC' && app.deal.west !== 'SHDC' &&
-				app.deal.north !== 'SHDC' && app.deal.east !== 'SHDC') {
-				
-				const linhand = [app.deal.south, app.deal.west, app.deal.north, app.deal.east];
-				
-				let d = {"bnum": parseInt(app.deal.board), "hand": linboard2dotboard(linhand), 
+		// Sometimes we have the full deal (Bidding table, Teaching table, social table)
+		// If so, launch the double dummy calculation immediately.
+		// Always get DD for our bot, regardless of extension setting
+		if (app.deal.south !== 'SHDC' && app.deal.west !== 'SHDC' &&
+			app.deal.north !== 'SHDC' && app.deal.east !== 'SHDC') {
+			
+			const linhand = [app.deal.south, app.deal.west, app.deal.north, app.deal.east];				let d = {"bnum": parseInt(app.deal.board), "hand": linboard2dotboard(linhand), 
 					"source": "prefetch" };
 				[d.dealer, d.vul] = bsolDealerVul(d.bnum);
 				// Keep it so we don't have to regenerate it
