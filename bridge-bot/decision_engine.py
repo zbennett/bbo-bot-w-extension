@@ -71,6 +71,11 @@ class DecisionEngine:
                 
     def update_card_played(self, player, card):
         """Update state with a played card."""
+        # Validate player
+        if player not in ['N', 'E', 'S', 'W']:
+            # Invalid player (e.g., '?'), skip update
+            return
+            
         self.played_cards.append((player, card))
         self.current_trick.append({'player': player, 'card': card})
         
