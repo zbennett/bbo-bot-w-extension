@@ -71,10 +71,13 @@ class DecisionEngine:
                 
     def update_card_played(self, player, card):
         """Update state with a played card."""
-        # Validate player
+        # If player is unknown ('?'), use the current lead_player
         if player not in ['N', 'E', 'S', 'W']:
-            # Invalid player (e.g., '?'), skip update
-            return
+            if self.lead_player:
+                player = self.lead_player
+            else:
+                # Can't determine player, skip
+                return
             
         self.played_cards.append((player, card))
         self.current_trick.append({'player': player, 'card': card})
@@ -86,6 +89,11 @@ class DecisionEngine:
                 self.tricks_won['NS'] += 1
             else:
                 self.tricks_won['EW'] += 1
+            
+            # Debug output
+            trick_cards = ' '.join([f"{t['player']}:{t['card']}" for t in self.current_trick])
+            print(f"🏆 Trick complete: {trick_cards} → {winner} wins")
+            
             self.lead_player = winner
             self.current_trick = []
         else:

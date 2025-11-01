@@ -199,28 +199,57 @@ class DoubleDummyAnalyzer:
                 lines.append(f"   {player}: {suits_str}")
         
         # Add interpretation
-        lines.append(f"\n💡 Opening Lead Recommendations:")
+        lines.append(f"\n💡 Double Dummy Interpretation:")
+        lines.append(f"   (Table shows: if PLAYER leads SUIT, how many tricks can DECLARER make)")
+        lines.append(f"")
         
-        # Find which partnership should be declaring
-        ns_best = max(self.tricks.get('N', {}).values(), default=0) + max(self.tricks.get('S', {}).values(), default=0)
-        ew_best = max(self.tricks.get('E', {}).values(), default=0) + max(self.tricks.get('W', {}).values(), default=0)
-        
-        if ns_best > ew_best:
-            lines.append(f"   • NS should declare (can make more tricks)")
-            # Best leads for NS
-            for player in ['N', 'S']:
-                if player in self.tricks:
-                    best_suit = max(self.tricks[player].keys(), key=lambda s: self.tricks[player][s])
-                    tricks = self.tricks[player][best_suit]
-                    lines.append(f"   • {player} best lead: {self._suit_name(best_suit)} ({tricks} tricks)")
+        # Parse contract to see who's declaring
+        if self.contract:
+            # Contract format like "NS 45S" or "EW 3N"
+            if 'NS' in self.contract:
+                declaring_side = 'NS'
+                defending_side = 'EW'
+                declarer_players = ['N', 'S']
+                defender_players = ['E', 'W']
+            elif 'EW' in self.contract:
+                declaring_side = 'EW'
+                defending_side = 'NS'
+                declarer_players = ['E', 'W']
+                defender_players = ['N', 'S']
+            else:
+                declaring_side = None
+                
+            if declaring_side:
+                lines.append(f"   📋 Contract: {declaring_side} declaring")
+                lines.append(f"")
+                
+                # For DEFENDERS: they want to MINIMIZE tricks declarer makes
+                # So they should lead the suit that gives declarer the FEWEST tricks
+                lines.append(f"   🛡️  Best defensive leads ({defending_side}):")
+                for player in defender_players:
+                    if player in self.tricks:
+                        # Find suit that minimizes declarer's tricks
+                        best_def_suit = min(self.tricks[player].keys(), key=lambda s: self.tricks[player][s])
+                        min_tricks = self.tricks[player][best_def_suit]
+                        lines.append(f"      • {player}: Lead {self._suit_name(best_def_suit)} → limits declarer to {min_tricks} tricks")
+                
+                lines.append(f"")
+                lines.append(f"   ⚔️  If declarer had the lead ({declaring_side}):")
+                for player in declarer_players:
+                    if player in self.tricks:
+                        # Find suit that maximizes declarer's tricks
+                        best_decl_suit = max(self.tricks[player].keys(), key=lambda s: self.tricks[player][s])
+                        max_tricks = self.tricks[player][best_decl_suit]
+                        lines.append(f"      • {player}: Lead {self._suit_name(best_decl_suit)} → makes {max_tricks} tricks")
         else:
-            lines.append(f"   • EW should declare (can make more tricks)")
-            # Best leads for EW
-            for player in ['E', 'W']:
+            # No contract yet, show general info
+            lines.append(f"   ℹ️  Potential trick-taking by partnership:")
+            for player in ['N', 'S', 'E', 'W']:
                 if player in self.tricks:
                     best_suit = max(self.tricks[player].keys(), key=lambda s: self.tricks[player][s])
-                    tricks = self.tricks[player][best_suit]
-                    lines.append(f"   • {player} best lead: {self._suit_name(best_suit)} ({tricks} tricks)")
+                    max_tricks = self.tricks[player][best_suit]
+                    partnership = 'NS' if player in ['N', 'S'] else 'EW'
+                    lines.append(f"      • {player} leads {self._suit_name(best_suit)}: {partnership} makes {max_tricks} tricks")
                 
         return '\n'.join(lines)
     

@@ -225,17 +225,22 @@ def handle_game_event(event_type, event_data):
         
         print(f"🎴 {player} plays: {SUIT_SYMBOLS.get(suit, suit)}{rank} ({played_count + 1} cards played)")
         
-        # Update decision engine
+        # Update decision engine with the card that was played
         decision_engine.update_card_played(player, card)
         
-        # Get and display play recommendation
-        recommended_card, reasoning = decision_engine.get_recommendation()
-        if recommended_card:
-            rec_suit = SUIT_SYMBOLS.get(recommended_card[0], recommended_card[0])
-            print(f"💡 Recommendation: {rec_suit}{recommended_card[1]} - {reasoning}")
-        elif reasoning and decision_engine.lead_player:
-            # Show reason only if there's an active player
-            print(f"💭 {reasoning}")
+        # Now get recommendation for the NEXT player who needs to play
+        if decision_engine.lead_player:
+            # Show current trick status
+            if decision_engine.current_trick:
+                trick_so_far = ' '.join([f"{t['player']}:{t['card']}" for t in decision_engine.current_trick])
+                print(f"   Current trick: {trick_so_far}")
+            
+            recommended_card, reasoning = decision_engine.get_recommendation()
+            if recommended_card:
+                rec_suit = SUIT_SYMBOLS.get(recommended_card[0], recommended_card[0])
+                print(f"💡 Recommendation for {decision_engine.lead_player}: {rec_suit}{recommended_card[1]} - {reasoning}")
+            elif reasoning:
+                print(f"💭 {decision_engine.lead_player}: {reasoning}")
         
         print_hand_summary(hands_dict_cache)
         
