@@ -4,6 +4,7 @@ Uses double dummy analysis to recommend optimal card plays.
 """
 
 from dd_analyzer import DoubleDummyAnalyzer, recommend_play as dd_recommend_play
+from realtime_dds import RealtimeDDS
 
 class DecisionEngine:
     """
@@ -24,6 +25,7 @@ class DecisionEngine:
         self.tricks_won = {'NS': 0, 'EW': 0}
         self.lead_player = None  # Who plays next
         self.dd_data = None
+        self.realtime_dds = RealtimeDDS()  # Real-time DDS engine
         
     def reset_deal(self, board, dealer, vul, hands):
         """Reset state for a new deal."""
@@ -54,29 +56,64 @@ class DecisionEngine:
                 
     def _finalize_contract(self):
         """Determine the final contract and declarer from the auction."""
-        # Find the last non-pass bid
+        # Find the last non-pass bid to get the contract
+        contract_bidder = None
         for i in range(len(self.auction) - 1, -1, -1):
             call = self.auction[i]['call'].upper()
             if call not in ['P', 'PASS', 'X', 'XX']:
                 self.contract = call
-                self.declarer = self.auction[i]['bidder']
-                # Dummy is partner of declarer
-                declarer_idx = ['N', 'E', 'S', 'W'].index(self.declarer)
-                dummy_idx = (declarer_idx + 2) % 4
-                self.dummy = ['N', 'E', 'S', 'W'][dummy_idx]
-                
-                # Lead player is LHO of declarer
-                self.lead_player = ['N', 'E', 'S', 'W'][(declarer_idx + 1) % 4]
+                contract_bidder = self.auction[i]['bidder']
                 break
+        
+        if not self.contract:
+            return
+            
+        # Extract the strain from contract (last char: S/H/D/C or NT)
+        if 'NT' in self.contract or 'N' == self.contract[-1]:
+            strain = 'NT'
+        else:
+            strain = self.contract[-1]  # S, H, D, or C
+        
+        # Determine the declaring partnership
+        contract_bidder_idx = ['N', 'E', 'S', 'W'].index(contract_bidder)
+        partner_idx = (contract_bidder_idx + 2) % 4
+        declaring_pair = {contract_bidder, ['N', 'E', 'S', 'W'][partner_idx]}
+        
+        # Find the FIRST person in the declaring partnership to bid the strain
+        for i in range(len(self.auction)):
+            call = self.auction[i]['call'].upper()
+            bidder = self.auction[i]['bidder']
+            
+            if bidder in declaring_pair and call not in ['P', 'PASS', 'X', 'XX']:
+                # Check if this bid is in the same strain
+                if 'NT' in call or 'N' in call:
+                    bid_strain = 'NT'
+                elif call[-1] in ['S', 'H', 'D', 'C']:
+                    bid_strain = call[-1]
+                else:
+                    continue
+                    
+                if bid_strain == strain:
+                    self.declarer = bidder
+                    declarer_idx = ['N', 'E', 'S', 'W'].index(self.declarer)
+                    dummy_idx = (declarer_idx + 2) % 4
+                    self.dummy = ['N', 'E', 'S', 'W'][dummy_idx]
+                    
+                    # Lead player is LHO of declarer
+                    self.lead_player = ['N', 'E', 'S', 'W'][(declarer_idx + 1) % 4]
+                    print(f"🔍 Contract finalized: {self.contract} by {self.declarer} (first to bid {strain}), opening leader: {self.lead_player}")
+                    break
                 
     def update_card_played(self, player, card):
         """Update state with a played card."""
         # If player is unknown ('?'), use the current lead_player
         if player not in ['N', 'E', 'S', 'W']:
             if self.lead_player:
+                print(f"🔍 Player '?' inferred as {self.lead_player} for card {card} (Contract: {self.contract}, Declarer: {self.declarer})")
                 player = self.lead_player
             else:
                 # Can't determine player, skip
+                print(f"⚠️  Cannot determine player for card {card} - lead_player not set! Contract: {self.contract}")
                 return
             
         self.played_cards.append((player, card))
@@ -165,9 +202,6 @@ class DecisionEngine:
         if not self.lead_player:
             return None, "No active player (waiting for auction to complete)"
             
-        if not self.dd_data:
-            return None, "No double dummy analysis available"
-            
         # Get remaining cards for current player
         remaining_cards = self._get_remaining_cards(self.lead_player)
         if not remaining_cards:
@@ -184,29 +218,97 @@ class DecisionEngine:
                     if suit in self.contract:
                         trump_suit = suit
                         break
+        
+        # Build current hands for all players (with cards removed)
+        # For DDS: We need to restore cards from the CURRENT trick since they're still "in play"
+        # Build set of cards currently in the incomplete trick
+        current_trick_cards_by_player = {t['player']: t['card'] for t in self.current_trick}
+        
+        current_hands = {}
+        for player in ['N', 'S', 'E', 'W']:
+            if player in self.hands:
+                # Start with original hand
+                hand_lin = self.hands[player]
+                cards = []
+                
+                suits = ['S', 'H', 'D', 'C']
+                suit_idx = 0
+                
+                for char in hand_lin:
+                    if char.upper() in suits:
+                        suit_idx = suits.index(char.upper())
+                    elif char in 'AKQJT98765432':
+                        cards.append(suits[suit_idx] + char)
+                        
+                # Remove ALL played cards (including current trick)
+                removed_count = 0
+                for played_player, played_card in self.played_cards:
+                    if played_player == player and played_card in cards:
+                        cards.remove(played_card)
+                        removed_count += 1
+                
+                # Add back cards from current trick (they're still in hand for DDS purposes)
+                added_back = 0
+                if player in current_trick_cards_by_player:
+                    cards.append(current_trick_cards_by_player[player])
+                    added_back = 1
+                
+                # Debug card counting
+                if removed_count - added_back != len(self.played_cards) // 4:  # Rough check
+                    pass  # Keep this for now to avoid too much debug output
+                
+                # Convert back to LIN format
+                lin_suits = {'S': '', 'H': '', 'D': '', 'C': ''}
+                for card in cards:
+                    suit = card[0]
+                    rank = card[1]
+                    lin_suits[suit] += rank
+                # Build LIN string
+                current_hands[player] = f"S{lin_suits['S']}.H{lin_suits['H']}.D{lin_suits['D']}.C{lin_suits['C']}"
             
-        # Use DD analyzer to recommend best play
+        # Try real-time DDS first (best option - uses current position)
         try:
-            analyzer = DoubleDummyAnalyzer(self.dd_data)
-            card, reasoning = analyzer.analyze_position(
-                self.lead_player, 
-                remaining_cards,
-                current_trick=self.current_trick,
-                trump_suit=trump_suit
+            best_card, tricks_made, reasoning = self.realtime_dds.analyze_best_play(
+                current_hands,
+                self.lead_player,
+                trump_suit or 'NT',
+                self.current_trick,
+                self.declarer
             )
             
             # Validate recommended card is actually in hand
-            if card and card not in remaining_cards:
-                print(f"⚠️  WARNING: Recommended {card} not in {self.lead_player}'s hand: {remaining_cards}")
-                print(f"    Current trick: {self.current_trick}")
-                print(f"    Trump: {trump_suit}")
-                # Fallback: just play first available card
-                card = remaining_cards[0]
-                reasoning = f"Playing {card} (fallback due to logic error)"
-            
-            return card, reasoning
+            if best_card and best_card in remaining_cards:
+                return best_card, reasoning
+            elif best_card:
+                print(f"⚠️  WARNING: Real-time DDS recommended {best_card} not in hand: {remaining_cards}")
+                # Fall through to backup method
         except Exception as e:
-            return None, f"Error analyzing position: {str(e)}"
+            print(f"⚠️  Real-time DDS error: {e}")
+            # Fall through to backup method
+            
+        # Fallback: Use static DD analysis (opening lead only, less accurate mid-hand)
+        if self.dd_data:
+            try:
+                analyzer = DoubleDummyAnalyzer(self.dd_data)
+                card, reasoning = analyzer.analyze_position(
+                    self.lead_player, 
+                    remaining_cards,
+                    current_trick=self.current_trick,
+                    trump_suit=trump_suit
+                )
+                
+                # Validate recommended card is actually in hand
+                if card and card not in remaining_cards:
+                    print(f"⚠️  WARNING: Static DD recommended {card} not in hand: {remaining_cards}")
+                    card = remaining_cards[0]
+                    reasoning = f"Playing {card} (fallback due to logic error)"
+                
+                return card, reasoning
+            except Exception as e:
+                return None, f"Error analyzing position: {str(e)}"
+        
+        # Last resort: just play first card
+        return remaining_cards[0], f"Playing {remaining_cards[0]} (no DD analysis available)"
             
     def _get_remaining_cards(self, player):
         """Get list of cards still in player's hand."""
