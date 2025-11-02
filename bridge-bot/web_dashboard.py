@@ -9,7 +9,7 @@ from flask_cors import CORS
 import json
 import threading
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 app.config['SECRET_KEY'] = 'bridge-bot-secret'
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -38,6 +38,12 @@ def index():
     """Serve the main dashboard page"""
     from flask import send_from_directory
     return send_from_directory('templates', 'dashboard_react.html')
+
+@app.route('/modular')
+def modular():
+    """Serve the modular dashboard page (experimental)"""
+    from flask import send_from_directory
+    return send_from_directory('templates', 'dashboard_modular.html')
 
 @app.route('/classic')
 def classic():

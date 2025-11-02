@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bridge Bot Dashboard (Modular)</title>
+    
+    <!-- React -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Socket.IO -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bridge-green': '#0a5f38',
+                        'bridge-felt': '#1a7a4d',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-900 text-white">
+    <div id="root"></div>
+
+    <!-- Load all JS files (using Babel for JSX) -->
+    <script src="/static/js/constants.js"></script>
+    <script src="/static/js/utils/cardUtils.js"></script>
+    <script src="/static/js/hooks/useSocket.js"></script>
+    <script src="/static/js/components/Hand.js"></script>
+    <script src="/static/js/components/Card.js"></script>
+    <script src="/static/js/components/CurrentTrick.js"></script>
+    <script src="/static/js/components/TrickHistory.js"></script>
+    <script src="/static/js/components/DDAnalysis.js"></script>
+    <script src="/static/js/components/Dashboard.js"></script>
+    
+    <script type="text/babel">
+        // Render the main Dashboard component
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(Dashboard));
+    </script>
+    
+    <div class="fixed bottom-4 right-4 bg-blue-600 text-white text-xs px-3 py-1 rounded shadow-lg">
+        Modular Architecture (Experimental)
+    </div>
+</body>
+</html>
