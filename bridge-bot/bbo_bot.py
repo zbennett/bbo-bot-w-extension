@@ -278,11 +278,12 @@ def handle_game_event(event_type, event_data):
         print(f"🎴 {player} plays: {SUIT_SYMBOLS.get(suit, suit)}{rank} ({played_count + 1} cards played)")
         
         # Update decision engine with the card that was played
-        # It returns (trick_complete, winner) tuple
-        trick_complete, winner = decision_engine.update_card_played(player, card)
+        # It returns (trick_complete, winner, corrected_player) tuple
+        # corrected_player will be the inferred player if player was '?'
+        trick_complete, winner, corrected_player = decision_engine.update_card_played(player, card)
         
-        # Update dashboard
-        DashboardBroadcaster.update_card_played(player, card, trick_complete, winner)
+        # Update dashboard with corrected player
+        DashboardBroadcaster.update_card_played(corrected_player, card, trick_complete, winner)
         
         # Set contract if not already set
         if decision_engine.contract and decision_engine.declarer:

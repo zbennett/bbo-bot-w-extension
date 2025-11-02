@@ -74,6 +74,7 @@ class DashboardBroadcaster:
         current_game_state['board_number'] = board_number
         current_game_state['dealer'] = dealer
         current_game_state['vulnerability'] = vulnerability
+        # Store hands as-is (dashboard will use list copies for display)
         current_game_state['hands'] = hands
         current_game_state['contract'] = None
         current_game_state['declarer'] = None
@@ -112,8 +113,13 @@ class DashboardBroadcaster:
     def update_card_played(player, card, trick_complete=False, winner=None):
         """Update dashboard with card played"""
         
+        print(f"🎴 Dashboard update_card_played: player={player}, card={card}, trick_complete={trick_complete}, winner={winner}")
+        print(f"   Current trick before: {current_game_state['current_trick']}")
+        print(f"   Last trick winner: {current_game_state.get('last_trick_winner')}")
+        
         # If there's a completed trick from last time, archive it now before adding new card
         if current_game_state.get('last_trick_winner'):
+            print(f"   📦 Archiving previous trick with winner {current_game_state['last_trick_winner']}")
             # Move previous completed trick to history
             if current_game_state['current_trick']:
                 current_game_state['all_tricks'].append({
@@ -125,13 +131,20 @@ class DashboardBroadcaster:
         
         card_info = {'player': player, 'card': card}
         
-        # Remove card from player's hand
+        # Remove card from player's hand  
         if player in current_game_state['hands']:
             hand = current_game_state['hands'][player]
+            card_found = False
             for i, c in enumerate(hand):
                 if c == card:
                     hand.pop(i)
+                    card_found = True
+                    print(f"🎴 Dashboard: Removed {card} from {player}'s hand (had {len(hand)+1} cards, now {len(hand)})")
                     break
+            if not card_found:
+                print(f"⚠️  Dashboard: Card {card} not found in {player}'s hand: {hand}")
+        else:
+            print(f"⚠️  Dashboard: Player {player} not found in hands!")
         
         # Add the card to current trick
         current_game_state['current_trick'].append(card_info)
