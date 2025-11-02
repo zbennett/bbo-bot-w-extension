@@ -39,16 +39,33 @@ class RealtimeDDS:
             trump_denom = self._suit_to_denom(trump_suit)
             deal.trump = trump_denom
             
-            # Convert current player to endplay Player and set as first to play
             player_map = {'N': Player.north, 'E': Player.east, 'S': Player.south, 'W': Player.west}
-            player = player_map[current_player]
-            deal.first = player
+            
+            # Set who LED this trick (deal.first)
+            # If there are cards in current trick, first player is who led
+            # Otherwise, current_player is leading
+            if played_cards_this_trick and len(played_cards_this_trick) > 0:
+                leader = played_cards_this_trick[0]['player']
+                deal.first = player_map[leader]
+            else:
+                deal.first = player_map[current_player]
             
             # Set cards already played this trick
+            # Must use deal._data.currentTrickRank and currentTrickSuit arrays
             if played_cards_this_trick:
-                for play in played_cards_this_trick:
+                print(f"🔍 Adding {len(played_cards_this_trick)} cards to curtrick: {[p['card'] for p in played_cards_this_trick]}")
+                from endplay.types import Rank
+                for i, play in enumerate(played_cards_this_trick):
                     card = self._card_str_to_endplay(play['card'])
-                    deal.curtrick.append(card)
+                    # Set rank and suit in the ctypes arrays
+                    # Map endplay Rank enum to DDS rank values (2-14)
+                    rank_to_dds = {
+                        Rank.R2: 2, Rank.R3: 3, Rank.R4: 4, Rank.R5: 5, Rank.R6: 6,
+                        Rank.R7: 7, Rank.R8: 8, Rank.R9: 9, Rank.RT: 10, Rank.RJ: 11,
+                        Rank.RQ: 12, Rank.RK: 13, Rank.RA: 14
+                    }
+                    deal._data.currentTrickRank[i] = rank_to_dds[card.rank]
+                    deal._data.currentTrickSuit[i] = int(card.suit)
             
             # Use solve_board to get best play
             # solve_board returns an iterable of (Card, tricks) tuples

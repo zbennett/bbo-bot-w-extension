@@ -203,7 +203,9 @@ class DecisionEngine:
             return None, "No active player (waiting for auction to complete)"
             
         # Get remaining cards for current player
-        remaining_cards = self._get_remaining_cards(self.lead_player)
+        # exclude_current_trick=True because if they've already played in this trick,
+        # that card is no longer available to play again!
+        remaining_cards = self._get_remaining_cards(self.lead_player, exclude_current_trick=True)
         if not remaining_cards:
             return None, f"{self.lead_player} has no cards remaining"
             
@@ -241,21 +243,10 @@ class DecisionEngine:
                         cards.append(suits[suit_idx] + char)
                         
                 # Remove ALL played cards (including current trick)
-                removed_count = 0
+                # Cards in curtrick are removed from hands and go in curtrick only
                 for played_player, played_card in self.played_cards:
                     if played_player == player and played_card in cards:
                         cards.remove(played_card)
-                        removed_count += 1
-                
-                # Add back cards from current trick (they're still in hand for DDS purposes)
-                added_back = 0
-                if player in current_trick_cards_by_player:
-                    cards.append(current_trick_cards_by_player[player])
-                    added_back = 1
-                
-                # Debug card counting
-                if removed_count - added_back != len(self.played_cards) // 4:  # Rough check
-                    pass  # Keep this for now to avoid too much debug output
                 
                 # Convert back to LIN format
                 lin_suits = {'S': '', 'H': '', 'D': '', 'C': ''}
@@ -310,8 +301,14 @@ class DecisionEngine:
         # Last resort: just play first card
         return remaining_cards[0], f"Playing {remaining_cards[0]} (no DD analysis available)"
             
-    def _get_remaining_cards(self, player):
-        """Get list of cards still in player's hand."""
+    def _get_remaining_cards(self, player, exclude_current_trick=False):
+        """Get list of cards still in player's hand.
+        
+        Args:
+            player: Player position ('N', 'E', 'S', 'W')
+            exclude_current_trick: If True, also exclude cards this player has played in current trick
+                                  (for validation). If False, keep them (for DDS).
+        """
         if player not in self.hands:
             return []
             
@@ -332,6 +329,12 @@ class DecisionEngine:
         for played_player, played_card in self.played_cards:
             if played_player == player and played_card in cards:
                 cards.remove(played_card)
+        
+        # Optionally exclude cards this player played in current trick
+        if exclude_current_trick:
+            for trick_play in self.current_trick:
+                if trick_play['player'] == player and trick_play['card'] in cards:
+                    cards.remove(trick_play['card'])
                 
         return cards
         
