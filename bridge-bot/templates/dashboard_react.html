@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bridge Bot Dashboard</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bridge-green': '#0a5f38',
+                        'bridge-felt': '#1a7a4d',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-900 text-white">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        const suitSymbols = { 'S': '♠', 'H': '♥', 'D': '♦', 'C': '♣' };
+        const suitColors = { 'S': 'text-gray-900', 'H': 'text-red-600', 'D': 'text-orange-500', 'C': 'text-gray-900' };
+        
+        const formatCard = (card) => {
+            if (!card) return '';
+            const suit = card[0];
+            const rank = card[1];
+            return { suit, rank, symbol: suitSymbols[suit] || suit, color: suitColors[suit] };
+        };
+
+        const calculateHCP = (cards) => {
+            const hcpValues = { 'A': 4, 'K': 3, 'Q': 2, 'J': 1 };
+            return cards.reduce((sum, card) => sum + (hcpValues[card[1]] || 0), 0);
+        };
+
+        const Hand = ({ cards, position, playerName, isVisible, declarer, isActivePlayer }) => {
+            const suits = useMemo(() => {
+                const result = { 'S': [], 'H': [], 'D': [], 'C': [] };
+                cards.forEach(card => {
+                    const suit = card[0];
+                    if (result[suit]) result[suit].push(card[1]);
+                });
+                return result;
+            }, [cards]);
+
+            const hcp = useMemo(() => calculateHCP(cards), [cards]);
+
+            const positionStyles = {
+                N: 'top-2 left-1/2 -translate-x-1/2',
+                E: 'right-2 top-1/2 -translate-y-1/2',
+                S: 'bottom-2 left-1/2 -translate-x-1/2',
+                W: 'left-2 top-1/2 -translate-y-1/2'
+            };
+
+            const isDeclarer = declarer === playerName;
+
+            return (
+                <div className={'absolute ' + positionStyles[position] + ' bg-gray-800/95 rounded-lg shadow-xl p-3 border-2 ' + (isActivePlayer ? 'border-green-400 ring-2 ring-green-400 ring-opacity-50' : isDeclarer ? 'border-yellow-500' : 'border-gray-700') + ' transition-all backdrop-blur-sm'}>
+                    <div className="flex items-center gap-2 mb-2">
+                        <div className="text-lg font-bold flex items-center gap-1">
+                            {playerName}
+                            {isActivePlayer && <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>}
+                        </div>
+                        {isDeclarer && <div className="text-yellow-500 text-[10px] font-semibold bg-yellow-500/20 px-1.5 py-0.5 rounded">DECLARER</div>}
+                        <div className="text-gray-400 text-xs ml-auto flex items-center gap-1.5">
+                            <span className="text-amber-400 font-bold">{hcp} HCP</span>
+                            <span className="text-gray-500">•</span>
+                            <span>{cards.length}</span>
+                        </div>
+                    </div>
+                    {isVisible ? (
+                        <div className="space-y-1">
+                            {Object.entries(suits).map(([suit, ranks]) => (
+                                <div key={suit} className="flex items-center gap-1">
+                                    <span className={'text-xl ' + suitColors[suit]}>{suitSymbols[suit]}</span>
+                                    <span className="text-xs font-mono">{ranks.join(' ') || '—'}</span>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-gray-500 text-xs italic">Hidden</div>
+                    )}
+                </div>
+            );
+        };
+
+        const Card = ({ card, player, size = 'md' }) => {
+            const formatted = formatCard(card);
+            const sizes = {
+                dimensions: {
+                    sm: 'w-18 h-26',
+                    md: 'w-24 h-36',
+                    lg: 'w-28 h-40'
+                },
+                symbol: {
+                    sm: 'text-4xl',
+                    md: 'text-6xl',
+                    lg: 'text-7xl'
+                },
+                rank: {
+                    sm: 'text-2xl',
+                    md: 'text-4xl',
+                    lg: 'text-5xl'
+                }
+            };
+
+            return (
+                <div className={sizes.dimensions[size] + ' bg-white rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center border-3 border-gray-300 relative'}>
+                    <div className={sizes.symbol[size] + ' font-bold leading-none ' + formatted.color}>{formatted.symbol}</div>
+                    <div className={sizes.rank[size] + ' font-bold leading-none mt-1 ' + formatted.color}>{formatted.rank}</div>
+                    {player && (
+                        <div className="absolute bottom-1 text-xs text-gray-800 font-extrabold bg-white/90 px-2 py-0.5 rounded-sm shadow-sm">
+                            {player}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const CurrentTrick = ({ trick, winner }) => {
+            if (!trick || trick.length === 0) return null;
+            
+            const isComplete = trick.length === 4;
+            
+            return (
+                <div className="bg-gray-900/95 rounded-xl p-3 border-2 border-gray-700 backdrop-blur">
+                    <div className="text-xs text-gray-400 mb-2 text-center font-semibold">
+                        {isComplete && winner ? (
+                            <span className="text-yellow-400 font-bold animate-pulse">🏆 {winner} wins!</span>
+                        ) : (
+                            'Current Trick'
+                        )}
+                    </div>
+                    <div className="flex gap-2 items-center justify-center">
+                        {trick.map((cardInfo, idx) => {
+                            // Convert card string like 'SA' to [suit, rank] format
+                            const cardStr = cardInfo.card || '';
+                            const cardArray = cardStr.length >= 2 ? [cardStr[0], cardStr.substring(1)] : ['', ''];
+                            return (
+                                <div key={idx} className="flex flex-col items-center gap-1">
+                                    <div className="text-[10px] text-gray-400 font-bold">{cardInfo.player}</div>
+                                    <Card card={cardArray} size="sm" />
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        const CompactTrickHistory = ({ tricks, isOpen, onToggle }) => {
+            if (tricks.length === 0) return null;
+
+            // Show only last 3 tricks when collapsed
+            const recentTricks = isOpen ? tricks : tricks.slice(-3);
+
+            return (
+                <div className={'absolute top-3 left-3 z-50 transition-all duration-300 ' + (isOpen ? 'w-72' : 'w-48')}>
+                    <div className="bg-gray-900/95 backdrop-blur-lg rounded-xl border-2 border-gray-700 shadow-2xl overflow-hidden">
+                        <button 
+                            onClick={onToggle}
+                            className="w-full flex items-center justify-between px-3 py-2 bg-gray-800/50 hover:bg-gray-700/50 transition"
+                        >
+                            <span className="text-xs font-semibold">📜 Tricks ({tricks.length})</span>
+                            <span className="text-lg">{isOpen ? '▼' : '▶'}</span>
+                        </button>
+                        <div className={'overflow-y-auto transition-all duration-300 ' + (isOpen ? 'max-h-96' : 'max-h-32')}>
+                            {recentTricks.map((trick, idx) => {
+                                const trickNum = isOpen ? idx + 1 : tricks.length - recentTricks.length + idx + 1;
+                                return (
+                                    <div key={idx} className="border-b border-gray-800 p-2 hover:bg-gray-800/50 transition">
+                                        <div className="flex items-center justify-between mb-1">
+                                            <span className="text-[10px] font-bold text-gray-400">Trick {trickNum}</span>
+                                            <span className="text-[10px] font-bold text-yellow-400">🏆 {trick.winner}</span>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-1 text-[10px]">
+                                            {trick.cards.map((cardInfo, cardIdx) => {
+                                                const cardStr = cardInfo.card || '';
+                                                const suit = cardStr[0];
+                                                const rank = cardStr.substring(1);
+                                                return (
+                                                    <div key={cardIdx} className="flex items-center gap-0.5">
+                                                        <span className="font-bold text-blue-300 w-3">{cardInfo.player}</span>
+                                                        <span className={suitColors[suit]}>{suitSymbols[suit]}</span>
+                                                        <span className="font-mono">{rank}</span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        {!isOpen && tricks.length > 3 && (
+                            <div className="text-center py-1 text-[9px] text-gray-500 bg-gray-800/30">
+                                +{tricks.length - 3} more
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const BiddingBox = ({ bidding }) => {
+            const containerRef = React.useRef(null);
+
+            useEffect(() => {
+                if (containerRef.current) {
+                    containerRef.current.scrollTop = containerRef.current.scrollHeight;
+                }
+            }, [bidding]);
+
+            return (
+                <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+                    <h3 className="font-semibold text-lg mb-3">Bidding</h3>
+                    <div ref={containerRef} className="space-y-1 max-h-48 overflow-y-auto">
+                        {bidding.length === 0 ? (
+                            <div className="text-gray-500 text-sm italic">No bids yet</div>
+                        ) : (
+                            bidding.map((bid, idx) => (
+                                <div key={idx} className="flex items-center gap-2 text-sm bg-gray-700 rounded px-3 py-2 animate-[fadeIn_0.3s_ease-in]">
+                                    <span className="font-bold text-blue-400 w-6">{bid.player}</span>
+                                    <span className="font-mono flex-1">{bid.bid}</span>
+                                    <span className="text-gray-500 text-xs">{bid.timing}s</span>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const Recommendation = ({ recommendation }) => {
+            if (!recommendation) {
+                return (
+                    <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+                        <h3 className="font-semibold text-lg mb-3">💡 Recommendation</h3>
+                        <div className="text-gray-500 text-sm italic">Waiting for recommendation...</div>
+                    </div>
+                );
+            }
+
+            const formatted = formatCard(recommendation.card);
+
+            return (
+                <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-xl p-4 border-2 border-blue-600 shadow-lg">
+                    <h3 className="font-semibold text-lg mb-3">💡 Recommendation</h3>
+                    <div className="flex items-center gap-4 mb-3">
+                        <div className="text-sm text-gray-300">For <span className="font-bold text-white">{recommendation.player}</span></div>
+                        <div className="bg-white rounded px-3 py-2 flex items-center gap-1">
+                            <span className={'text-3xl ' + formatted.color}>{formatted.symbol}</span>
+                            <span className={'text-2xl font-bold ' + formatted.color}>{formatted.rank}</span>
+                        </div>
+                    </div>
+                    <div className="text-sm text-gray-300 leading-relaxed">{recommendation.reasoning}</div>
+                </div>
+            );
+        };
+
+        const DDAnalysis = ({ analysis }) => {
+            if (!analysis) return null;
+
+            // Access the tricks data from the raw_data.tricks structure
+            const tricksData = analysis.raw_data?.tricks || {};
+
+            return (
+                <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+                    <h3 className="font-semibold text-lg mb-3">🧠 Double Dummy Analysis</h3>
+                    <div className="space-y-3 text-sm">
+                        {analysis.contract && (
+                            <div className="bg-gray-700 rounded p-3">
+                                <div className="font-semibold text-blue-400 mb-1">Contract</div>
+                                <div className="text-white text-lg">{analysis.contract}</div>
+                                {analysis.score && (
+                                    <div className="text-gray-300 text-sm mt-1">Score: <span className="font-bold">{analysis.score}</span></div>
+                                )}
+                            </div>
+                        )}
+                        
+                        {Object.keys(tricksData).length > 0 && (
+                            <div className="bg-gray-700 rounded p-3">
+                                <div className="font-semibold text-blue-400 mb-3">Tricks Declarer Makes if Player Leads Suit</div>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-center border-collapse">
+                                        <thead>
+                                            <tr className="border-b-2 border-gray-600">
+                                                <th className="p-2 text-gray-400 font-semibold text-left">Lead</th>
+                                                <th className="p-2 font-semibold">♠</th>
+                                                <th className="p-2 font-semibold text-red-500">♥</th>
+                                                <th className="p-2 font-semibold text-orange-500">♦</th>
+                                                <th className="p-2 font-semibold">♣</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {['N', 'E', 'S', 'W'].map(player => {
+                                                const playerTricks = tricksData[player] || {};
+                                                return (
+                                                    <tr key={player} className="border-b border-gray-600/30">
+                                                        <td className="p-2 font-bold text-blue-400 text-left">{player}</td>
+                                                        {['S', 'H', 'D', 'C'].map(suit => (
+                                                            <td key={suit} className="p-2">
+                                                                <span className="inline-block bg-gray-800 rounded px-3 py-1 font-mono font-bold text-white min-w-[2rem]">
+                                                                    {playerTricks[suit] !== undefined ? playerTricks[suit] : '-'}
+                                                                </span>
+                                                            </td>
+                                                        ))}
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div className="text-xs text-gray-400 mt-3 italic text-center">
+                                    Number shows tricks declarer makes if that player leads that suit
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const Dashboard = () => {
+            const [gameState, setGameState] = useState({
+                board_number: null,
+                dealer: null,
+                vulnerability: null,
+                hands: { N: [], E: [], S: [], W: [] },
+                contract: null,
+                declarer: null,
+                current_trick: [],
+                tricks_won: { NS: 0, EW: 0 },
+                all_tricks: [],
+                last_recommendation: null,
+                bidding: [],
+                dd_analysis: null,
+                active_player: null,
+                bottom_seat: 'S',
+                last_trick_winner: null
+            });
+
+            const [showTrickHistory, setShowTrickHistory] = useState(false);
+            const [connected, setConnected] = useState(false);
+
+            // Determine seat positions based on bottom_seat
+            const getRotatedPositions = (bottomSeat) => {
+                const order = ['S', 'W', 'N', 'E'];
+                const bottomIdx = order.indexOf(bottomSeat || 'S');
+                const rotated = [];
+                for (let i = 0; i < 4; i++) {
+                    rotated.push(order[(bottomIdx + i) % 4]);
+                }
+                return {
+                    bottom: rotated[0],
+                    left: rotated[1],
+                    top: rotated[2],
+                    right: rotated[3]
+                };
+            };
+
+            const positions = useMemo(() => getRotatedPositions(gameState.bottom_seat), [gameState.bottom_seat]);
+
+            useEffect(() => {
+                const socket = io();
+
+                socket.on('connect', () => {
+                    console.log('Connected to server');
+                    setConnected(true);
+                });
+
+                socket.on('disconnect', () => {
+                    console.log('Disconnected from server');
+                    setConnected(false);
+                });
+
+                socket.on('game_state', (state) => {
+                    console.log('Received game state:', state);
+                    setGameState(state);
+                });
+
+                socket.on('game_event', (event) => {
+                    console.log('Received game event:', event);
+                });
+
+                return () => socket.disconnect();
+            }, []);
+
+            const tableHeight = 550;
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4">
+                    <div className="max-w-7xl mx-auto mb-4">
+                        <div className="bg-gray-800 rounded-xl p-3 border border-gray-700 shadow-xl">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                                        Bridge Bot Dashboard
+                                    </h1>
+                                    <div className={'flex items-center gap-2 px-3 py-1 rounded-full ' + (connected ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400')}>
+                                        <div className={'w-2 h-2 rounded-full ' + (connected ? 'bg-green-400 animate-pulse' : 'bg-red-400')}></div>
+                                        <span className="text-xs font-semibold">{connected ? 'Connected' : 'Disconnected'}</span>
+                                    </div>
+                                </div>
+                                {gameState.board_number && (
+                                    <div className="flex items-center gap-4 text-xs">
+                                        <div>
+                                            <span className="text-gray-400">Board:</span>{' '}
+                                            <span className="font-bold text-white">{gameState.board_number}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-400">Dealer:</span>{' '}
+                                            <span className="font-bold text-white">{gameState.dealer}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-400">Vul:</span>{' '}
+                                            <span className="font-bold text-white">{gameState.vulnerability}</span>
+                                        </div>
+                                        {gameState.contract && (
+                                            <div>
+                                                <span className="text-gray-400">Contract:</span>{' '}
+                                                <span className="font-bold text-white">{gameState.contract}</span>
+                                                {' by '}
+                                                <span className="font-bold text-yellow-500">{gameState.declarer}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div className="lg:col-span-2">
+                            <div className="bg-gradient-to-br from-bridge-green to-bridge-felt rounded-3xl p-6 border-8 border-amber-800 shadow-2xl relative" style={{height: tableHeight + 'px'}}>
+                                {/* Compact trick history panel (floating) */}
+                                <CompactTrickHistory 
+                                    tricks={gameState.all_tricks} 
+                                    isOpen={showTrickHistory}
+                                    onToggle={() => setShowTrickHistory(!showTrickHistory)}
+                                />
+                                
+                                {/* Player hands - positioned based on bottom_seat rotation */}
+                                <Hand cards={gameState.hands[positions.top]} position="N" playerName={positions.top} isVisible={true} declarer={gameState.declarer} isActivePlayer={gameState.active_player === positions.top} />
+                                <Hand cards={gameState.hands[positions.right]} position="E" playerName={positions.right} isVisible={true} declarer={gameState.declarer} isActivePlayer={gameState.active_player === positions.right} />
+                                <Hand cards={gameState.hands[positions.bottom]} position="S" playerName={positions.bottom} isVisible={true} declarer={gameState.declarer} isActivePlayer={gameState.active_player === positions.bottom} />
+                                <Hand cards={gameState.hands[positions.left]} position="W" playerName={positions.left} isVisible={true} declarer={gameState.declarer} isActivePlayer={gameState.active_player === positions.left} />
+
+                                {/* Current trick - horizontal row in center */}
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{zIndex: 100}}>
+                                    <CurrentTrick trick={gameState.current_trick} winner={gameState.last_trick_winner} />
+                                </div>
+
+                                {/* Tricks won counter */}
+                                <div className="absolute bottom-3 right-3 bg-gray-900/95 rounded-lg p-2 backdrop-blur border border-gray-700" style={{zIndex: 50}}>
+                                    <div className="text-[10px] font-semibold text-gray-400 mb-1">Tricks Won</div>
+                                    <div className="flex gap-3 text-xs">
+                                        <div>
+                                            <span className="text-blue-400 font-bold">NS:</span>{' '}
+                                            <span className="text-white font-mono text-base">{gameState.tricks_won.NS}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-red-400 font-bold">EW:</span>{' '}
+                                            <span className="text-white font-mono text-base">{gameState.tricks_won.EW}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <Recommendation recommendation={gameState.last_recommendation} />
+                            <BiddingBox bidding={gameState.bidding} />
+                            <DDAnalysis analysis={gameState.dd_analysis} />
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<Dashboard />);
+    </script>
+</body>
+</html>
