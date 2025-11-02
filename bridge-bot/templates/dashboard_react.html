@@ -322,6 +322,112 @@
             );
         };
 
+        const RubberScoreCard = ({ rubberScore }) => {
+            const [expanded, setExpanded] = useState(true);
+
+            if (!rubberScore) {
+                return (
+                    <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+                        <h3 className="font-semibold text-lg mb-2">Rubber Bridge Scoring</h3>
+                        <div className="text-gray-500 text-sm italic">
+                            No rubber in progress
+                        </div>
+                    </div>
+                );
+            }
+
+            const { ns, ew, rubber_complete, rubber_number, hand_count } = rubberScore;
+            const nsTotalScore = ns.total;
+            const ewTotalScore = ew.total;
+            const leader = nsTotalScore > ewTotalScore ? 'NS' : ewTotalScore > nsTotalScore ? 'EW' : 'Tied';
+            const leadAmount = Math.abs(nsTotalScore - ewTotalScore);
+
+            return (
+                <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+                    <div 
+                        className="flex items-center justify-between cursor-pointer mb-3"
+                        onClick={() => setExpanded(!expanded)}
+                    >
+                        <div>
+                            <h3 className="font-semibold text-lg">
+                                Rubber #{rubber_number}
+                                {rubber_complete && <span className="ml-2 text-green-400">✓</span>}
+                            </h3>
+                            <div className="text-xs text-gray-400">{hand_count} hands</div>
+                        </div>
+                        <button className="text-gray-400">{expanded ? '▼' : '▶'}</button>
+                    </div>
+
+                    {expanded && (
+                        <>
+                            <div className="grid grid-cols-3 gap-2 text-sm mb-3">
+                                <div className="font-semibold text-gray-400"></div>
+                                <div className="font-semibold text-center text-green-400">NS</div>
+                                <div className="font-semibold text-center text-blue-400">EW</div>
+
+                                <div className="text-gray-400">Games</div>
+                                <div className="text-center font-bold">
+                                    <span className={ns.games >= 2 ? 'text-green-400' : ''}>{ns.games}</span>
+                                </div>
+                                <div className="text-center font-bold">
+                                    <span className={ew.games >= 2 ? 'text-blue-400' : ''}>{ew.games}</span>
+                                </div>
+
+                                <div className="text-gray-400">Vuln</div>
+                                <div className="text-center">
+                                    {ns.vulnerable ? <span className="text-red-500 font-bold">VUL</span> : <span className="text-gray-500">—</span>}
+                                </div>
+                                <div className="text-center">
+                                    {ew.vulnerable ? <span className="text-red-500 font-bold">VUL</span> : <span className="text-gray-500">—</span>}
+                                </div>
+
+                                <div className="col-span-3 border-t border-gray-600 my-2"></div>
+
+                                <div className="text-gray-400 text-xs">Below</div>
+                                <div className="text-center font-mono text-xs">{ns.below}</div>
+                                <div className="text-center font-mono text-xs">{ew.below}</div>
+
+                                <div className="text-gray-400 text-xs">Above</div>
+                                <div className="text-center font-mono text-xs">{ns.above}</div>
+                                <div className="text-center font-mono text-xs">{ew.above}</div>
+
+                                <div className="col-span-3 border-t border-gray-600 my-2"></div>
+
+                                <div className="text-gray-300 font-semibold">Total</div>
+                                <div className="text-center font-bold text-lg text-green-400">{nsTotalScore}</div>
+                                <div className="text-center font-bold text-lg text-blue-400">{ewTotalScore}</div>
+                            </div>
+
+                            {leader !== 'Tied' && (
+                                <div className="bg-gray-700/50 rounded p-2 text-center text-sm mb-2">
+                                    <span className={leader === 'NS' ? 'text-green-400' : 'text-blue-400'}>{leader}</span>
+                                    <span className="text-gray-400"> leads by </span>
+                                    <span className="font-bold">{leadAmount}</span>
+                                </div>
+                            )}
+
+                            {(ns.rubbers > 0 || ew.rubbers > 0) && (
+                                <div className="bg-gray-700/50 rounded p-2 text-sm">
+                                    <div className="text-gray-400 text-xs mb-1">Rubbers Won</div>
+                                    <div className="flex justify-between">
+                                        <span>NS: <span className="font-bold text-green-400">{ns.rubbers}</span></span>
+                                        <span>EW: <span className="font-bold text-blue-400">{ew.rubbers}</span></span>
+                                    </div>
+                                </div>
+                            )}
+
+                            {rubber_complete && (
+                                <div className="mt-3 bg-yellow-500/20 border border-yellow-500/50 rounded p-3 text-center">
+                                    <div className="text-yellow-400 font-bold mb-1">🏆 Rubber Complete!</div>
+                                    <div className="text-gray-300 text-sm">{leader} wins {ns.games}-{ew.games}</div>
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
+            );
+        };
+
         const Dashboard = () => {
             const [gameState, setGameState] = useState({
                 board_number: null,
@@ -338,7 +444,8 @@
                 dd_analysis: null,
                 active_player: null,
                 bottom_seat: 'S',
-                last_trick_winner: null
+                last_trick_winner: null,
+                rubber_score: null
             });
 
             const [showTrickHistory, setShowTrickHistory] = useState(false);
@@ -383,6 +490,14 @@
 
                 socket.on('game_event', (event) => {
                     console.log('Received game event:', event);
+                });
+
+                socket.on('rubber_score', (rubberScore) => {
+                    console.log('Received rubber score:', rubberScore);
+                    setGameState(prevState => ({
+                        ...prevState,
+                        rubber_score: rubberScore
+                    }));
                 });
 
                 return () => socket.disconnect();
@@ -471,6 +586,7 @@
                         </div>
 
                         <div className="space-y-4">
+                            <RubberScoreCard rubberScore={gameState.rubber_score} />
                             <Recommendation recommendation={gameState.last_recommendation} />
                             <BiddingBox bidding={gameState.bidding} />
                             <CompactTrickHistory 

@@ -146,6 +146,16 @@ def update_active_player(player):
     broadcaster.broadcast_active_player(player)
 
 
+def update_rubber_score(rubber_score):
+    """
+    Update dashboard with rubber scoring information
+    
+    Args:
+        rubber_score: Rubber scoring state dict
+    """
+    broadcaster.broadcast_rubber_score(rubber_score)
+
+
 def start_server(host='0.0.0.0', port=5001, debug=False):
     """
     Start the dashboard server

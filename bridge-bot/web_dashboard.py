@@ -30,7 +30,8 @@ current_game_state = {
     'dd_analysis': None,
     'active_player': None,
     'bottom_seat': 'S',
-    'last_trick_winner': None
+    'last_trick_winner': None,
+    'rubber_score': None  # Rubber bridge scoring
 }
 
 @app.route('/')
@@ -202,6 +203,13 @@ class DashboardBroadcaster:
     def set_bottom_seat(seat):
         """Set which seat appears at bottom of display"""
         current_game_state['bottom_seat'] = seat
+        broadcast_game_state()
+    
+    @staticmethod
+    def update_rubber_score(rubber_score):
+        """Update dashboard with rubber scoring information"""
+        current_game_state['rubber_score'] = rubber_score
+        socketio.emit('rubber_score', rubber_score)
         broadcast_game_state()
 
 def start_dashboard(port=5000):

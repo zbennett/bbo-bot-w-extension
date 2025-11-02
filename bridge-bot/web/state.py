@@ -26,7 +26,8 @@ class GameState:
             'dd_analysis': None,
             'active_player': None,
             'bottom_seat': 'S',
-            'last_trick_winner': None
+            'last_trick_winner': None,
+            'rubber_score': None  # Rubber bridge scoring state
         }
     
     def get_state(self):
@@ -129,3 +130,7 @@ class GameState:
     def set_dd_analysis(self, analysis):
         """Set the double dummy analysis"""
         self._state['dd_analysis'] = analysis
+    
+    def set_rubber_score(self, rubber_score):
+        """Set the rubber scoring state"""
+        self._state['rubber_score'] = rubber_score

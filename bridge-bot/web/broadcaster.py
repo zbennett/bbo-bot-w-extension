@@ -104,3 +104,11 @@ class DashboardBroadcaster:
         self.socketio.emit('active_player', {
             'player': player
         })
+    
+    def broadcast_rubber_score(self, rubber_score):
+        """Broadcast rubber scoring update"""
+        self.game_state.set_rubber_score(rubber_score)
+        
+        self.socketio.emit('rubber_score', rubber_score)
+        
+        print(f"📤 Broadcasted rubber score update")
