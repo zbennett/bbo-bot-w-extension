@@ -61,21 +61,25 @@ class RubberScoring:
     
     def calculate_contract_score(self, contract, declarer, tricks_made, doubled=False, redoubled=False):
         """
-        Calculate score for a completed contract.
+        Calculate score for a completed hand.
         
         Args:
-            contract: Contract string (e.g., "3NT", "4H", "5Cx")
-            declarer: Declarer position (N/E/S/W)
-            tricks_made: Number of tricks actually made
-            doubled: Whether contract was doubled
-            redoubled: Whether contract was redoubled
-            
+            contract: String like '3NT', '4S', '6C', etc.
+            declarer: 'N', 'S', 'E', or 'W'
+            tricks_made: Number of tricks made by declarer's partnership (0-13)
+            doubled: Boolean, was contract doubled?
+            redoubled: Boolean, was contract redoubled?
+        
         Returns:
             dict with scoring breakdown
         """
         # Parse contract
         level = int(contract[0])
         suit = contract[1:].replace('x', '').replace('X', '')
+        
+        # Normalize 'N' to 'NT' for no trump
+        if suit == 'N':
+            suit = 'NT'
         
         partnership = 'NS' if declarer in ['N', 'S'] else 'EW'
         vulnerable = self.get_vulnerability(partnership)
