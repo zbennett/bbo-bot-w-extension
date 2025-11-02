@@ -6,6 +6,7 @@ import hashlib
 import re
 from dd_analyzer import DoubleDummyAnalyzer, recommend_play
 from decision_engine import DecisionEngine
+from web_dashboard import start_dashboard, DashboardBroadcaster
 
 SEAT_ORDER = ["South", "West", "North", "East"]
 SUITS = ['S', 'H', 'D', 'C']
@@ -17,7 +18,7 @@ last_dd_hash = None
 last_dd_result = None
 decision_engine = DecisionEngine()
 
-BOTTOM_SEAT = "South"  # Change to "East", "West", or "North" to control which hand is at the bottom
+BOTTOM_SEAT = "West"  # Change to "East", "West", or "North" to control which hand is at the bottom
 
 # Parse dot-format hand into suit dictionary
 def parse_dot_hand(dot_str):
@@ -53,6 +54,18 @@ def visible_len(s):
 # ANSI-safe left-align
 def pad_right(s, width):
     return s + ' ' * (width - visible_len(s))
+
+# Convert LIN format to list of cards for dashboard
+def lin_to_card_list(lin_hand):
+    """Convert LIN format (e.g., 'SAKQJHAKDAKCK') to list of cards ['SA', 'SK', 'SQ', ...]"""
+    cards = []
+    current_suit = None
+    for char in lin_hand:
+        if char in 'SHDC':
+            current_suit = char
+        elif current_suit:
+            cards.append(f"{current_suit}{char}")
+    return cards
 
 def format_suit_line(suit, cards):
     symbol = SUIT_SYMBOLS.get(suit, suit)
@@ -147,6 +160,13 @@ def handle_dd_result(data):
     # Update decision engine with DD data
     decision_engine.update_dd_analysis(data)
     
+    # Update dashboard
+    DashboardBroadcaster.update_dd_analysis({
+        'contract': data.get('cNS'),
+        'score': data.get('sNS'),
+        'raw_data': data
+    })
+    
     # Trigger reprint of current hands with updated DD info
     if last_deal_hash:
         print_hand_summary(hands_dict_cache)
@@ -176,6 +196,8 @@ def handle_game_event(event_type, event_data):
         hands = event_data.get("hands", {})
         hands_dict_cache = {}
         hands_lin = {}  # Keep LIN format for decision engine
+        dashboard_hands = {'N': [], 'E': [], 'S': [], 'W': []}  # For dashboard
+        
         for seat in SEAT_ORDER:
             seat_key = seat.lower()
             if seat_key in hands:
@@ -187,6 +209,9 @@ def handle_game_event(event_type, event_data):
                 # Map to decision engine format (N/S/E/W)
                 de_seat = {'South': 'S', 'West': 'W', 'North': 'N', 'East': 'E'}[seat]
                 hands_lin[de_seat] = lin_hand
+                
+                # Convert to card list for dashboard
+                dashboard_hands[de_seat] = lin_to_card_list(lin_hand)
         
         # Initialize decision engine with new deal
         decision_engine.reset_deal(
@@ -194,6 +219,14 @@ def handle_game_event(event_type, event_data):
             event_data.get('dealer'),
             event_data.get('vul'),
             hands_lin
+        )
+        
+        # Update dashboard
+        DashboardBroadcaster.update_new_deal(
+            current_board,
+            event_data.get('dealer'),
+            event_data.get('vul'),
+            dashboard_hands
         )
         
         print_hand_summary(hands_dict_cache)
@@ -208,6 +241,25 @@ def handle_game_event(event_type, event_data):
         
         # Update decision engine
         decision_engine.update_auction(call, bidder)
+        
+        # Update dashboard
+        DashboardBroadcaster.update_bid(bidder, call.upper(), time)
+        
+        # Check if auction just ended (3 passes after a bid)
+        if decision_engine.contract and decision_engine.declarer and decision_engine.lead_player:
+            # Auction is complete! Show opening lead recommendation
+            DashboardBroadcaster.update_active_player(decision_engine.lead_player)
+            
+            recommended_card, reasoning = decision_engine.get_recommendation()
+            if recommended_card:
+                rec_suit = SUIT_SYMBOLS.get(recommended_card[0], recommended_card[0])
+                print(f"🎺 OPENING LEAD Recommendation for {decision_engine.lead_player}: {rec_suit}{recommended_card[1]} - {reasoning}")
+                
+                DashboardBroadcaster.update_recommendation(
+                    decision_engine.lead_player,
+                    recommended_card,
+                    reasoning
+                )
         
     elif event_type == "card_played":
         # Card was played
@@ -226,10 +278,21 @@ def handle_game_event(event_type, event_data):
         print(f"🎴 {player} plays: {SUIT_SYMBOLS.get(suit, suit)}{rank} ({played_count + 1} cards played)")
         
         # Update decision engine with the card that was played
-        decision_engine.update_card_played(player, card)
+        # It returns (trick_complete, winner) tuple
+        trick_complete, winner = decision_engine.update_card_played(player, card)
+        
+        # Update dashboard
+        DashboardBroadcaster.update_card_played(player, card, trick_complete, winner)
+        
+        # Set contract if not already set
+        if decision_engine.contract and decision_engine.declarer:
+            DashboardBroadcaster.update_contract(decision_engine.contract, decision_engine.declarer)
         
         # Now get recommendation for the NEXT player who needs to play
         if decision_engine.lead_player:
+            # Update active player indicator
+            DashboardBroadcaster.update_active_player(decision_engine.lead_player)
+            
             # Show current trick status
             if decision_engine.current_trick:
                 trick_so_far = ' '.join([f"{t['player']}:{t['card']}" for t in decision_engine.current_trick])
@@ -239,6 +302,13 @@ def handle_game_event(event_type, event_data):
             if recommended_card:
                 rec_suit = SUIT_SYMBOLS.get(recommended_card[0], recommended_card[0])
                 print(f"💡 Recommendation for {decision_engine.lead_player}: {rec_suit}{recommended_card[1]} - {reasoning}")
+                
+                # Update dashboard with recommendation
+                DashboardBroadcaster.update_recommendation(
+                    decision_engine.lead_player,
+                    recommended_card,
+                    reasoning
+                )
             elif reasoning:
                 print(f"💭 {decision_engine.lead_player}: {reasoning}")
         
@@ -304,8 +374,18 @@ def find_free_port(start=8675):
 
 # Entry point
 async def main():
+    # Start web dashboard on port 5001 (5000 often used by AirPlay)
+    dashboard_port = 5001
+    start_dashboard(port=dashboard_port)
+    
+    # Set the bottom seat for the dashboard to match BOTTOM_SEAT
+    seat_map = {"South": "S", "West": "W", "North": "N", "East": "E"}
+    DashboardBroadcaster.set_bottom_seat(seat_map.get(BOTTOM_SEAT, "S"))
+    
     port = find_free_port()
     print(f"🚀 Server running at ws://localhost:{port}")
+    print(f"🌐 Dashboard available at http://localhost:{dashboard_port}")
+    print(f"🎯 Bottom seat: {BOTTOM_SEAT}")
     async with websockets.serve(handle_connection, "localhost", port):
         await asyncio.Future()
 
