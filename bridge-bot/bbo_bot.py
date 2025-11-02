@@ -314,6 +314,7 @@ def handle_game_event(event_type, event_data):
             )
             
             # Broadcast update to dashboard
+            print(f"📊 Broadcasting rubber score update: {result['rubber_status']}")
             DashboardBroadcaster.update_rubber_score(result['rubber_status'])
             
             # Print score summary
@@ -436,7 +437,9 @@ async def main():
     DashboardBroadcaster.set_bottom_seat(seat_map.get(BOTTOM_SEAT, "S"))
     
     # Initialize rubber scoring
-    DashboardBroadcaster.update_rubber_score(rubber_scorer.get_rubber_status())
+    initial_status = rubber_scorer.get_rubber_status()
+    print(f"📊 Initializing rubber scoring: {initial_status}")
+    DashboardBroadcaster.update_rubber_score(initial_status)
     
     port = find_free_port()
     print(f"🚀 Server running at ws://localhost:{port}")

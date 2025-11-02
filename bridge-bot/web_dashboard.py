@@ -208,6 +208,7 @@ class DashboardBroadcaster:
     @staticmethod
     def update_rubber_score(rubber_score):
         """Update dashboard with rubber scoring information"""
+        print(f"📊 Web Dashboard: Updating rubber score: rubber_number={rubber_score.get('rubber_number')}, hand_count={rubber_score.get('hand_count')}")
         current_game_state['rubber_score'] = rubber_score
         socketio.emit('rubber_score', rubber_score)
         broadcast_game_state()

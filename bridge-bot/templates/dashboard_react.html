@@ -507,6 +507,7 @@
 
                 socket.on('game_state', (state) => {
                     console.log('Received game state:', state);
+                    console.log('Rubber score in state:', state.rubber_score);
                     setGameState(state);
                 });
 
