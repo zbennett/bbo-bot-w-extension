@@ -105,7 +105,7 @@ class DecisionEngine:
                     break
                 
     def update_card_played(self, player, card):
-        """Update state with a played card."""
+        """Update state with a played card. Returns (trick_complete, winner, corrected_player)."""
         # If player is unknown ('?'), use the current lead_player
         if player not in ['N', 'E', 'S', 'W']:
             if self.lead_player:
@@ -114,7 +114,7 @@ class DecisionEngine:
             else:
                 # Can't determine player, skip
                 print(f"⚠️  Cannot determine player for card {card} - lead_player not set! Contract: {self.contract}")
-                return
+                return False, None, None
             
         self.played_cards.append((player, card))
         self.current_trick.append({'player': player, 'card': card})
@@ -133,10 +133,12 @@ class DecisionEngine:
             
             self.lead_player = winner
             self.current_trick = []
+            return True, winner, player
         else:
             # Next player is LHO of current player
             player_idx = ['N', 'E', 'S', 'W'].index(player)
             self.lead_player = ['N', 'E', 'S', 'W'][(player_idx + 1) % 4]
+            return False, None, player
             
     def _determine_trick_winner(self):
         """Determine who won the current trick."""
