@@ -7,6 +7,7 @@ import re
 from dd_analyzer import DoubleDummyAnalyzer, recommend_play
 from decision_engine import DecisionEngine
 from web_dashboard import start_dashboard, DashboardBroadcaster
+from rubber_scoring import RubberScoring
 
 SEAT_ORDER = ["South", "West", "North", "East"]
 SUITS = ['S', 'H', 'D', 'C']
@@ -17,6 +18,7 @@ last_deal_hash = None
 last_dd_hash = None
 last_dd_result = None
 decision_engine = DecisionEngine()
+rubber_scorer = RubberScoring()
 
 BOTTOM_SEAT = "West"  # Change to "East", "West", or "North" to control which hand is at the bottom
 
@@ -285,6 +287,56 @@ def handle_game_event(event_type, event_data):
         # Update dashboard with corrected player
         DashboardBroadcaster.update_card_played(corrected_player, card, trick_complete, winner)
         
+        # Check if hand is complete (all 13 tricks played)
+        total_tricks = decision_engine.tricks_won['NS'] + decision_engine.tricks_won['EW']
+        if total_tricks == 13 and decision_engine.contract and decision_engine.declarer:
+            # Hand is complete, record rubber score
+            declarer_partnership = 'NS' if decision_engine.declarer in ['N', 'S'] else 'EW'
+            tricks_made = decision_engine.tricks_won[declarer_partnership]
+            
+            # Detect doubled/redoubled from contract
+            doubled = 'X' in decision_engine.contract.upper()
+            redoubled = 'XX' in decision_engine.contract.upper()
+            contract_clean = decision_engine.contract.replace('X', '').replace('x', '')
+            
+            print(f"\n🎯 HAND COMPLETE!")
+            print(f"   Contract: {decision_engine.contract} by {decision_engine.declarer}")
+            print(f"   Tricks: NS={decision_engine.tricks_won['NS']}, EW={decision_engine.tricks_won['EW']}")
+            print(f"   Declarer's partnership ({declarer_partnership}) made {tricks_made} tricks")
+            
+            # Record result in rubber scoring
+            result = rubber_scorer.record_hand_result(
+                contract_clean,
+                decision_engine.declarer,
+                tricks_made,
+                doubled=doubled,
+                redoubled=redoubled
+            )
+            
+            # Broadcast update to dashboard
+            DashboardBroadcaster.update_rubber_score(result['rubber_status'])
+            
+            # Print score summary
+            score_info = result['score']
+            print(f"   Score: {score_info['partnership']} +{score_info['total']} ({score_info['description']})")
+            
+            # Check for rubber completion
+            if result['rubber_status']['rubber_complete']:
+                status = result['rubber_status']
+                ns_total = status['ns']['total']
+                ew_total = status['ew']['total']
+                winner = 'NS' if ns_total > ew_total else 'EW'
+                
+                print(f"\n🏆 RUBBER COMPLETE!")
+                print(f"   Winner: {winner}")
+                print(f"   Games: NS {status['ns']['games']} - EW {status['ew']['games']}")
+                print(f"   Final: NS {ns_total} - EW {ew_total}")
+                print(f"   Starting new rubber...\n")
+                
+                # Start new rubber
+                rubber_scorer.start_new_rubber()
+                DashboardBroadcaster.update_rubber_score(rubber_scorer.get_rubber_status())
+        
         # Set contract if not already set
         if decision_engine.contract and decision_engine.declarer:
             DashboardBroadcaster.update_contract(decision_engine.contract, decision_engine.declarer)
@@ -382,6 +434,9 @@ async def main():
     # Set the bottom seat for the dashboard to match BOTTOM_SEAT
     seat_map = {"South": "S", "West": "W", "North": "N", "East": "E"}
     DashboardBroadcaster.set_bottom_seat(seat_map.get(BOTTOM_SEAT, "S"))
+    
+    # Initialize rubber scoring
+    DashboardBroadcaster.update_rubber_score(rubber_scorer.get_rubber_status())
     
     port = find_free_port()
     print(f"🚀 Server running at ws://localhost:{port}")

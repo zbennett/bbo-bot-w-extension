@@ -299,6 +299,17 @@ class RubberScoring:
         ns_total = self.ns_below + self.ns_above
         ew_total = self.ew_below + self.ew_above
         
+        # Get last hand info if available
+        last_hand = None
+        if self.hand_history:
+            last = self.hand_history[-1]
+            last_hand = {
+                'contract': last['contract'],
+                'declarer': last['declarer'],
+                'tricks_made': last['tricks_made'],
+                'score': last['score']
+            }
+        
         return {
             'rubber_number': self.current_rubber_number,
             'ns': {
@@ -318,7 +329,8 @@ class RubberScoring:
                 'rubbers': self.ew_rubbers
             },
             'rubber_complete': self.rubber_complete,
-            'hand_count': len(self.hand_history)
+            'hand_count': len(self.hand_history),
+            'last_hand': last_hand
         }
     
     def get_score_summary(self):

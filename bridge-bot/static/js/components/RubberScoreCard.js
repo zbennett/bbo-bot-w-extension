@@ -18,7 +18,7 @@ function RubberScoreCard({ rubberScore }) {
         );
     }
 
-    const { ns, ew, rubber_complete, rubber_number, hand_count } = rubberScore;
+    const { ns, ew, rubber_complete, rubber_number, hand_count, last_hand } = rubberScore;
 
     // Calculate who's ahead
     const nsTotalScore = ns.total;
@@ -49,6 +49,28 @@ function RubberScoreCard({ rubberScore }) {
 
             {expanded && (
                 <>
+                    {/* Last Hand Score */}
+                    {last_hand && (
+                        <div className="bg-gray-700/30 rounded p-3 mb-3 border border-gray-600">
+                            <div className="text-xs text-gray-400 mb-1">Last Hand</div>
+                            <div className="text-sm">
+                                <span className="font-mono font-bold">{last_hand.contract}</span>
+                                <span className="text-gray-400"> by </span>
+                                <span className="font-bold">{last_hand.declarer}</span>
+                                <span className="text-gray-400"> → </span>
+                                <span className="font-mono">{last_hand.tricks_made} tricks</span>
+                            </div>
+                            <div className="text-xs mt-1">
+                                <span className={last_hand.score.partnership === 'NS' ? 'text-green-400' : 'text-blue-400'}>
+                                    {last_hand.score.partnership}
+                                </span>
+                                <span className="text-gray-400"> +</span>
+                                <span className="font-bold text-yellow-400">{last_hand.score.total}</span>
+                                <span className="text-gray-500 ml-2">({last_hand.score.description})</span>
+                            </div>
+                        </div>
+                    )}
+                    
                     {/* Score Table */}
                     <div className="mb-4">
                         <div className="grid grid-cols-3 gap-2 text-sm">
