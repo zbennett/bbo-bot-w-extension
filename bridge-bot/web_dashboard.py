@@ -31,7 +31,8 @@ current_game_state = {
     'active_player': None,
     'bottom_seat': 'S',
     'last_trick_winner': None,
-    'rubber_score': None  # Rubber bridge scoring
+    'rubber_score': None,  # Rubber bridge scoring
+    'hcp': {'N': 0, 'E': 0, 'S': 0, 'W': 0, 'NS': 0, 'EW': 0}  # High card points
 }
 
 @app.route('/')
@@ -211,6 +212,12 @@ class DashboardBroadcaster:
         print(f"📊 Web Dashboard: Updating rubber score: rubber_number={rubber_score.get('rubber_number')}, hand_count={rubber_score.get('hand_count')}")
         current_game_state['rubber_score'] = rubber_score
         socketio.emit('rubber_score', rubber_score)
+        broadcast_game_state()
+    
+    @staticmethod
+    def update_hcp(hcp_by_player):
+        """Update high card points for each player and partnership"""
+        current_game_state['hcp'] = hcp_by_player
         broadcast_game_state()
 
 def start_dashboard(port=5000):

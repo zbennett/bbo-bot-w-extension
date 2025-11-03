@@ -223,6 +223,22 @@ def handle_game_event(event_type, event_data):
             hands_lin
         )
         
+        # Calculate and broadcast HCP
+        hcp = {}
+        for seat in ['N', 'E', 'S', 'W']:
+            if seat in hands_lin:
+                hand = parse_lin_hand(hands_lin[seat])
+                hcp[seat] = calculate_hcp(hand)
+            else:
+                hcp[seat] = 0
+        
+        hcp['NS'] = hcp['N'] + hcp['S']
+        hcp['EW'] = hcp['E'] + hcp['W']
+        
+        print(f"\n💎 High Card Points:")
+        print(f"   North: {hcp['N']}  South: {hcp['S']}  (NS Total: {hcp['NS']})")
+        print(f"   East:  {hcp['E']}  West:  {hcp['W']}  (EW Total: {hcp['EW']})")
+        
         # Update dashboard
         DashboardBroadcaster.update_new_deal(
             current_board,
@@ -230,6 +246,7 @@ def handle_game_event(event_type, event_data):
             event_data.get('vul'),
             dashboard_hands
         )
+        DashboardBroadcaster.update_hcp(hcp)
         
         print_hand_summary(hands_dict_cache)
         
@@ -371,7 +388,69 @@ def handle_game_event(event_type, event_data):
     elif event_type == "claim_accepted":
         # Claim was accepted
         tricks = event_data.get("tricks_claimed")
-        print(f"\n✅ Claim accepted: {tricks} tricks")
+        claimer = event_data.get("claimer", "?")
+        print(f"\n✅ Claim accepted: {tricks} tricks by {claimer}")
+        
+        # If we have a contract and declarer, calculate rubber score
+        if decision_engine.contract and decision_engine.declarer:
+            # Calculate total tricks for declarer's partnership
+            # Claimed tricks + tricks already won
+            declarer_partnership = 'NS' if decision_engine.declarer in ['N', 'S'] else 'EW'
+            claimer_partnership = 'NS' if claimer in ['N', 'S'] else 'EW'
+            
+            # If declarer's partnership claimed, add claimed tricks to their total
+            if claimer_partnership == declarer_partnership:
+                tricks_made = decision_engine.tricks_won[declarer_partnership] + tricks
+            else:
+                # Opponents claimed, so declarer gets remaining tricks
+                total_tricks_played = decision_engine.tricks_won['NS'] + decision_engine.tricks_won['EW']
+                remaining_tricks = 13 - total_tricks_played
+                tricks_made = decision_engine.tricks_won[declarer_partnership] + (remaining_tricks - tricks)
+            
+            # Detect doubled/redoubled from contract
+            doubled = 'X' in decision_engine.contract.upper()
+            redoubled = 'XX' in decision_engine.contract.upper()
+            contract_clean = decision_engine.contract.replace('X', '').replace('x', '')
+            
+            print(f"\n🎯 HAND COMPLETE (via claim)!")
+            print(f"   Contract: {decision_engine.contract} by {decision_engine.declarer}")
+            print(f"   Tricks: NS={decision_engine.tricks_won['NS']}, EW={decision_engine.tricks_won['EW']}, Claimed={tricks}")
+            print(f"   Declarer's partnership ({declarer_partnership}) made {tricks_made} tricks")
+            
+            # Record result in rubber scoring
+            result = rubber_scorer.record_hand_result(
+                contract_clean,
+                decision_engine.declarer,
+                tricks_made,
+                doubled=doubled,
+                redoubled=redoubled
+            )
+            
+            # Broadcast update to dashboard
+            print(f"📊 Broadcasting rubber score update: {result['rubber_status']}")
+            DashboardBroadcaster.update_rubber_score(result['rubber_status'])
+            
+            # Print score summary
+            score_info = result['score']
+            print(f"   Score: {score_info['partnership']} +{score_info['total']} ({score_info['description']})")
+            
+            # Check for rubber completion
+            if result['rubber_status']['rubber_complete']:
+                status = result['rubber_status']
+                ns_total = status['ns']['total']
+                ew_total = status['ew']['total']
+                winner = 'NS' if ns_total > ew_total else 'EW'
+                
+                print(f"\n🏆 RUBBER COMPLETE!")
+                print(f"   Winner: {winner}")
+                print(f"   Games: NS {status['ns']['games']} - EW {status['ew']['games']}")
+                print(f"   Final: NS {ns_total} - EW {ew_total}")
+                print(f"   Starting new rubber...\n")
+                
+                # Start new rubber
+                rubber_scorer.start_new_rubber()
+                DashboardBroadcaster.update_rubber_score(rubber_scorer.get_rubber_status())
+        
         print(f"{'='*60}\n")
 
 def parse_lin_hand(lin_str):
