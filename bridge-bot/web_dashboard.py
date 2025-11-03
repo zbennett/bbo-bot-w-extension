@@ -32,7 +32,11 @@ current_game_state = {
     'bottom_seat': 'S',
     'last_trick_winner': None,
     'rubber_score': None,  # Rubber bridge scoring
-    'hcp': {'N': 0, 'E': 0, 'S': 0, 'W': 0, 'NS': 0, 'EW': 0}  # High card points
+    'hcp': {
+        'current': {'N': 0, 'E': 0, 'S': 0, 'W': 0, 'NS': 0, 'EW': 0},  # Current hand
+        'session': {'N': 0, 'E': 0, 'S': 0, 'W': 0, 'NS': 0, 'EW': 0},  # Running total
+        'hands_played': 0  # Number of hands in session
+    }
 }
 
 @app.route('/')
@@ -215,9 +219,20 @@ class DashboardBroadcaster:
         broadcast_game_state()
     
     @staticmethod
-    def update_hcp(hcp_by_player):
-        """Update high card points for each player and partnership"""
-        current_game_state['hcp'] = hcp_by_player
+    def update_hcp(hcp_current):
+        """Update high card points for current hand and session totals"""
+        # Update current hand
+        current_game_state['hcp']['current'] = hcp_current
+        
+        # Add to session totals
+        for player in ['N', 'E', 'S', 'W', 'NS', 'EW']:
+            current_game_state['hcp']['session'][player] += hcp_current.get(player, 0)
+        
+        # Increment hands played counter
+        current_game_state['hcp']['hands_played'] += 1
+        
+        print(f"💎 Session HCP: NS={current_game_state['hcp']['session']['NS']}, EW={current_game_state['hcp']['session']['EW']} ({current_game_state['hcp']['hands_played']} hands)")
+        
         broadcast_game_state()
 
 def start_dashboard(port=5000):

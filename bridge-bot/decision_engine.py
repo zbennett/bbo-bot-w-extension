@@ -106,15 +106,24 @@ class DecisionEngine:
                 
     def update_card_played(self, player, card):
         """Update state with a played card. Returns (trick_complete, winner, corrected_player)."""
-        # If player is unknown ('?'), use the current lead_player
+        # If player is unknown ('?'), infer from whose turn it is
         if player not in ['N', 'E', 'S', 'W']:
-            if self.lead_player:
-                print(f"🔍 Player '?' inferred as {self.lead_player} for card {card} (Contract: {self.contract}, Declarer: {self.declarer})")
-                player = self.lead_player
+            # Determine whose turn it is based on current trick
+            if len(self.current_trick) == 0:
+                # First card of trick - use lead_player
+                if self.lead_player:
+                    player = self.lead_player
+                    print(f"🔍 Player '?' inferred as {player} (leads trick) for card {card}")
+                else:
+                    print(f"⚠️  Cannot determine player for card {card} - lead_player not set!")
+                    return False, None, None
             else:
-                # Can't determine player, skip
-                print(f"⚠️  Cannot determine player for card {card} - lead_player not set! Contract: {self.contract}")
-                return False, None, None
+                # Not first card - determine next player in rotation
+                last_player = self.current_trick[-1]['player']
+                player_order = ['N', 'E', 'S', 'W']
+                last_idx = player_order.index(last_player)
+                player = player_order[(last_idx + 1) % 4]
+                print(f"🔍 Player '?' inferred as {player} (follows {last_player}) for card {card}")
             
         self.played_cards.append((player, card))
         self.current_trick.append({'player': player, 'card': card})

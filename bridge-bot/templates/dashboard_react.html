@@ -364,17 +364,29 @@
         const HCPDisplay = ({ hcp }) => {
             const [expanded, setExpanded] = useState(true);
             
-            if (!hcp || Object.values(hcp).every(v => v === 0)) {
+            if (!hcp || !hcp.current) {
                 return null;
             }
 
+            const current = hcp.current || {};
+            const session = hcp.session || {};
+            const handsPlayed = hcp.hands_played || 0;
+            
+            // Skip if no data
+            if (Object.values(current).every(v => v === 0) && Object.values(session).every(v => v === 0)) {
+                return null;
+            }
+
+            // Current hand percentages
             const total = 40; // Total HCP in deck
-            const nsPercent = ((hcp.NS / total) * 100).toFixed(1);
-            const ewPercent = ((hcp.EW / total) * 100).toFixed(1);
-            const nPercent = ((hcp.N / total) * 100).toFixed(1);
-            const ePercent = ((hcp.E / total) * 100).toFixed(1);
-            const sPercent = ((hcp.S / total) * 100).toFixed(1);
-            const wPercent = ((hcp.W / total) * 100).toFixed(1);
+            const currentNSPercent = ((current.NS / total) * 100).toFixed(1);
+            const currentEWPercent = ((current.EW / total) * 100).toFixed(1);
+            
+            // Session averages
+            const sessionAvgNS = handsPlayed > 0 ? (session.NS / handsPlayed).toFixed(1) : '0.0';
+            const sessionAvgEW = handsPlayed > 0 ? (session.EW / handsPlayed).toFixed(1) : '0.0';
+            const sessionAvgPercentNS = ((session.NS / (handsPlayed * 40)) * 100).toFixed(1);
+            const sessionAvgPercentEW = ((session.EW / (handsPlayed * 40)) * 100).toFixed(1);
 
             return (
                 <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
@@ -382,60 +394,101 @@
                         className="flex items-center justify-between cursor-pointer mb-3"
                         onClick={() => setExpanded(!expanded)}
                     >
-                        <h3 className="font-semibold text-lg">High Card Points</h3>
+                        <div>
+                            <h3 className="font-semibold text-lg">High Card Points</h3>
+                            {handsPlayed > 0 && (
+                                <div className="text-xs text-gray-500">{handsPlayed} hands played</div>
+                            )}
+                        </div>
                         <button className="text-gray-400">{expanded ? '▼' : '▶'}</button>
                     </div>
                     
                     {expanded && (
                         <>
-                            {/* Partnership Totals */}
-                            <div className="grid grid-cols-2 gap-3 mb-4">
-                                <div className="bg-green-900/30 rounded-lg p-3 border border-green-600/50">
-                                    <div className="text-xs text-gray-400 mb-1">NS Partnership</div>
-                                    <div className="flex items-baseline gap-2">
-                                        <div className="text-2xl font-bold text-green-400">{hcp.NS}</div>
-                                        <div className="text-sm text-green-300">({nsPercent}%)</div>
+                            {/* Session Totals (Running Tally) */}
+                            <div className="mb-4">
+                                <div className="text-xs text-gray-400 mb-2 font-semibold">Session Running Total</div>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="bg-green-900/40 rounded-lg p-3 border-2 border-green-600/70">
+                                        <div className="text-xs text-gray-300 mb-1">NS Total</div>
+                                        <div className="flex items-baseline gap-2 mb-1">
+                                            <div className="text-2xl font-bold text-green-400">{session.NS}</div>
+                                            <div className="text-sm text-green-300">({sessionAvgPercentNS}%)</div>
+                                        </div>
+                                        <div className="text-xs text-gray-400">
+                                            Avg: {sessionAvgNS} per hand
+                                        </div>
+                                    </div>
+                                    <div className="bg-blue-900/40 rounded-lg p-3 border-2 border-blue-600/70">
+                                        <div className="text-xs text-gray-300 mb-1">EW Total</div>
+                                        <div className="flex items-baseline gap-2 mb-1">
+                                            <div className="text-2xl font-bold text-blue-400">{session.EW}</div>
+                                            <div className="text-sm text-blue-300">({sessionAvgPercentEW}%)</div>
+                                        </div>
+                                        <div className="text-xs text-gray-400">
+                                            Avg: {sessionAvgEW} per hand
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="bg-blue-900/30 rounded-lg p-3 border border-blue-600/50">
-                                    <div className="text-xs text-gray-400 mb-1">EW Partnership</div>
-                                    <div className="flex items-baseline gap-2">
-                                        <div className="text-2xl font-bold text-blue-400">{hcp.EW}</div>
-                                        <div className="text-sm text-blue-300">({ewPercent}%)</div>
+                            </div>
+
+                            {/* Current Hand */}
+                            <div className="border-t border-gray-700 pt-3 mb-3">
+                                <div className="text-xs text-gray-400 mb-2 font-semibold">Current Hand</div>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="bg-green-900/20 rounded-lg p-2 border border-green-600/30">
+                                        <div className="flex items-baseline gap-2">
+                                            <div className="text-xl font-bold text-green-400">{current.NS}</div>
+                                            <div className="text-xs text-green-300">({currentNSPercent}%)</div>
+                                        </div>
+                                    </div>
+                                    <div className="bg-blue-900/20 rounded-lg p-2 border border-blue-600/30">
+                                        <div className="flex items-baseline gap-2">
+                                            <div className="text-xl font-bold text-blue-400">{current.EW}</div>
+                                            <div className="text-xs text-blue-300">({currentEWPercent}%)</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            {/* Individual Players */}
+                            {/* Individual Players (Session Totals) */}
                             <div className="border-t border-gray-700 pt-3">
-                                <div className="text-xs text-gray-400 mb-2">Individual Players</div>
+                                <div className="text-xs text-gray-400 mb-2">Individual Session Totals</div>
                                 <div className="grid grid-cols-2 gap-2 text-sm">
                                     <div className="flex justify-between items-center">
                                         <span className="text-gray-300">North:</span>
                                         <div className="flex items-baseline gap-1">
-                                            <span className="font-mono font-bold text-green-400">{hcp.N}</span>
-                                            <span className="text-xs text-gray-400">({nPercent}%)</span>
+                                            <span className="font-mono font-bold text-green-400">{session.N}</span>
+                                            <span className="text-xs text-gray-400">
+                                                (avg: {handsPlayed > 0 ? (session.N / handsPlayed).toFixed(1) : '0.0'})
+                                            </span>
                                         </div>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <span className="text-gray-300">East:</span>
                                         <div className="flex items-baseline gap-1">
-                                            <span className="font-mono font-bold text-blue-400">{hcp.E}</span>
-                                            <span className="text-xs text-gray-400">({ePercent}%)</span>
+                                            <span className="font-mono font-bold text-blue-400">{session.E}</span>
+                                            <span className="text-xs text-gray-400">
+                                                (avg: {handsPlayed > 0 ? (session.E / handsPlayed).toFixed(1) : '0.0'})
+                                            </span>
                                         </div>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <span className="text-gray-300">South:</span>
                                         <div className="flex items-baseline gap-1">
-                                            <span className="font-mono font-bold text-green-400">{hcp.S}</span>
-                                            <span className="text-xs text-gray-400">({sPercent}%)</span>
+                                            <span className="font-mono font-bold text-green-400">{session.S}</span>
+                                            <span className="text-xs text-gray-400">
+                                                (avg: {handsPlayed > 0 ? (session.S / handsPlayed).toFixed(1) : '0.0'})
+                                            </span>
                                         </div>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <span className="text-gray-300">West:</span>
                                         <div className="flex items-baseline gap-1">
-                                            <span className="font-mono font-bold text-blue-400">{hcp.W}</span>
-                                            <span className="text-xs text-gray-400">({wPercent}%)</span>
+                                            <span className="font-mono font-bold text-blue-400">{session.W}</span>
+                                            <span className="text-xs text-gray-400">
+                                                (avg: {handsPlayed > 0 ? (session.W / handsPlayed).toFixed(1) : '0.0'})
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -601,7 +654,11 @@
                 bottom_seat: 'S',
                 last_trick_winner: null,
                 rubber_score: null,
-                hcp: { N: 0, E: 0, S: 0, W: 0, NS: 0, EW: 0 }
+                hcp: {
+                    current: { N: 0, E: 0, S: 0, W: 0, NS: 0, EW: 0 },
+                    session: { N: 0, E: 0, S: 0, W: 0, NS: 0, EW: 0 },
+                    hands_played: 0
+                }
             });
 
             const [showTrickHistory, setShowTrickHistory] = useState(false);

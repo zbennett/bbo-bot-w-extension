@@ -396,16 +396,35 @@ def handle_game_event(event_type, event_data):
             # Calculate total tricks for declarer's partnership
             # Claimed tricks + tricks already won
             declarer_partnership = 'NS' if decision_engine.declarer in ['N', 'S'] else 'EW'
-            claimer_partnership = 'NS' if claimer in ['N', 'S'] else 'EW'
             
-            # If declarer's partnership claimed, add claimed tricks to their total
-            if claimer_partnership == declarer_partnership:
-                tricks_made = decision_engine.tricks_won[declarer_partnership] + tricks
+            # Determine who claimed based on claimer or infer from context
+            if claimer in ['N', 'E', 'S', 'W']:
+                claimer_partnership = 'NS' if claimer in ['N', 'S'] else 'EW'
             else:
-                # Opponents claimed, so declarer gets remaining tricks
-                total_tricks_played = decision_engine.tricks_won['NS'] + decision_engine.tricks_won['EW']
-                remaining_tricks = 13 - total_tricks_played
-                tricks_made = decision_engine.tricks_won[declarer_partnership] + (remaining_tricks - tricks)
+                # Claimer unknown - infer from whose lead it is or who has more tricks
+                # Usually the side that's winning claims, so use tricks_won to infer
+                ns_tricks = decision_engine.tricks_won['NS']
+                ew_tricks = decision_engine.tricks_won['EW']
+                
+                # If one side is clearly winning, they're likely the claimer
+                if ns_tricks > ew_tricks + 2:
+                    claimer_partnership = 'NS'
+                    print(f"   Inferred claimer: NS (leading with {ns_tricks} vs {ew_tricks} tricks)")
+                elif ew_tricks > ns_tricks + 2:
+                    claimer_partnership = 'EW'
+                    print(f"   Inferred claimer: EW (leading with {ew_tricks} vs {ns_tricks} tricks)")
+                else:
+                    # Close game or early claim - assume declarer's side claims
+                    claimer_partnership = declarer_partnership
+                    print(f"   Inferred claimer: {declarer_partnership} (declarer's side)")
+            
+            # The "tricks_claimed" is the TOTAL tricks the claimer will make, not additional
+            if claimer_partnership == declarer_partnership:
+                # Declarer's side claimed - they'll make this many total tricks
+                tricks_made = tricks
+            else:
+                # Opponents claimed - declarer gets remaining tricks
+                tricks_made = 13 - tricks
             
             # Detect doubled/redoubled from contract
             doubled = 'X' in decision_engine.contract.upper()
