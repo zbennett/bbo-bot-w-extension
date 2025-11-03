@@ -204,6 +204,7 @@
         };
 
         const BiddingBox = ({ bidding }) => {
+            const [expanded, setExpanded] = useState(true);
             const containerRef = React.useRef(null);
 
             useEffect(() => {
@@ -214,30 +215,48 @@
 
             return (
                 <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-                    <h3 className="font-semibold text-lg mb-3">Bidding</h3>
-                    <div ref={containerRef} className="space-y-1 max-h-48 overflow-y-auto">
-                        {bidding.length === 0 ? (
-                            <div className="text-gray-500 text-sm italic">No bids yet</div>
-                        ) : (
-                            bidding.map((bid, idx) => (
-                                <div key={idx} className="flex items-center gap-2 text-sm bg-gray-700 rounded px-3 py-2 animate-[fadeIn_0.3s_ease-in]">
-                                    <span className="font-bold text-blue-400 w-6">{bid.player}</span>
-                                    <span className="font-mono flex-1">{bid.bid}</span>
-                                    <span className="text-gray-500 text-xs">{bid.timing}s</span>
-                                </div>
-                            ))
-                        )}
+                    <div 
+                        className="flex items-center justify-between cursor-pointer mb-3"
+                        onClick={() => setExpanded(!expanded)}
+                    >
+                        <h3 className="font-semibold text-lg">Bidding</h3>
+                        <button className="text-gray-400">{expanded ? '▼' : '▶'}</button>
                     </div>
+                    {expanded && (
+                        <div ref={containerRef} className="space-y-1 max-h-48 overflow-y-auto">
+                            {bidding.length === 0 ? (
+                                <div className="text-gray-500 text-sm italic">No bids yet</div>
+                            ) : (
+                                bidding.map((bid, idx) => (
+                                    <div key={idx} className="flex items-center gap-2 text-sm bg-gray-700 rounded px-3 py-2 animate-[fadeIn_0.3s_ease-in]">
+                                        <span className="font-bold text-blue-400 w-6">{bid.player}</span>
+                                        <span className="font-mono flex-1">{bid.bid}</span>
+                                        <span className="text-gray-500 text-xs">{bid.timing}s</span>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    )}
                 </div>
             );
         };
 
         const Recommendation = ({ recommendation }) => {
+            const [expanded, setExpanded] = useState(true);
+            
             if (!recommendation) {
                 return (
                     <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-                        <h3 className="font-semibold text-lg mb-3">💡 Recommendation</h3>
-                        <div className="text-gray-500 text-sm italic">Waiting for recommendation...</div>
+                        <div 
+                            className="flex items-center justify-between cursor-pointer"
+                            onClick={() => setExpanded(!expanded)}
+                        >
+                            <h3 className="font-semibold text-lg">💡 Recommendation</h3>
+                            <button className="text-gray-400">{expanded ? '▼' : '▶'}</button>
+                        </div>
+                        {expanded && (
+                            <div className="text-gray-500 text-sm italic mt-3">Waiting for recommendation...</div>
+                        )}
                     </div>
                 );
             }
@@ -246,20 +265,32 @@
 
             return (
                 <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-xl p-4 border-2 border-blue-600 shadow-lg">
-                    <h3 className="font-semibold text-lg mb-3">💡 Recommendation</h3>
-                    <div className="flex items-center gap-4 mb-3">
-                        <div className="text-sm text-gray-300">For <span className="font-bold text-white">{recommendation.player}</span></div>
-                        <div className="bg-white rounded px-3 py-2 flex items-center gap-1">
-                            <span className={'text-3xl ' + formatted.color}>{formatted.symbol}</span>
-                            <span className={'text-2xl font-bold ' + formatted.color}>{formatted.rank}</span>
-                        </div>
+                    <div 
+                        className="flex items-center justify-between cursor-pointer mb-3"
+                        onClick={() => setExpanded(!expanded)}
+                    >
+                        <h3 className="font-semibold text-lg">💡 Recommendation</h3>
+                        <button className="text-gray-300">{expanded ? '▼' : '▶'}</button>
                     </div>
-                    <div className="text-sm text-gray-300 leading-relaxed">{recommendation.reasoning}</div>
+                    {expanded && (
+                        <>
+                            <div className="flex items-center gap-4 mb-3">
+                                <div className="text-sm text-gray-300">For <span className="font-bold text-white">{recommendation.player}</span></div>
+                                <div className="bg-white rounded px-3 py-2 flex items-center gap-1">
+                                    <span className={'text-3xl ' + formatted.color}>{formatted.symbol}</span>
+                                    <span className={'text-2xl font-bold ' + formatted.color}>{formatted.rank}</span>
+                                </div>
+                            </div>
+                            <div className="text-sm text-gray-300 leading-relaxed">{recommendation.reasoning}</div>
+                        </>
+                    )}
                 </div>
             );
         };
 
         const DDAnalysis = ({ analysis }) => {
+            const [expanded, setExpanded] = useState(true);
+            
             if (!analysis) return null;
 
             // Access the tricks data from the raw_data.tricks structure
@@ -267,8 +298,15 @@
 
             return (
                 <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-                    <h3 className="font-semibold text-lg mb-3">🧠 Double Dummy Analysis</h3>
-                    <div className="space-y-3 text-sm">
+                    <div 
+                        className="flex items-center justify-between cursor-pointer mb-3"
+                        onClick={() => setExpanded(!expanded)}
+                    >
+                        <h3 className="font-semibold text-lg">🧠 Double Dummy Analysis</h3>
+                        <button className="text-gray-400">{expanded ? '▼' : '▶'}</button>
+                    </div>
+                    {expanded && (
+                        <div className="space-y-3 text-sm">
                         {analysis.contract && (
                             <div className="bg-gray-700 rounded p-3">
                                 <div className="font-semibold text-blue-400 mb-1">Contract</div>
@@ -317,62 +355,101 @@
                                 </div>
                             </div>
                         )}
-                    </div>
+                        </div>
+                    )}
                 </div>
             );
         };
 
         const HCPDisplay = ({ hcp }) => {
+            const [expanded, setExpanded] = useState(true);
+            
             if (!hcp || Object.values(hcp).every(v => v === 0)) {
                 return null;
             }
 
+            const total = 40; // Total HCP in deck
+            const nsPercent = ((hcp.NS / total) * 100).toFixed(1);
+            const ewPercent = ((hcp.EW / total) * 100).toFixed(1);
+            const nPercent = ((hcp.N / total) * 100).toFixed(1);
+            const ePercent = ((hcp.E / total) * 100).toFixed(1);
+            const sPercent = ((hcp.S / total) * 100).toFixed(1);
+            const wPercent = ((hcp.W / total) * 100).toFixed(1);
+
             return (
                 <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
-                    <h3 className="font-semibold text-lg mb-3">High Card Points</h3>
-                    
-                    {/* Partnership Totals */}
-                    <div className="grid grid-cols-2 gap-3 mb-4">
-                        <div className="bg-green-900/30 rounded-lg p-3 border border-green-600/50">
-                            <div className="text-xs text-gray-400 mb-1">NS Partnership</div>
-                            <div className="text-2xl font-bold text-green-400">{hcp.NS}</div>
-                        </div>
-                        <div className="bg-blue-900/30 rounded-lg p-3 border border-blue-600/50">
-                            <div className="text-xs text-gray-400 mb-1">EW Partnership</div>
-                            <div className="text-2xl font-bold text-blue-400">{hcp.EW}</div>
-                        </div>
+                    <div 
+                        className="flex items-center justify-between cursor-pointer mb-3"
+                        onClick={() => setExpanded(!expanded)}
+                    >
+                        <h3 className="font-semibold text-lg">High Card Points</h3>
+                        <button className="text-gray-400">{expanded ? '▼' : '▶'}</button>
                     </div>
                     
-                    {/* Individual Players */}
-                    <div className="border-t border-gray-700 pt-3">
-                        <div className="text-xs text-gray-400 mb-2">Individual Players</div>
-                        <div className="grid grid-cols-2 gap-2 text-sm">
-                            <div className="flex justify-between">
-                                <span className="text-gray-300">North:</span>
-                                <span className="font-mono font-bold text-green-400">{hcp.N}</span>
+                    {expanded && (
+                        <>
+                            {/* Partnership Totals */}
+                            <div className="grid grid-cols-2 gap-3 mb-4">
+                                <div className="bg-green-900/30 rounded-lg p-3 border border-green-600/50">
+                                    <div className="text-xs text-gray-400 mb-1">NS Partnership</div>
+                                    <div className="flex items-baseline gap-2">
+                                        <div className="text-2xl font-bold text-green-400">{hcp.NS}</div>
+                                        <div className="text-sm text-green-300">({nsPercent}%)</div>
+                                    </div>
+                                </div>
+                                <div className="bg-blue-900/30 rounded-lg p-3 border border-blue-600/50">
+                                    <div className="text-xs text-gray-400 mb-1">EW Partnership</div>
+                                    <div className="flex items-baseline gap-2">
+                                        <div className="text-2xl font-bold text-blue-400">{hcp.EW}</div>
+                                        <div className="text-sm text-blue-300">({ewPercent}%)</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex justify-between">
-                                <span className="text-gray-300">East:</span>
-                                <span className="font-mono font-bold text-blue-400">{hcp.E}</span>
+                            
+                            {/* Individual Players */}
+                            <div className="border-t border-gray-700 pt-3">
+                                <div className="text-xs text-gray-400 mb-2">Individual Players</div>
+                                <div className="grid grid-cols-2 gap-2 text-sm">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-gray-300">North:</span>
+                                        <div className="flex items-baseline gap-1">
+                                            <span className="font-mono font-bold text-green-400">{hcp.N}</span>
+                                            <span className="text-xs text-gray-400">({nPercent}%)</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-gray-300">East:</span>
+                                        <div className="flex items-baseline gap-1">
+                                            <span className="font-mono font-bold text-blue-400">{hcp.E}</span>
+                                            <span className="text-xs text-gray-400">({ePercent}%)</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-gray-300">South:</span>
+                                        <div className="flex items-baseline gap-1">
+                                            <span className="font-mono font-bold text-green-400">{hcp.S}</span>
+                                            <span className="text-xs text-gray-400">({sPercent}%)</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-gray-300">West:</span>
+                                        <div className="flex items-baseline gap-1">
+                                            <span className="font-mono font-bold text-blue-400">{hcp.W}</span>
+                                            <span className="text-xs text-gray-400">({wPercent}%)</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex justify-between">
-                                <span className="text-gray-300">South:</span>
-                                <span className="font-mono font-bold text-green-400">{hcp.S}</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-gray-300">West:</span>
-                                <span className="font-mono font-bold text-blue-400">{hcp.W}</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    {/* Balance indicator */}
-                    {hcp.NS !== hcp.EW && (
-                        <div className="mt-3 text-center text-xs">
-                            <span className={hcp.NS > hcp.EW ? 'text-green-400' : 'text-blue-400'}>
-                                {hcp.NS > hcp.EW ? 'NS' : 'EW'} has {Math.abs(hcp.NS - hcp.EW)} more HCP
-                            </span>
-                        </div>
+                            
+                            {/* Balance indicator */}
+                            {hcp.NS !== hcp.EW && (
+                                <div className="mt-3 text-center text-xs">
+                                    <span className={hcp.NS > hcp.EW ? 'text-green-400' : 'text-blue-400'}>
+                                        {hcp.NS > hcp.EW ? 'NS' : 'EW'} has {Math.abs(hcp.NS - hcp.EW)} more HCP
+                                    </span>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             );
@@ -666,9 +743,9 @@
                         </div>
 
                         <div className="space-y-4">
+                            <Recommendation recommendation={gameState.last_recommendation} />
                             <RubberScoreCard rubberScore={gameState.rubber_score} />
                             <HCPDisplay hcp={gameState.hcp} />
-                            <Recommendation recommendation={gameState.last_recommendation} />
                             <BiddingBox bidding={gameState.bidding} />
                             <CompactTrickHistory 
                                 tricks={gameState.all_tricks} 
