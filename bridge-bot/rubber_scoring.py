@@ -147,12 +147,9 @@ class RubberScoring:
         # Check if contract makes game (100+ points)
         makes_game = base_points >= 100
         
-        # Game bonus (only if not already vulnerable)
-        if makes_game:
-            above_points += 500 if vulnerable else 300
-        else:
-            # Part score bonus
-            above_points += 50
+        # Note: In rubber bridge, there are NO game bonuses per hand
+        # Only rubber bonuses (500 or 700) awarded at end of rubber
+        # Part score bonus (50) is also only awarded at END of rubber
         
         return {
             'partnership': partnership,
@@ -198,9 +195,75 @@ class RubberScoring:
             'description': f"Down {undertricks} ({'doubled' if doubled else 'redoubled' if redoubled else ''})"
         }
     
-    def record_hand_result(self, contract, declarer, tricks_made, doubled=False, redoubled=False):
+    def _calculate_honors(self, contract, hands=None):
+        """
+        Calculate honor points.
+        
+        Honors:
+        - 4 trump honors (A, K, Q, J, T) in one hand: 100 points
+        - 5 trump honors in one hand: 150 points
+        - 4 aces in NT in one hand: 150 points
+        
+        Args:
+            contract: Contract string like '3NT', '4S', etc.
+            hands: Dict of {'N': 'SAKQJH...', 'E': '...', 'S': '...', 'W': '...'} in LIN format
+            
+        Returns:
+            dict with {'partnership': 'NS'/'EW', 'points': int, 'description': str} or None
+        """
+        if not hands:
+            return None
+            
+        # Parse contract to get trump suit
+        suit = contract[1:].replace('x', '').replace('X', '')
+        if suit == 'N':
+            suit = 'NT'
+        
+        # Honor cards
+        trump_honors = ['A', 'K', 'Q', 'J', 'T']
+        aces = ['A']
+        
+        for player, hand in hands.items():
+            if suit == 'NT':
+                # Count aces in hand
+                ace_count = sum(1 for card in hand if card == 'A')
+                if ace_count == 4:
+                    partnership = 'NS' if player in ['N', 'S'] else 'EW'
+                    return {
+                        'partnership': partnership,
+                        'points': 150,
+                        'description': f'{player} holds all 4 aces'
+                    }
+            else:
+                # Count trump honors in hand
+                # Parse hand to find trump suit cards
+                honor_count = 0
+                in_trump_suit = False
+                for char in hand:
+                    if char == suit:
+                        in_trump_suit = True
+                    elif char in ['S', 'H', 'D', 'C']:
+                        in_trump_suit = False
+                    elif in_trump_suit and char in trump_honors:
+                        honor_count += 1
+                
+                if honor_count >= 4:
+                    partnership = 'NS' if player in ['N', 'S'] else 'EW'
+                    points = 150 if honor_count == 5 else 100
+                    return {
+                        'partnership': partnership,
+                        'points': points,
+                        'description': f'{player} holds {honor_count} trump honors'
+                    }
+        
+        return None
+    
+    def record_hand_result(self, contract, declarer, tricks_made, doubled=False, redoubled=False, hands=None):
         """
         Record a completed hand and update rubber score.
+        
+        Args:
+            hands: Optional dict of hands in LIN format for honor calculation
         
         Returns:
             dict with hand result and current rubber status
@@ -209,31 +272,42 @@ class RubberScoring:
         score_result = self.calculate_contract_score(contract, declarer, tricks_made, doubled, redoubled)
         partnership = score_result['partnership']
         
-        # Update scores
+        # Calculate honors (if hands provided)
+        # Honors go to whichever partnership holds them, independent of who made contract
+        honors = self._calculate_honors(contract, hands) if hands else None
+        if honors:
+            score_result['honors'] = honors
+        
+        # Update scores for contract result
         if partnership == 'NS':
             self.ns_below += score_result['below_line']
             self.ns_above += score_result['above_line']
-            
-            # Check for game
-            if score_result['makes_game'] or self.ns_below >= 100:
-                self.ns_games += 1
-                self.ns_vulnerable = True
-                # Reset below-the-line for both sides
-                self.ns_below = 0
-                self.ew_below = 0
-                score_result['game_won'] = True
         else:
             self.ew_below += score_result['below_line']
             self.ew_above += score_result['above_line']
-            
-            # Check for game
-            if score_result['makes_game'] or self.ew_below >= 100:
-                self.ew_games += 1
-                self.ew_vulnerable = True
-                # Reset below-the-line for both sides
-                self.ns_below = 0
-                self.ew_below = 0
-                score_result['game_won'] = True
+        
+        # Add honor points (go to partnership that holds them, not necessarily contract maker)
+        if honors:
+            if honors['partnership'] == 'NS':
+                self.ns_above += honors['points']
+            else:
+                self.ew_above += honors['points']
+        
+        # Check for game completion
+        if partnership == 'NS' and (score_result['makes_game'] or self.ns_below >= 100):
+            self.ns_games += 1
+            self.ns_vulnerable = True
+            # Reset below-the-line for both sides
+            self.ns_below = 0
+            self.ew_below = 0
+            score_result['game_won'] = True
+        elif partnership == 'EW' and (score_result['makes_game'] or self.ew_below >= 100):
+            self.ew_games += 1
+            self.ew_vulnerable = True
+            # Reset below-the-line for both sides
+            self.ns_below = 0
+            self.ew_below = 0
+            score_result['game_won'] = True
         
         # Check for rubber completion (first to 2 games)
         if self.ns_games >= 2 or self.ew_games >= 2:
@@ -261,10 +335,16 @@ class RubberScoring:
         winner = 'NS' if self.ns_games >= 2 else 'EW'
         loser_games = self.ew_games if winner == 'NS' else self.ns_games
         
-        # Rubber bonus
+        # Rubber bonus: 500 for 2-0, 700 for 2-1
         rubber_bonus = 500 if loser_games == 0 else 700
         
-        # Add bonus to winning partnership
+        # Add part score bonuses (50 points for unfinished games)
+        if self.ns_below > 0:
+            self.ns_above += 50
+        if self.ew_below > 0:
+            self.ew_above += 50
+        
+        # Add rubber bonus to winning partnership
         if winner == 'NS':
             self.ns_above += rubber_bonus
             self.ns_rubbers += 1

@@ -175,13 +175,14 @@ def handle_dd_result(data):
 
 # WebSocket handler
 hands_dict_cache = {}
+current_hands_lin = {}  # Store hands in LIN format for scoring
 current_board = None
 current_auction = []
 current_played_cards = []
 
 def handle_game_event(event_type, event_data):
     """Handle event-based messages from Chrome extension"""
-    global hands_dict_cache, current_board, current_auction, current_played_cards, decision_engine
+    global hands_dict_cache, current_hands_lin, current_board, current_auction, current_played_cards, decision_engine
     
     if event_type == "new_deal":
         # New deal started
@@ -214,6 +215,9 @@ def handle_game_event(event_type, event_data):
                 
                 # Convert to card list for dashboard
                 dashboard_hands[de_seat] = lin_to_card_list(lin_hand)
+        
+        # Store hands globally for scoring (including honors)
+        current_hands_lin = hands_lin
         
         # Initialize decision engine with new deal
         decision_engine.reset_deal(
@@ -321,13 +325,14 @@ def handle_game_event(event_type, event_data):
             print(f"   Tricks: NS={decision_engine.tricks_won['NS']}, EW={decision_engine.tricks_won['EW']}")
             print(f"   Declarer's partnership ({declarer_partnership}) made {tricks_made} tricks")
             
-            # Record result in rubber scoring
+            # Record result in rubber scoring (with hands for honor calculation)
             result = rubber_scorer.record_hand_result(
                 contract_clean,
                 decision_engine.declarer,
                 tricks_made,
                 doubled=doubled,
-                redoubled=redoubled
+                redoubled=redoubled,
+                hands=current_hands_lin
             )
             
             # Broadcast update to dashboard
@@ -436,13 +441,14 @@ def handle_game_event(event_type, event_data):
             print(f"   Tricks: NS={decision_engine.tricks_won['NS']}, EW={decision_engine.tricks_won['EW']}, Claimed={tricks}")
             print(f"   Declarer's partnership ({declarer_partnership}) made {tricks_made} tricks")
             
-            # Record result in rubber scoring
+            # Record result in rubber scoring (with hands for honor calculation)
             result = rubber_scorer.record_hand_result(
                 contract_clean,
                 decision_engine.declarer,
                 tricks_made,
                 doubled=doubled,
-                redoubled=redoubled
+                redoubled=redoubled,
+                hands=current_hands_lin
             )
             
             # Broadcast update to dashboard
