@@ -297,14 +297,20 @@ class RubberScoring:
         if partnership == 'NS' and (score_result['makes_game'] or self.ns_below >= 100):
             self.ns_games += 1
             self.ns_vulnerable = True
-            # Reset below-the-line for both sides
+            # Move below-the-line points to above (they stay on scorecard)
+            self.ns_above += self.ns_below
+            self.ew_above += self.ew_below
+            # Reset below counters for next game
             self.ns_below = 0
             self.ew_below = 0
             score_result['game_won'] = True
         elif partnership == 'EW' and (score_result['makes_game'] or self.ew_below >= 100):
             self.ew_games += 1
             self.ew_vulnerable = True
-            # Reset below-the-line for both sides
+            # Move below-the-line points to above (they stay on scorecard)
+            self.ns_above += self.ns_below
+            self.ew_above += self.ew_below
+            # Reset below counters for next game
             self.ns_below = 0
             self.ew_below = 0
             score_result['game_won'] = True
@@ -338,11 +344,10 @@ class RubberScoring:
         # Rubber bonus: 500 for 2-0, 700 for 2-1
         rubber_bonus = 500 if loser_games == 0 else 700
         
-        # Add part score bonuses (50 points for unfinished games)
-        if self.ns_below > 0:
-            self.ns_above += 50
-        if self.ew_below > 0:
-            self.ew_above += 50
+        # Move any remaining below-the-line points to above
+        # (happens when last hand of rubber completes a game)
+        self.ns_above += self.ns_below
+        self.ew_above += self.ew_below
         
         # Add rubber bonus to winning partnership
         if winner == 'NS':
