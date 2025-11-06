@@ -890,10 +890,21 @@ function processWebsocket(e) {
 		let pos = msg.search('card=');
 		let card = msg.slice(pos+5, pos+7);
 		
-		// Determine who played (it's you!)
+		// Determine who played the card
 		const played_count = app.deal.play ? app.deal.play.length : 0;
 		const seats = ['S', 'W', 'N', 'E'];  // BBO order
-		const player = app.table.myseatix !== undefined ? seats[app.table.myseatix] : '?';
+		let player = app.table.myseatix !== undefined ? seats[app.table.myseatix] : '?';
+		
+		// Check if playing from dummy's hand (declarer plays from dummy)
+		if (app.deal && app.deal.declarer !== undefined && app.table.myseatix !== undefined) {
+			const dummyix = (app.deal.declarer + 2) % 4;
+			// Check if the card is in dummy's hand
+			if (app.deal.hand && app.deal.hand[dummyix] && 
+			    app.deal.hand[dummyix].indexOf(card) >= 0) {
+				// Playing from dummy's hand
+				player = seats[dummyix];
+			}
+		}
 		
 		// Send card played event to Python bot BEFORE calling trickcard
 		// (which updates app.deal.play)
