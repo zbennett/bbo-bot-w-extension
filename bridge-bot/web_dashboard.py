@@ -80,8 +80,11 @@ class DashboardBroadcaster:
         current_game_state['board_number'] = board_number
         current_game_state['dealer'] = dealer
         current_game_state['vulnerability'] = vulnerability
-        # Store hands as-is (dashboard will use list copies for display)
-        current_game_state['hands'] = hands
+        # Store DEEP COPY of hands so modifications elsewhere don't affect dashboard
+        current_game_state['hands'] = {
+            player: hand.copy() if isinstance(hand, list) else hand 
+            for player, hand in hands.items()
+        }
         current_game_state['contract'] = None
         current_game_state['declarer'] = None
         current_game_state['current_trick'] = []
