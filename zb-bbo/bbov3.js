@@ -836,6 +836,20 @@ function processWebsocket(e) {
 		console.info(call, 'call made by you after', (tdiff/1000).toFixed(3), 'sec');
 		auctionclock(tdiff);
 		
+		// Determine who made the bid (it's you!)
+		const seats = ['S', 'W', 'N', 'E'];  // BBO order
+		const bidder = app.table.myseatix !== undefined ? seats[app.table.myseatix] : '?';
+		const dealer = app.deal.dealer;
+		
+		// Send bid event to Python bot
+		sendGameEvent('bid_made', {
+			call: lowercall,
+			bidder: bidder,
+			dealer: dealer,
+			auction: app.deal.auction,
+			time: tdiff / 1000
+		});
+		
 		const ncalls = app.deal.auction.length;
 		if (ncalls === 1) { saveCardSize(); }
 		
@@ -875,6 +889,20 @@ function processWebsocket(e) {
 		// User is playing a card
 		let pos = msg.search('card=');
 		let card = msg.slice(pos+5, pos+7);
+		
+		// Determine who played (it's you!)
+		const played_count = app.deal.play ? app.deal.play.length : 0;
+		const seats = ['S', 'W', 'N', 'E'];  // BBO order
+		const player = app.table.myseatix !== undefined ? seats[app.table.myseatix] : '?';
+		
+		// Send card played event to Python bot BEFORE calling trickcard
+		// (which updates app.deal.play)
+		sendGameEvent('card_played', {
+			card: card,
+			player: player,
+			played_count: played_count
+		});
+		
 		trickcard(card, e.timeStamp, true);
 	}
 	else if (mtype === 'sc_deal') {
