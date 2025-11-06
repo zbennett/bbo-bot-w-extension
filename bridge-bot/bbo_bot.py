@@ -305,6 +305,11 @@ def handle_game_event(event_type, event_data):
         # corrected_player will be the inferred player if player was '?'
         trick_complete, winner, corrected_player = decision_engine.update_card_played(player, card)
         
+        # Validate corrected_player before sending to dashboard
+        if corrected_player not in ['N', 'E', 'S', 'W']:
+            print(f"⚠️  ERROR: Invalid player '{corrected_player}' after card {card} - using original '{player}'")
+            corrected_player = player if player in ['N', 'E', 'S', 'W'] else '?'
+        
         # Update dashboard with corrected player
         DashboardBroadcaster.update_card_played(corrected_player, card, trick_complete, winner)
         
