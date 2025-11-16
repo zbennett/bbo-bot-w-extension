@@ -20,7 +20,7 @@ last_dd_result = None
 decision_engine = DecisionEngine()
 rubber_scorer = RubberScoring()
 
-BOTTOM_SEAT = "West"  # Change to "East", "West", or "North" to control which hand is at the bottom
+BOTTOM_SEAT = "East"  # Change to "East", "West", or "North" to control which hand is at the bottom
 
 # Parse dot-format hand into suit dictionary
 def parse_dot_hand(dot_str):

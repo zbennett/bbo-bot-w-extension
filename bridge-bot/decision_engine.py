@@ -58,21 +58,37 @@ class DecisionEngine:
         """Determine the final contract and declarer from the auction."""
         # Find the last non-pass bid to get the contract
         contract_bidder = None
+        doubled = False
+        redoubled = False
+
         for i in range(len(self.auction) - 1, -1, -1):
             call = self.auction[i]['call'].upper()
-            if call not in ['P', 'PASS', 'X', 'XX']:
+            # Check for double/redouble modifiers
+            if call in ['X', 'D']:
+                doubled = True
+            elif call in ['XX', 'DD']:
+                redoubled = True
+            # Skip passes, doubles, and redoubles - look for actual contract bid
+            elif call not in ['P', 'PASS']:
                 self.contract = call
                 contract_bidder = self.auction[i]['bidder']
+                # Append X or XX to contract if doubled/redoubled
+                if redoubled:
+                    self.contract += 'XX'
+                elif doubled:
+                    self.contract += 'X'
                 break
-        
+
         if not self.contract:
             return
-            
-        # Extract the strain from contract (last char: S/H/D/C or NT)
-        if 'NT' in self.contract or 'N' == self.contract[-1]:
+
+        # Extract the strain from contract (handle X/XX suffix)
+        contract_base = self.contract.replace('XX', '').replace('X', '')
+
+        if 'NT' in contract_base or 'N' == contract_base[-1]:
             strain = 'NT'
         else:
-            strain = self.contract[-1]  # S, H, D, or C
+            strain = contract_base[-1]  # S, H, D, or C
         
         # Determine the declaring partnership
         contract_bidder_idx = ['N', 'E', 'S', 'W'].index(contract_bidder)
@@ -124,6 +140,22 @@ class DecisionEngine:
                 last_idx = player_order.index(last_player)
                 player = player_order[(last_idx + 1) % 4]
                 print(f"🔍 Player '?' inferred as {player} (follows {last_player}) for card {card}")
+
+        # Check if the card actually belongs to dummy (declarer playing from dummy's hand)
+        if self.dummy and player != self.dummy:
+            # Check if card is in player's hand
+            player_hand = self._get_remaining_cards(player, exclude_current_trick=False)
+            print(f"🔍 Checking card {card} for player {player}: in_hand={card in player_hand}, hand={player_hand[:5] if len(player_hand) > 5 else player_hand}...")
+            if card not in player_hand and self.dummy:
+                # Card not in player's hand - check if it's in dummy's hand
+                dummy_hand = self._get_remaining_cards(self.dummy, exclude_current_trick=False)
+                print(f"🔍 Card {card} not in {player}'s hand, checking dummy ({self.dummy}): in_dummy={card in dummy_hand}, dummy_hand={dummy_hand[:5] if len(dummy_hand) > 5 else dummy_hand}...")
+                if card in dummy_hand:
+                    print(f"🔍 Card {card} detected in dummy ({self.dummy})'s hand, played by declarer ({self.declarer})")
+                    # This card is from dummy's hand, but we record it as dummy playing
+                    player = self.dummy
+                else:
+                    print(f"⚠️  WARNING: Card {card} not found in {player}'s hand OR dummy's hand!")
             
         self.played_cards.append((player, card))
         self.current_trick.append({'player': player, 'card': card})
@@ -236,29 +268,38 @@ class DecisionEngine:
         # For DDS: We need to restore cards from the CURRENT trick since they're still "in play"
         # Build set of cards currently in the incomplete trick
         current_trick_cards_by_player = {t['player']: t['card'] for t in self.current_trick}
-        
+
         current_hands = {}
         for player in ['N', 'S', 'E', 'W']:
             if player in self.hands:
                 # Start with original hand
                 hand_lin = self.hands[player]
                 cards = []
-                
+
                 suits = ['S', 'H', 'D', 'C']
                 suit_idx = 0
-                
+
                 for char in hand_lin:
                     if char.upper() in suits:
                         suit_idx = suits.index(char.upper())
                     elif char in 'AKQJT98765432':
                         cards.append(suits[suit_idx] + char)
-                        
+
+                original_count = len(cards)
+
                 # Remove ALL played cards (including current trick)
                 # Cards in curtrick are removed from hands and go in curtrick only
+                removed_count = 0
                 for played_player, played_card in self.played_cards:
                     if played_player == player and played_card in cards:
                         cards.remove(played_card)
-                
+                        removed_count += 1
+
+                # Debug: Check if card counts make sense
+                expected_remaining = original_count - removed_count
+                if len(cards) != expected_remaining:
+                    print(f"⚠️  Card count mismatch for {player}: expected {expected_remaining}, got {len(cards)}")
+
                 # Convert back to LIN format
                 lin_suits = {'S': '', 'H': '', 'D': '', 'C': ''}
                 for card in cards:
@@ -268,6 +309,9 @@ class DecisionEngine:
                 # Build LIN string
                 current_hands[player] = f"S{lin_suits['S']}.H{lin_suits['H']}.D{lin_suits['D']}.C{lin_suits['C']}"
             
+        # Debug: Show what we're sending to DDS
+        print(f"🔍 DDS: Declarer={self.declarer}, Dummy={self.dummy}, Total played cards={len(self.played_cards)}")
+
         # Try real-time DDS first (best option - uses current position)
         try:
             best_card, tricks_made, reasoning = self.realtime_dds.analyze_best_play(
