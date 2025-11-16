@@ -220,9 +220,11 @@ def handle_game_event(event_type, event_data):
         current_hands_lin = hands_lin
         
         # Initialize decision engine with new deal
+        # Normalize dealer to uppercase to match hand keys
+        dealer = event_data.get('dealer', '').upper()
         decision_engine.reset_deal(
             current_board,
-            event_data.get('dealer'),
+            dealer,
             event_data.get('vul'),
             hands_lin
         )
