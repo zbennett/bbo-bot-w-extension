@@ -251,8 +251,29 @@ def handle_game_event(event_type, event_data):
             dashboard_hands
         )
         DashboardBroadcaster.update_hcp(hcp)
-        
+
         print_hand_summary(hands_dict_cache)
+
+        # Show initial bidding recommendation for dealer
+        if decision_engine.current_bidder:
+            dealer = decision_engine.current_bidder
+            bid_rec, bid_reasoning = decision_engine.get_bidding_recommendation(dealer)
+            if bid_rec:
+                bid_display = bid_rec.upper()
+                if bid_display == 'P':
+                    bid_display = 'PASS'
+                elif bid_display == 'D':
+                    bid_display = 'DOUBLE'
+
+                print(f"\n🎯 Bidding Recommendation for {dealer} (dealer): {bid_display}")
+                print(f"   Reason: {bid_reasoning}")
+
+                DashboardBroadcaster.update_active_player(dealer)
+                DashboardBroadcaster.update_recommendation(
+                    dealer,
+                    bid_rec,
+                    bid_reasoning
+                )
         
     elif event_type == "bid_made":
         # Bid was made
@@ -261,13 +282,35 @@ def handle_game_event(event_type, event_data):
         current_auction = event_data.get("auction", [])
         time = event_data.get("time", 0)
         print(f"📢 {bidder} bids: {call.upper()} (after {time:.2f}s)")
-        
+
         # Update decision engine
         decision_engine.update_auction(call, bidder)
-        
+
         # Update dashboard
         DashboardBroadcaster.update_bid(bidder, call.upper(), time)
-        
+
+        # If auction is still ongoing, show bidding recommendation for next player
+        if not decision_engine.contract and decision_engine.current_bidder:
+            next_bidder = decision_engine.current_bidder
+            bid_rec, bid_reasoning = decision_engine.get_bidding_recommendation(next_bidder)
+            if bid_rec:
+                # Format bid for display
+                bid_display = bid_rec.upper()
+                if bid_display == 'P':
+                    bid_display = 'PASS'
+                elif bid_display == 'D':
+                    bid_display = 'DOUBLE'
+
+                print(f"🎯 Bidding Recommendation for {next_bidder}: {bid_display}")
+                print(f"   Reason: {bid_reasoning}")
+
+                # Update dashboard with bidding recommendation
+                DashboardBroadcaster.update_recommendation(
+                    next_bidder,
+                    bid_rec,
+                    bid_reasoning
+                )
+
         # Check if auction just ended (3 passes after a bid)
         if decision_engine.contract and decision_engine.declarer and decision_engine.lead_player:
             # Auction is complete! Show opening lead recommendation

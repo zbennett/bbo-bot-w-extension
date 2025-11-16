@@ -1,10 +1,12 @@
 """
 Decision Engine for Bridge Bot
 Uses double dummy analysis to recommend optimal card plays.
+Includes Standard American bidding recommendations.
 """
 
 from dd_analyzer import DoubleDummyAnalyzer, recommend_play as dd_recommend_play
 from realtime_dds import RealtimeDDS
+from bidding_system import StandardAmericanBidding
 
 class DecisionEngine:
     """
@@ -26,6 +28,8 @@ class DecisionEngine:
         self.lead_player = None  # Who plays next
         self.dd_data = None
         self.realtime_dds = RealtimeDDS()  # Real-time DDS engine
+        self.bidding_system = StandardAmericanBidding()  # Bidding recommendations
+        self.current_bidder = None  # Track whose turn to bid
         
     def reset_deal(self, board, dealer, vul, hands):
         """Reset state for a new deal."""
@@ -42,17 +46,26 @@ class DecisionEngine:
         self.tricks_won = {'NS': 0, 'EW': 0}
         self.lead_player = None
         self.dd_data = None
+
+        # Set current bidder to dealer
+        self.current_bidder = dealer
         
     def update_auction(self, call, bidder):
         """Update auction state with a new call."""
         self.auction.append({'call': call, 'bidder': bidder})
-        
+
+        # Update current bidder to next player in rotation
+        player_order = ['N', 'E', 'S', 'W']
+        bidder_idx = player_order.index(bidder)
+        self.current_bidder = player_order[(bidder_idx + 1) % 4]
+
         # Determine contract and declarer if auction is complete
         if call.upper() in ['P', 'PASS'] and len(self.auction) >= 4:
             # Check if last 3 calls were all passes
             last_three = [a['call'].upper() for a in self.auction[-3:]]
             if all(c in ['P', 'PASS'] for c in last_three):
                 self._finalize_contract()
+                self.current_bidder = None  # Auction is over
                 
     def _finalize_contract(self):
         """Determine the final contract and declarer from the auction."""
@@ -236,7 +249,36 @@ class DecisionEngine:
     def update_dd_analysis(self, dd_data):
         """Store double dummy analysis results."""
         self.dd_data = dd_data
-        
+
+    def get_bidding_recommendation(self, player):
+        """
+        Get a bidding recommendation for the specified player
+        Returns: (bid, reasoning) or (None, reason_string)
+        """
+        # Check if auction is still ongoing
+        if self.contract:
+            return None, "Auction is complete"
+
+        # Check if it's the player's turn
+        if self.current_bidder != player:
+            return None, f"Not {player}'s turn to bid (current bidder: {self.current_bidder})"
+
+        # Check if we have the player's hand
+        if player not in self.hands:
+            return None, f"Hand not available for {player}"
+
+        # Set up bidding system with current hand and auction
+        self.bidding_system.set_hand(self.hands[player])
+        self.bidding_system.set_auction(self.auction, player)
+        self.bidding_system.vulnerability = self.vulnerability
+
+        # Get recommendation from bidding system
+        try:
+            bid, reasoning = self.bidding_system.get_recommendation()
+            return bid, reasoning
+        except Exception as e:
+            return None, f"Error getting bidding recommendation: {str(e)}"
+
     def get_recommendation(self):
         """
         Get a play recommendation for the current player.
