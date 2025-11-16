@@ -238,16 +238,16 @@ class DashboardBroadcaster:
         
         broadcast_game_state()
 
-def start_dashboard(port=5000):
+def start_dashboard(port=9877):
     """Start the dashboard server in a separate thread"""
     def run_server():
         print(f'🌐 Starting web dashboard on http://localhost:{port}')
         socketio.run(app, host='0.0.0.0', port=port, debug=False, allow_unsafe_werkzeug=True)
-    
+
     dashboard_thread = threading.Thread(target=run_server, daemon=True)
     dashboard_thread.start()
     return dashboard_thread
 
 if __name__ == '__main__':
     # Run standalone for testing
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    socketio.run(app, host='0.0.0.0', port=9877, debug=True)

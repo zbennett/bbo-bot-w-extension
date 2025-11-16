@@ -261,11 +261,51 @@
                 );
             }
 
-            const formatted = formatCard(recommendation.card);
+            // Check if this is a bid or a card
+            const SUIT_SYMBOLS = { 'S': '♠', 'H': '♥', 'D': '♦', 'C': '♣' };
+            const card = recommendation.card || '';
+            const isBid = card === 'P' || card === 'D' || card === 'DD' || /^[1-7](NT|[SHDC])$/i.test(card);
+
+            let displayContent;
+            if (isBid) {
+                // Format bid display
+                const bid = card.toUpperCase();
+                let displayText;
+                if (bid === 'P') {
+                    displayText = 'PASS';
+                } else if (bid === 'D') {
+                    displayText = 'DOUBLE';
+                } else if (bid === 'DD') {
+                    displayText = 'REDOUBLE';
+                } else {
+                    // Format like "1♠", "3NT", etc.
+                    const level = bid[0];
+                    const strain = bid.slice(1);
+                    if (strain === 'NT' || strain === 'N') {
+                        displayText = level + 'NT';
+                    } else {
+                        displayText = level + (SUIT_SYMBOLS[strain] || strain);
+                    }
+                }
+                displayContent = (
+                    <div className="bg-white rounded px-4 py-3">
+                        <span className="text-3xl font-bold text-gray-900">{displayText}</span>
+                    </div>
+                );
+            } else {
+                // Format card display
+                const formatted = formatCard(card);
+                displayContent = (
+                    <div className="bg-white rounded px-3 py-2 flex items-center gap-1">
+                        <span className={'text-3xl ' + formatted.color}>{formatted.symbol}</span>
+                        <span className={'text-2xl font-bold ' + formatted.color}>{formatted.rank}</span>
+                    </div>
+                );
+            }
 
             return (
                 <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-xl p-4 border-2 border-blue-600 shadow-lg">
-                    <div 
+                    <div
                         className="flex items-center justify-between cursor-pointer mb-3"
                         onClick={() => setExpanded(!expanded)}
                     >
@@ -276,10 +316,7 @@
                         <>
                             <div className="flex items-center gap-4 mb-3">
                                 <div className="text-sm text-gray-300">For <span className="font-bold text-white">{recommendation.player}</span></div>
-                                <div className="bg-white rounded px-3 py-2 flex items-center gap-1">
-                                    <span className={'text-3xl ' + formatted.color}>{formatted.symbol}</span>
-                                    <span className={'text-2xl font-bold ' + formatted.color}>{formatted.rank}</span>
-                                </div>
+                                {displayContent}
                             </div>
                             <div className="text-sm text-gray-300 leading-relaxed">{recommendation.reasoning}</div>
                         </>

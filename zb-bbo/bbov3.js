@@ -39,10 +39,10 @@ var app = { "startTime": Date.now(), "traffic": '', "trafficCounter": 0, "prevWS
 			"seatLetters": "SWNE", "honorLetters": "JQKA",
 			"pass": "Pass", "dbl": "Dbl", "rdbl" : "Rdbl", "nt" : "NT" } };
 
-const socket = new WebSocket("ws://localhost:8675");
+const socket = new WebSocket("ws://localhost:9876");
 
 socket.onopen = () => {
-  console.log("✅ Connected to local Python WebSocket server on ws://localhost:8675");
+  console.log("✅ Connected to local Python WebSocket server on ws://localhost:9876");
   console.log("📊 Socket state:", socket.readyState, "(1 = OPEN)");
 };
 

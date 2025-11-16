@@ -257,7 +257,9 @@ def handle_game_event(event_type, event_data):
         # Show initial bidding recommendation for dealer
         if decision_engine.current_bidder:
             dealer = decision_engine.current_bidder
+            print(f"🎯 Getting bidding recommendation for dealer: {dealer}")
             bid_rec, bid_reasoning = decision_engine.get_bidding_recommendation(dealer)
+            print(f"   Result: bid={bid_rec}, reasoning={bid_reasoning}")
             if bid_rec:
                 bid_display = bid_rec.upper()
                 if bid_display == 'P':
@@ -274,6 +276,8 @@ def handle_game_event(event_type, event_data):
                     bid_rec,
                     bid_reasoning
                 )
+            else:
+                print(f"⚠️  No bidding recommendation generated (reason: {bid_reasoning})")
         
     elif event_type == "bid_made":
         # Bid was made
@@ -538,7 +542,8 @@ def parse_lin_hand(lin_str):
     return hand
 
 async def handle_connection(websocket):
-    print("✅ WebSocket client connected.")
+    client_address = websocket.remote_address
+    print(f"\n✅ Chrome extension connected from {client_address}")
     async for message in websocket:
         try:
             data = json.loads(message)
@@ -568,7 +573,7 @@ async def handle_connection(websocket):
             traceback.print_exc()
 
 # Find free port to avoid collisions
-def find_free_port(start=8675):
+def find_free_port(start=9876):
     for port in range(start, start + 100):
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -580,8 +585,8 @@ def find_free_port(start=8675):
 
 # Entry point
 async def main():
-    # Start web dashboard on port 5001 (5000 often used by AirPlay)
-    dashboard_port = 5001
+    # Start web dashboard on port 9877 (avoiding common ports)
+    dashboard_port = 9877
     start_dashboard(port=dashboard_port)
     
     # Set the bottom seat for the dashboard to match BOTTOM_SEAT
@@ -594,10 +599,14 @@ async def main():
     DashboardBroadcaster.update_rubber_score(initial_status)
     
     port = find_free_port()
-    print(f"🚀 Server running at ws://localhost:{port}")
+    print(f"\n{'='*60}")
+    print(f"🚀 WebSocket server starting on ws://localhost:{port}")
     print(f"🌐 Dashboard available at http://localhost:{dashboard_port}")
     print(f"🎯 Bottom seat: {BOTTOM_SEAT}")
+    print(f"{'='*60}\n")
+    print(f"⏳ Waiting for Chrome extension to connect...")
     async with websockets.serve(handle_connection, "localhost", port):
+        print(f"✅ WebSocket server listening on port {port}")
         await asyncio.Future()
 
 if __name__ == "__main__":
