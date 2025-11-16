@@ -742,7 +742,8 @@ class StandardAmericanBidding:
             my_opening = self._get_my_opening()
             suit = my_opening[1]
             if suit in ['H', 'S']:
-                return f'4{suit}', f"4{{'H': '♥', 'S': '♠'}[suit]} (maximum weak 2)"
+                suit_symbol = '♥' if suit == 'H' else '♠'
+                return f'4{suit}', f"4{suit_symbol} (maximum weak 2)"
 
         return 'P', "Pass (minimum weak 2)"
 
@@ -785,7 +786,8 @@ class StandardAmericanBidding:
         if partner_response == f'2{opening_suit}':
             # With 16+ HCP and 5+ card suit, invite or bid game
             if hcp >= 19 and opening_suit in ['H', 'S']:
-                return f'4{opening_suit}', f"4{{'H': '♥', 'S': '♠'}[opening_suit]} game ({hcp} HCP)"
+                suit_name = {'H': '♥', 'S': '♠'}[opening_suit]
+                return f'4{opening_suit}', f"4{suit_name} game ({hcp} HCP)"
             if 16 <= hcp <= 18 and opening_suit in ['H', 'S']:
                 suit_name = {'H': '♥', 'S': '♠'}[opening_suit]
                 return f'3{opening_suit}', f"3{suit_name} invitational ({hcp} HCP)"
@@ -796,12 +798,14 @@ class StandardAmericanBidding:
         if partner_response == f'3{opening_suit}':
             # With 16+ HCP, bid game
             if hcp >= 16 and opening_suit in ['H', 'S']:
-                return f'4{opening_suit}', f"4{{'H': '♥', 'S': '♠'}[opening_suit]} game ({hcp} HCP)"
+                suit_name = {'H': '♥', 'S': '♠'}[opening_suit]
+                return f'4{opening_suit}', f"4{suit_name} game ({hcp} HCP)"
             if hcp >= 16 and opening_suit in ['C', 'D']:
                 # Consider 3NT or 5-level
                 if self.hand.is_semi_balanced():
                     return '3NT', f"3NT game ({hcp} HCP)"
-                return f'5{opening_suit}', f"5{{'D': '♦', 'C': '♣'}[opening_suit]} game ({hcp} HCP)"
+                suit_name = {'D': '♦', 'C': '♣'}[opening_suit]
+                return f'5{opening_suit}', f"5{suit_name} game ({hcp} HCP)"
             # With minimum, pass
             return 'P', f"Pass (minimum, {hcp} HCP)"
 
@@ -810,7 +814,8 @@ class StandardAmericanBidding:
             # Show hand strength
             if hcp <= 14:
                 # Minimum - bid game
-                return f'4{opening_suit}', f"4{{'H': '♥', 'S': '♠'}[opening_suit]} (minimum opener)"
+                suit_name = {'H': '♥', 'S': '♠'}[opening_suit]
+                return f'4{opening_suit}', f"4{suit_name} (minimum opener)"
             elif 15 <= hcp <= 17:
                 # Medium - show shortness or side suit
                 for suit in ['C', 'D', 'H', 'S']:
@@ -823,7 +828,8 @@ class StandardAmericanBidding:
                 return f'3{opening_suit}', f"3{suit_name} (medium opener, no shortness)"
             else:
                 # Strong - show slam interest
-                return f'3{opening_suit}', f"3{{'H': '♥', 'S': '♠'}[opening_suit]} (strong opener, slam try)"
+                suit_name = {'H': '♥', 'S': '♠'}[opening_suit]
+                return f'3{opening_suit}', f"3{suit_name} (strong opener, slam try)"
 
         # Partner bid 2NT (standard invitational 11-12 HCP)
         if partner_response == '2NT':
@@ -844,7 +850,8 @@ class StandardAmericanBidding:
                     suit_name = {'H': '♥', 'S': '♠'}[response_suit]
                     return f'3{response_suit}', f"3{suit_name} (4+ card support, medium)"
                 else:
-                    return f'4{response_suit}', f"4{{'H': '♥', 'S': '♠'}[response_suit]} (4+ card support, strong)"
+                    suit_name = {'H': '♥', 'S': '♠'}[response_suit]
+                    return f'4{response_suit}', f"4{suit_name} (4+ card support, strong)"
 
             # Rebid our suit with 6+ cards
             if dist[opening_suit] >= 6:
@@ -948,9 +955,11 @@ class StandardAmericanBidding:
                 if self.hand.get_distribution()[major] >= 4:
                     # Found fit
                     if hcp >= 10:
-                        return f'4{major}', f"4{{'H': '♥', 'S': '♠'}[major]} (game with fit)"
+                        suit_name = {'H': '♥', 'S': '♠'}[major]
+                        return f'4{major}', f"4{suit_name} (game with fit)"
                     elif hcp >= 8:
-                        return f'3{major}', f"3{{'H': '♥', 'S': '♠'}[major]} (invitational)"
+                        suit_name = {'H': '♥', 'S': '♠'}[major]
+                        return f'3{major}', f"3{suit_name} (invitational)"
                     else:
                         return 'P', f"Pass (minimum)"
             # Opener denied major (2D)
@@ -966,10 +975,11 @@ class StandardAmericanBidding:
         if my_response in ['2D', '2H']:
             # Opener accepted transfer
             transferred_suit = 'H' if my_response == '2D' else 'S'
+            suit_name = {'H': '♥', 'S': '♠'}[transferred_suit]
             if hcp >= 10:
-                return f'4{transferred_suit}', f"4{{'H': '♥', 'S': '♠'}[transferred_suit]} game"
+                return f'4{transferred_suit}', f"4{suit_name} game"
             elif hcp >= 8:
-                return f'3{transferred_suit}', f"3{{'H': '♥', 'S': '♠'}[transferred_suit]} invitational"
+                return f'3{transferred_suit}', f"3{suit_name} invitational"
             else:
                 return 'P', "Pass (transfer complete)"
 
@@ -1003,7 +1013,8 @@ class StandardAmericanBidding:
                     # Try for game
                     rebid_suit = opener_rebid[1]
                     if rebid_suit in ['H', 'S'] and dist[rebid_suit] >= 3:
-                        return f'4{rebid_suit}', f"4{{'H': '♥', 'S': '♠'}[rebid_suit]} (fit + maximum)"
+                        suit_name = {'H': '♥', 'S': '♠'}[rebid_suit]
+                        return f'4{rebid_suit}', f"4{suit_name} (fit + maximum)"
                     return '3NT', f"3NT (maximum, {hcp} HCP)"
                 return 'P', "Pass (minimum)"
 
@@ -1014,7 +1025,8 @@ class StandardAmericanBidding:
             if opener_rebid == f'3{opening_suit}':
                 if hcp >= 8:
                     if opening_suit in ['H', 'S']:
-                        return f'4{opening_suit}', f"4{{'H': '♥', 'S': '♠'}[opening_suit]} (maximum raise)"
+                        suit_name = {'H': '♥', 'S': '♠'}[opening_suit]
+                        return f'4{opening_suit}', f"4{suit_name} (maximum raise)"
                     return 'P', f"Pass (not enough for 5-level)"
                 return 'P', "Pass (minimum raise)"
 
@@ -1025,15 +1037,18 @@ class StandardAmericanBidding:
             if opener_rebid == f'2{my_suit}':
                 # Decide on game
                 if hcp >= 11 and my_suit in ['H', 'S']:
-                    return f'4{my_suit}', f"4{{'H': '♥', 'S': '♠'}[my_suit]} game"
+                    suit_name = {'H': '♥', 'S': '♠'}[my_suit]
+                    return f'4{my_suit}', f"4{suit_name} game"
                 elif hcp >= 10 and my_suit in ['H', 'S']:
-                    return f'3{my_suit}', f"3{{'H': '♥', 'S': '♠'}[my_suit]} invitational"
+                    suit_name = {'H': '♥', 'S': '♠'}[my_suit]
+                    return f'3{my_suit}', f"3{suit_name} invitational"
                 return 'P', "Pass (minimum)"
 
             # Opener jump raised our suit
             if opener_rebid == f'3{my_suit}':
                 if my_suit in ['H', 'S']:
-                    return f'4{my_suit}', f"4{{'H': '♥', 'S': '♠'}[my_suit]} accept invitation"
+                    suit_name = {'H': '♥', 'S': '♠'}[my_suit]
+                    return f'4{my_suit}', f"4{suit_name} accept invitation"
                 return 'P', "Pass"
 
             # Opener rebid 1NT - decide on game
@@ -1062,8 +1077,10 @@ class StandardAmericanBidding:
                 if dist[opening_suit] >= 3:
                     if hcp >= 11:
                         if opening_suit in ['H', 'S']:
-                            return f'4{opening_suit}', f"4{{'H': '♥', 'S': '♠'}[opening_suit]} (fit + game values)"
-                        return f'3{opening_suit}', f"3{{'D': '♦', 'C': '♣'}[opening_suit]} (delayed support)"
+                            suit_name = {'H': '♥', 'S': '♠'}[opening_suit]
+                            return f'4{opening_suit}', f"4{suit_name} (fit + game values)"
+                        suit_name = {'D': '♦', 'C': '♣'}[opening_suit]
+                        return f'3{opening_suit}', f"3{suit_name} (delayed support)"
                 return 'P', "Pass"
 
         return 'P', "Pass (no clear rebid)"
