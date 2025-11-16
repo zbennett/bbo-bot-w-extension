@@ -263,20 +263,22 @@
 
             // Check if this is a bid or a card
             const SUIT_SYMBOLS = { 'S': '♠', 'H': '♥', 'D': '♦', 'C': '♣' };
+            const SUIT_COLORS = { 'S': 'text-gray-900', 'H': 'text-red-600', 'D': 'text-red-600', 'C': 'text-gray-900' };
             const card = recommendation.card || '';
             const isBid = card === 'P' || card === 'D' || card === 'DD' || /^[1-7](NT|[SHDC])$/i.test(card);
 
             let displayContent;
             if (isBid) {
-                // Format bid display
+                // Format bid display - use same card display style
                 const bid = card.toUpperCase();
-                let displayText;
+                let displayText, colorClass = 'text-gray-900';
+
                 if (bid === 'P') {
                     displayText = 'PASS';
                 } else if (bid === 'D') {
-                    displayText = 'DOUBLE';
+                    displayText = 'DBL';
                 } else if (bid === 'DD') {
-                    displayText = 'REDOUBLE';
+                    displayText = 'RDBL';
                 } else {
                     // Format like "1♠", "3NT", etc.
                     const level = bid[0];
@@ -285,11 +287,12 @@
                         displayText = level + 'NT';
                     } else {
                         displayText = level + (SUIT_SYMBOLS[strain] || strain);
+                        colorClass = SUIT_COLORS[strain] || 'text-gray-900';
                     }
                 }
                 displayContent = (
-                    <div className="bg-white rounded px-4 py-3">
-                        <span className="text-3xl font-bold text-gray-900">{displayText}</span>
+                    <div className="bg-white rounded px-4 py-3 flex items-center justify-center min-w-[80px]">
+                        <span className={'text-3xl font-bold ' + colorClass}>{displayText}</span>
                     </div>
                 );
             } else {

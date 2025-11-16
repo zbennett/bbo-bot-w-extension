@@ -255,11 +255,19 @@ def handle_game_event(event_type, event_data):
         print_hand_summary(hands_dict_cache)
 
         # Show initial bidding recommendation for dealer
+        print(f"🔍 DEBUG: decision_engine.current_bidder = {decision_engine.current_bidder}")
+        print(f"🔍 DEBUG: decision_engine.hands keys = {list(decision_engine.hands.keys())}")
+
         if decision_engine.current_bidder:
             dealer = decision_engine.current_bidder
             print(f"🎯 Getting bidding recommendation for dealer: {dealer}")
+            print(f"   Dealer has hand: {dealer in decision_engine.hands}")
+            if dealer in decision_engine.hands:
+                print(f"   Hand length: {len(decision_engine.hands[dealer])}")
+
             bid_rec, bid_reasoning = decision_engine.get_bidding_recommendation(dealer)
-            print(f"   Result: bid={bid_rec}, reasoning={bid_reasoning}")
+            print(f"   Result: bid={repr(bid_rec)}, reasoning={bid_reasoning}")
+
             if bid_rec:
                 bid_display = bid_rec.upper()
                 if bid_display == 'P':
@@ -278,6 +286,8 @@ def handle_game_event(event_type, event_data):
                 )
             else:
                 print(f"⚠️  No bidding recommendation generated (reason: {bid_reasoning})")
+        else:
+            print(f"⚠️  No current_bidder set!")
         
     elif event_type == "bid_made":
         # Bid was made
@@ -324,7 +334,8 @@ def handle_game_event(event_type, event_data):
             if recommended_card:
                 rec_suit = SUIT_SYMBOLS.get(recommended_card[0], recommended_card[0])
                 print(f"🎺 OPENING LEAD Recommendation for {decision_engine.lead_player}: {rec_suit}{recommended_card[1]} - {reasoning}")
-                
+                print(f"   📊 Sending to dashboard: player={decision_engine.lead_player}, card={recommended_card}")
+
                 DashboardBroadcaster.update_recommendation(
                     decision_engine.lead_player,
                     recommended_card,
@@ -430,7 +441,8 @@ def handle_game_event(event_type, event_data):
             if recommended_card:
                 rec_suit = SUIT_SYMBOLS.get(recommended_card[0], recommended_card[0])
                 print(f"💡 Recommendation for {decision_engine.lead_player}: {rec_suit}{recommended_card[1]} - {reasoning}")
-                
+                print(f"   📊 Sending to dashboard: player={decision_engine.lead_player}, card={recommended_card}")
+
                 # Update dashboard with recommendation
                 DashboardBroadcaster.update_recommendation(
                     decision_engine.lead_player,
